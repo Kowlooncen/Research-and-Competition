@@ -15,7 +15,7 @@ Welcome to the "Research and Competition" repository! This repository compiles m
   - [2021 “深圳杯”数学建模比赛](#shenzhen-cup-2021)
   - [2021 美国大学生数学建模](#mcm-2021)
   - [2022 美国大学生数学建模](#mcm-2022)
-- [Chinese College Students Mathematics Competition](https://github.com/Kowlooncen/Research-and-Competition/tree/main/Mathematical%20Modeling%20Competition/2022%20%E7%BE%8E%E5%9B%BD%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B)
+- [Chinese College Students Mathematics Competition](https://github.com/Kowlooncen/Research-and-Competition/tree/main/Chinese%20College%20Students%20Mathematics%20Competition)
 
 ### Overview
 
