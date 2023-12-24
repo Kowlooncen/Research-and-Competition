@@ -42,3 +42,19 @@ Explore mathematical modeling competitions and gain insights into problem-solvin
 
 - [Competition Details](https://www.shumo.com/wiki/doku.php?id=2021_%E5%B9%B4%E5%85%A8%E5%9B%BD%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E7%AB%9E%E8%B5%9B_cumcm_%E8%AF%95%E9%A2%98)
 - [Repository Section](https://github.com/Kowlooncen/Research-and-Competition/blob/main/Mathematical%20Modeling%20Competition/2021%20%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/README.md)
+
+
+#### Shenzhen Cup 2021
+
+- [Competition Details](http://www.m2ct.org/view-page.jsp?editId=12&uri=0D00250&gobackUrl=modular-list.jsp&pageType=smxly&menuType=flowUp1)
+- [Repository Section](https://github.com/Kowlooncen/Research-and-Competition/tree/main/Mathematical%20Modeling%20Competition/2021%20%E2%80%9C%E6%B7%B1%E5%9C%B3%E6%9D%AF%E2%80%9D%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B)
+
+### MCM 2021
+
+- [Competition Details](https://www.mathmodels.org/Problems/2021/MCM-C/index.html)
+- [Repository Section](https://github.com/Kowlooncen/Research-and-Competition/tree/main/Mathematical%20Modeling%20Competition/2021%20%E7%BE%8E%E5%9B%BD%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B)
+
+### MCM 2022
+
+- [Competition Details](https://www.mathmodels.org/Problems/2022/MCM-A/index.html)
+- [Repository Section](https://github.com/Kowlooncen/Research-and-Competition/tree/main/Mathematical%20Modeling%20Competition/2021%20%E2%80%9C%E6%B7%B1%E5%9C%B3%E6%9D%AF%E2%80%9D%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B)
