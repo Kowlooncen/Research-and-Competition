@@ -1,0 +1,25 @@
+
+%      X Input : year
+%      Y Output: bingsilv
+%  Output:
+%      fitresult : a fit object representing the fit.
+%      gof : structure with goodness-of fit info.
+%
+%  另请参阅 FIT, CFIT, SFIT.
+% Fit: 'prediction'.
+[xData, yData] = prepareCurveData( year, bingsilv );
+
+% Set up fittype and options.
+ft = fittype( 'smoothingspline' );
+
+% Fit model to data.
+[fitresult, gof] = fit( xData, yData, ft );
+
+% Plot fit with data.
+figure( 'Name', 'prediction' );
+h = plot( fitresult, xData, yData );
+legend( h, 'bingsilv vs. year', 'prediction', 'Location', 'NorthEast' );
+% Label axes
+xlabel year
+ylabel bingsilv
+grid on

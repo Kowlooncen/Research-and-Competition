@@ -1,0 +1,17 @@
+[xData, yData] = prepareCurveData( year, renjunzhichu );
+
+% Set up fittype and options.
+ft = fittype( {'(sin(x-pi))', '((x-10)^2)', '1'}, 'independent', 'x', 'dependent', 'y', 'coefficients', {'a', 'b', 'c'} );
+
+% Fit model to data.
+[fitresult, gof] = fit( xData, yData, ft );
+
+% Plot fit with data.
+figure( 'Name', '人均医疗支出占比' );
+h = plot( fitresult, xData, yData );
+legend( h, 'renjunzhichu vs. year', '人均医疗支出占比', 'Location', 'NorthEast' );
+% Label axes
+xlabel year
+ylabel renjunzhichu
+grid on
+*(sin(x-pi))+b*((x-10)^2)+c*(1)
