@@ -21,13 +21,13 @@ This repository represents a collection of my academic and personal growth exper
 
 [Link to Biology Competition Section](https://github.com/Kowlooncen/Research-and-Competition/blob/main/Biology%20competition/README.md)
 
-Explore materials related to biology competitions and discover the insights gained from these experiences.
+Using drones to investigate the health of mangrove ecosystems.
 
 ### Blow-up for Equations of Mathematical Physics: Numerical Diagnostics
 
 [Link to Mathematical Physics Section](https://github.com/Kowlooncen/Research-and-Competition/blob/main/Blow-up%20for%20equations%20of%20mathematical%20physics%3A%20numerical%20diagnostics/README.md)
 
-Delve into the numerical diagnostics of blow-up phenomena in equations of mathematical physics and the associated research findings.
+Summer Research Project: Delve into the numerical diagnostics of blow-up phenomena in equations of mathematical physics.
 
 ### Mathematical Modeling Competition
 
