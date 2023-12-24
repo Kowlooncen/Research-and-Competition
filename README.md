@@ -11,10 +11,11 @@ Welcome to the "Research and Competition" repository! This repository compiles m
 - [Blow-up for Equations of Mathematical Physics: Numerical Diagnostics](#mathematical-physics)
 - [Mathematical Modeling Competition](#mathematical-modeling-competition)
   - [2020 “深圳杯”数学建模比赛](#shenzhen-cup-2020)
-  - [2021 中国大学生数学建模](#chinese-university-math-modeling-2021)
+  - [2021 中国大学生数学建模](#Chinese University Mathematical Modeling 2021)
   - [2021 “深圳杯”数学建模比赛](#shenzhen-cup-2021)
   - [2021 美国大学生数学建模](#American-university-math-modeling-2021)
   - [2022 美国大学生数学建模](#American-university-math-modeling-2022)
+- [Chinese College Students Mathematics Competition]
 
 ### Overview
 
