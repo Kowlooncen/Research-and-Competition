@@ -1,0 +1,5099 @@
+%\documentclass[twoside]{cctbook}
+\documentclass[twoside]{book}
+%\documentclass[UTF8]{ctexbook}
+\usepackage{CJK}
+% standard LaTeX graphics tool
+\usepackage{latexsym,amsfonts,amsbsy,graphicx,epsf}
+\usepackage{amsmath, amssymb, amsthm,amscd,amsxtra}
+\usepackage{subfigure}
+\usepackage[dvips]{epsfig}
+\usepackage{color}
+\usepackage{makeidx} % This contains the macros for indexing
+\makeindex % Switches indexing on (write to \jobname.idx)
+\setlength{\unitlength}{1cm}
+\usepackage{lineno}
+
+%\usepackage{underscore}
+\usepackage{titlesec}
+
+\usepackage[utf8]{inputenc}
+%\usepackage[english]{babel}
+\usepackage{epstopdf}
+\usepackage{multirow}
+
+\usepackage{listingsutf8}
+\usepackage{listings}
+\usepackage{framed}
+\usepackage{textcomp}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+
+\lstset{
+  language=Matlab,  %代码语言使用的是matlab
+    numbers=left, % 显示行号
+    numberstyle=\tiny,    % 行号字体
+  showstringspaces=false,%不显示代码字符串中间的空格标记
+  stringstyle=\ttfamily, % 代码字符串的特殊格式
+  breaklines=true, %对过长的代码自动换行
+  extendedchars=false,  %解决代码跨页时，章节标题，页眉等汉字不显示的问题
+  escapebegin=\begin{CJK*}{GBK}{hei},escapeend=\end{CJK*},   % 代码中出现中文必须加上，否则报错
+  texcl=true}
+
+
+\lstset{escapeinside={(§}{§)}}
+%\usepackage[numbered]{matlab-prettifier}
+\sloppy
+
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter|}{0.5em}{}
+\titleformat{\section}[hang]{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}[hang]{\normalfont\bfseries}{\thesubsection.}{0.5em}{}
+
+\DeclareMathOperator{\sign}{sgn}
+
+
+
+%\linenumbers*[1]
+%%%%%%%%%%%%%%%%%%%%%%!!!!!!!!!!!!!!!!!!!!!!!!!!!!Pay attention to color part for corrections!!!!!!!!!!!!!!!!!!!!!!!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\oddsidemargin 10pt
+\evensidemargin 10pt
+\topmargin 10pt
+\headheight 0.5cm
+\headsep 0.5cm
+\topskip 0.5cm
+%\textheight 20cm
+\textheight 17.5cm
+%\textwidth 14.5cm
+\textwidth 13cm
+\footskip 0.5cm
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\myfootnote"#1"#2{\def\thefootnote{#1}\footnote{#2}
+\def\thefootnote{\arabic{footnote}}}
+\def\textbf{\bf}%
+\newcommand{\namelistlabel}[1]{\mbox{#1}\hfil}
+\newcommand{\define}{\stackrel{\rm def}{=}}
+%
+\def\shorttitle#1{\def\shorttitleintern{#1}}
+\def\shortauthors#1{\def\shortauthorsintern{#1}}
+\def\firstpage#1{\def\thefirstpage{#1}\setcounter{page}{#1}}
+\def\dd{\displaystyle}
+\newcommand{\reff}[1]{(\ref{#1})}
+%
+%      algorithm with list
+%
+\newcommand{\alglist}{
+\begin{list}{步 1}
+{\setlength{\leftmargin}{0.7 in}\setlength{\labelwidth}{1.0 in}}
+}
+\newcommand{\descriplist}{
+\begin{list}{步 1}
+{\setlength{\leftmargin}{0.56 in}\setlength{\labelwidth}{1.0 in}}
+}
+%
+\newcommand{\eproof}{$\quad \Box$}
+%\newcommand\proof{\noindent {\heiti 证明:\hspace{.05in}}}
+\renewcommand\proof{\indent {\heiti 证明:\hspace{.05in}}}
+%
+%    New theorem commands
+%
+\newtheorem{theorem}{定理\hspace*{.1mm}}[section]
+\newtheorem{proposition}[theorem]{性质\hspace*{.1mm}}
+\newtheorem{lemma}[theorem]{引理\hspace*{.1mm}}
+\newtheorem{corollary}[theorem]{推论\hspace*{.1mm}}
+\newtheorem{algorithm}[theorem]{算法\hspace*{.1mm}}
+\newtheorem{assumption}[theorem]{假设\hspace*{.1mm}}
+\newtheorem{definition}[theorem]{定义\hspace*{.1mm}}
+\newtheorem{remark}[theorem]{注\hspace*{.1mm}}
+\newtheorem{example}[theorem]{例\hspace*{.1mm}}
+\newtheorem{statement}[theorem]{结论\hspace*{.1mm}}
+%
+%=================eqno style=================
+%
+\renewcommand{\theequation}
+{\arabic{chapter}.\arabic{section}.\arabic{equation}}
+%
+\thispagestyle{empty}
+\renewcommand{\baselinestretch}{1.4}
+%\firstpage{1}
+
+%---------------------------------------------------
+% Start your paper from here
+%---------------------------------------------------
+%
+
+\begin{document}
+\begin{CJK*}{GBK}{song}
+
+
+\vspace*{1.5cm}
+\begin{center}
+\Huge\bf 数学物理方程爆破解的\\ 数值诊断方法
+\end{center}
+
+\vskip 0.8cm
+\centerline{\large D. L. Lukyanenko, 张晔}
+\vskip .2cm
+
+
+\vskip .9cm
+
+\begin{figure}[h!]
+\begin{center}
+\begin{minipage}[b]{0.5\linewidth}
+\epsfig{file=Chapter-1-1.eps,width=0.95\linewidth}
+\end{minipage}
+\end{center}
+\end{figure}
+
+
+\vspace*{2.5cm}
+%\vspace*{1.5cm}
+\begin{center}
+\large 高等教育出版社, 北京, 2020年7月
+\end{center}
+
+\newpage
+\thispagestyle{empty}
+\vspace*{2cm}
+\begin{center}
+\sc\huge Blow-up for equations of mathematical physics: numerical diagnostics
+\end{center}
+
+\vskip .8cm
+\centerline{\large by}
+\vskip .8cm
+\begin{center}
+\sc\large D. L. Lukyanenko and Y. Zhang
+\end{center}
+
+\vspace{5.5cm}
+\begin{center}
+\Large Higher Education Press,  Beijing,  China
+\end{center}
+
+%\vspace{1cm}
+\vspace{.1cm}
+\begin{center}
+{\Large July,  2020}
+\end{center}
+
+\newpage
+\pagenumbering{roman}
+\noindent{\large\bf 前言}
+\bigskip
+
+*****************************
+
+本书的出版得到了广东省区域联合基金-青年基金项目(2019A1515110971)、深圳北理莫斯科大学
+和北京理工大学数学与统计学院的共同支持，在此深表感谢！
+
+\bigskip
+
+\begin{flushright}
+A. G. Lukyanenko; 国立莫斯科大学理学院, 莫斯科.\\
+张晔; 北京理工大学数学与统计学院, 北京.\\
+2020年7月.
+\end{flushright}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\pagenumbering{arabic}
+
+
+
+\chapter*{前言}\label{chapter0}
+
+
+近些年来有关“极端条件下的模式”的课题在飞速发展，或者换一个称呼“爆破”(这个称呼也经常被用在术语“解的爆破”上)。简单点说，“爆破”的模式，就是在无穷出且有限时间内解的范数变换(在任何函数空间中)。假设现在有这样一个函数~$u(x,t)$，其中~$t$ 表示时间，~$x$ 是一个在函数空间中合适的自变量，因此该函数可以写成~$u(x)(t)$，则当时间趋近于~$T_{bl}$ 时解的爆破可以写成入下形式:
+\begin{equation*}
+\lim_{t\to T_{bl}}\|u(x)(t)\|=+\infty.
+\end{equation*}
+在物理学上这样的解也被描述成爆炸，不稳定发展等等。到现在为止，存在三组主要的研究“爆破(blow-up)”这种情况的分析方法。第一种是 С.\;И.~Похожаева(S. I. Pohozhaeva)提出的非线性容量的方法(试验函数)以及在不同选择中的Э.~Митидиери~(E. Mitidiert)法，位于书中的\cite{Po},第二种是Х.~А.~Левина(H.A. Levina)提出的动力学方法以及它的变式，位于书中\cite{Levine1, Levine2,Kal, Al, Korpusov}，第三种是由A.A. Samarsky, V.A. Galaktionov, S.P. Kurdyumov以及A.P. Mikhailova提出的基于比较不同特征的自成型规范法 位于书中\cite{Samar} (см. 同样位于 \cite{Galact}).然而在数值上对“极端条件下的模式”问题的研究也同样紧迫。它包括了至少3个任务:1)在可接受的精确度下得到当时间趋近时的解的爆破，2)得到当时间趋近于~$T_{bl}$ 时解的爆破的分析结果，且能对于具体的模型得到时间~$T_{bl}$ 的具体数值。3)能在分析失败的情况下自己建立解的爆破的实际模型。
+
+这些所有的任务都很难，而且很多的研究都需要解决这些任务。所以，也经常使用一些减少网格间距(通过时间或者空间)~\cite{PelXu, Georg}和经验性评估等相适应的方法~\cite{Georg}.它们结合了基于从时间变量到延展变量的方法~\cite{Turner}，例如，曲线的长度，在某些情况下还需根据它的增长而对解使用等比放缩~\cite{BerKohn}。
+
+然而，每一种方法都有一个有限的应用范围。因此，等比放缩仅被允许用在已知方程的阶的情况下。除了被运用在工作中的这些方法外~\cite{Cho}，还需要使用确定的右部分单调的性质以及需要选择某个辅助函数，存在和求解是一个单独的问题。后者也适用于苏德曼变换~\cite{Turner}，但也同换元法一样，仅仅只适用于一般的微分方程。
+
+在本书中概述了对于物理学中的一些有关解的爆破的数学任务的数值分析方法，该方法基于理查森提出的对精确度有效评估的理论，其核心思想在~\cite{BUE_basic_1, BUE_basic_2,Kalitkin_book_3}.笔者第一次意识到该方法能用于判断爆破的可行性是基于~\cite[глава~8]{Al}.简而言之，在求解光滑解的过程中，对于已知的图解，有效精确度阶的确定更趋向于理论~--因此，有效精确度阶的显著变化就能证明存在解的爆破。我们认为这种方法是十分可行的，因为它是普遍的(可能是用于任何一个一般微分方程和偏导数方程)并且它对于先验信息的要求微乎其微。 只需要知道爆破的时间值~$T_{bl}$的上界就足够了。然而，就算不知道它的值，也可以找到~$T_{bl}$的近似值和提出解的爆破的假设。在思想上，此方法与当网格的参数趋近于零(对于光滑解而言误差应该减小)时，通过合适的误差对数值解的爆破的鉴定方法类似。
+
+在教学参考书中，概述了笔者对解的爆破(blow-up)这一现象的数值研究工作，此外，该书的第一作者也将多年研读“数解法”的经验给运用到国立莫斯科罗曼罗索夫大学(МГУ)应用数学物理系的数学教研组的工作中。笔者相信，对于任何一种数值方法，如果没有实际的理论依据，是不可能将此方法解释清楚的，而只有将数值方法有效地解释说明，学生们才能明白自己所使用的数值方法有那些优点和缺点，还能从中获得并强化与之相关的实际操作技能。在这方面，本教学参考书的一个亮点就是，这些数值方法的实际应用都是在MatLab编程软件上进行的，这就有利于学生自主应用研究方法来解决日常科学工作中出现的问题。
+
+根据难度递增的原则，本书被分成了五个章节。第一章讨论了常微方程中的柯西问题。第二章介绍了在关于时间的一阶微分方程中，对简单边界问题的求解方法。在第三章中会涉及更复杂的边界问题(关于时间的二阶微分方程，时间导数下的非线性方程等等)，此外，还详细地讨论了有关提高方法的数值执行效率(矩阵变换的高效方法，对中间运算及数据储存进行合理地安排等等)的问题。第四章涉及关于空间变量中的高阶导数方程的问题，还讨论了有关所得的解的精确度阶过高或者解不够平滑等情况。第五章分析了在无线域中寻找解的问题。上述章节中的所有方法，全都可以在MatLab软件上运用。
+
+%该书中所使用的“数解法”的材料是本书第一作者为МГУ的物理系数学教研组的本科生和研究生以及物理系巴库分院的学士生所授。
+
+本书的主要目的是给读者提供解决问题的工具，使他们能有效地运用本书中的方法(包括程序综合体)来解决科研工作中遇到的问题。同时，作者也希望他们所选择的材料讲解方式可以使读者在解决更复杂的问题时，比如多维排列，能够归纳出本书所提及的方法。
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\chapter{一阶常微分方程柯西问题爆破解的诊断}\label{Chapter_1}
+
+在这一章，我们通过一个具体的例子来介绍我们所关心的数学问题。考虑如下一阶常微分方程的柯西问题（它是化学动力学中一个简单的热传导模型）：
+\begin{equation}{}
+    \label{Ch1_test_syst}
+    \left\{
+    \begin{aligned}
+        &\dfrac{d u}{d t} = u^2, \quad t \in (t_0,T], \\
+        &u(t_0) = u_0 > 0.
+    \end{aligned}
+    \right.
+\end{equation}
+
+为了确定起见，我们代入以下参数：
+\begin{equation}
+    \label{Ch1_set_of_parameters}
+    t_0 = 0, \quad T = 2, \quad u_0 = 1.
+\end{equation}
+
+可以验证，函数
+\begin{equation}
+    \label{Ch1_exact_solution}
+    u(t) = \dfrac{1}{u_0 - t}
+\end{equation}
+是问题~\eqref{Ch1_set_of_parameters}-~\eqref{Ch1_set_of_parameters}的一个解。 我们将函数\eqref{Ch1_exact_solution}（其中参数$u_0$的取值见~\eqref{Ch1_set_of_parameters}）在图~\ref{Fig_1_1}中画出。可以看出，函数~(\ref{Ch1_exact_solution})在有限的时间内（在~$t=1$ 内）趋向了无穷，并且在~$t=1$点没有定义。但是我们认定柯西问题的解是定义在连通集合（一段区间）内的函数，所以问题~\eqref{Ch1_test_syst}的解是函数~(\ref{Ch1_exact_solution})限制于 $t \in [0,1)$ 时的部分。对于此类情形，我们说方程的解经历了爆破（"blow-up"）。
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Chapter-1-1.eps}\\
+    \caption{满足方程~\eqref{Ch1_test_syst}和参数集合~\eqref{Ch1_set_of_parameters}的函数。在阴影线表示的区域里函数 $u(t)$不是相应的柯西问题的解。}
+    \label{Fig_1_1}
+\end{figure}
+
+需要注意的是，在大部分科学领域的实际问题中，某个参数在有限的时间里趋向正无穷的情形是不可能存在的。而这个参数可能在相应的简化的数学模型中的解中趋向无穷。在这种情况下，我们可以认为真实问题超出了简化数学模型的可应用范围。例如，在化学反应的热传导问题中，只有在无限多的反应物集中在相当小的体积的假设下，才有可能在$ t = 1 $附近达到无穷。显然，这种情况在实际中是不会遇到的，因为反应物的量总是有限的，这会最终导致反应的停止，以及在某个固定的小于$1$的时间点$t$时停止放热（在这种情况下，总放热量是有限的）。因此，如果我们弄清所考虑物理问题的合理模型，并同时考虑到守恒定律和反应传播速率，那么所得的数学模型将给出从起始时间点开始都存在的解。 但是，在实际情形中精确模型的构造（由于物理过程的复杂性，缺乏准确的数据等等）或者甚至是数值解的求解（由于方程式的极端复杂性）都可能是无法实现的。因此，它们通常仅限于描述过程特征的简化模型。近似模型中的解趋向于无穷可能对应真实的爆炸（非常大的热量释放）。
+
+但即使简化后的模型也十分复杂，以至于解决它们的唯一有效方法就是使用数值方法获得近似数值解。对于任意~$t$的取值都存在数值解（对于适当近似值的选择可以查阅~\pageref{rem02}页的说明~2）。我们以研究过的测试问题~\eqref{Ch1_test_syst}--\eqref{Ch1_set_of_parameters}为例进行演示。
+
+
+\section{数值解的搜寻}
+
+
+将问题~\eqref{Ch1_test_syst}改写为以下形式
+\begin{equation}
+    \label{Ch1_ODE}
+    \left\{
+    \begin{aligned}
+        &\dfrac{d u}{d t} = f(u), \quad t \in (t_0,T],\\
+        &u(t_0) = u_0,
+    \end{aligned}
+    \right.
+\end{equation}
+此处$f(u) = u^2$.
+
+引入对时间$t$的等长区间$T_M$，间隔大小为$\tau = (T - t_0)/M$: $T_M = \{t_m, \; 0 \leqslant m \leqslant M: \; t_m = t_0 + m \tau\}$。注意到，这个区间有$M + 1$个节点，或者等效地，$M$个小间隔。在区间$T_M$的节点处引入函数$u(t)$的网格（区间？）值的表示: $u_m \equiv u(t_m)$, $0 \leqslant m \leqslant M$。
+
+对于自治系统~\eqref{Ch1_ODE}写出单阶段Rosebrock算法群ROS1~\cite{Kalitkin_book_2,Hairer&Wanner}
+
+\begin{equation}
+    \label{Ch1_ROS1_ODE}
+    \begin{aligned}
+        &u_{m + 1} = u_m + (t_{m + 1} - t_m) \, \mathrm{Re} \, w_1 \, , \quad 0 \leqslant m \leqslant M - 1,\\
+        &\mbox{这里 $w_1$ 定义于方程} \\
+        &\!\Big(1 - a_{11} \, (t_{m + 1} - t_m) \, f_u(u_m)\Big) w_1 =
+        f (u_m).
+    \end{aligned}
+\end{equation}
+这里$a_{11}$~---定义算法性质的参数(关于这一点的详细内容请看章节 1~\cite{Kalitkin_book_2}的~1.2.3部分)。特别地，对于$a_{11} = 0$算法~\eqref{Ch1_ROS1_ODE}退化为一个明确的单阶段Runge-Kutta算法ERK1(欧拉算法）；当$a_{11} = 1$~---退化为反欧拉算法DIRK1；当$a_{11} = 1/2$~--- 退化为“半隐式”算法；当$a_{11} = (1 + i)/2$~--- 退化为带复系数的单阶段Rosenbrock算法CROS1。
+
+以下是Matlab函数的示例，该函数根据图~\eqref{Ch1_ROS1_ODE}实现对问题~\eqref{Ch1_ODE}的数值解的寻找。
+
+\begin{lstlisting}
+function u = ODESolving(t_0,T,M,u_0,f,f_u,a_11)
+
+    % 函数寻找常微分方程的
+    % 近似数值解
+
+    % 输入的参数：
+    % t\_0, T - 初始和终止时间点($t_0$ 和 $T$)
+    % M - 关于时间的区间内小间隔的数量
+    % u\_0 - 初始条件
+    % f 和 f\_u - 定义了正在求解的常微分方程的非齐次性
+    % 以及对变量u的导数
+    % a\_11 - 算法参数 (0 - ERK1, 1 - DIRK1,
+    % 1/2 - “半隐式”算法, (1 + 1i)/2 - CROS1)
+
+    % 输出的参数：
+    % u- 储存常微分方程解的网格数值
+
+    tau = (T - t_0)/M;  % 区间内间隔大小的定义
+    t = t_0:tau:T;      % 区间的定义
+
+    % 网格（区间？）值u(t)数组的内存分配
+    u = zeros(1,M + 1);
+
+    u(1) = u_0;         % 初始条件的给定
+
+    for m = 1:M
+
+        % ROS1算法的实现
+        % （对于自治方程）
+        w_1 = (1 - a_11*(t(m + 1) - t(m))*...
+            f_u(u(m)))^(-1)*f(u(m));
+        u(m + 1) = u(m) + (t(m + 1) - t(m))*real(w_1);
+
+    end
+
+end
+\end{lstlisting}
+
+
+\emph{说明 } 需要注意的是，当访问向量$u$ 和 $t$的部分时所有的索引需要位移$+1$位（与上述解析公式相比），因为在Matlab中数组元素的编号从$1$开始（因此$u_0 \equiv u(1)$, $u_1 \equiv u(2)$, \ldots, $u_M \equiv u(M + 1)$）。
+
+
+可以使用以下命令集合来运行此函数以及接下来对解的处理：
+%\lstinputlisting{test_1_1_ODESolving.m}
+\begin{framed}
+\begin{lstlisting}
+% 初始和终止时间的定义
+t_0 = 0; T = 2;
+
+M = 50; % 区间内小间隔的数量
+
+f = @(u) u^2;       % 函数 (§ $f(u) = u^2$ §) 的定义
+f_u = @(u) 2*u;     % 函数 (§ $f_u(u) = 2u$ §) 的定义
+
+u_0 = 1; % 初始条件的定义
+
+% 算法ROS1的参数 (§ $a_{11}$ §) 的定义
+% (需要展开注释需要注释的部分)
+a_11 = (1 + 1i)/2;  % CROS1
+% a\_11 = 1;         % DIRK1
+% a\_11 = 1/2;       % “半隐式”算法
+% a\_11 = 0;         % ERK1
+
+% 执行函数 ODESolving 进行解的计算
+u = ODESolving(t_0,T,M,u_0,f,f_u,a_11);
+
+% 解的处理
+figure;
+% 绘制确解的图像
+plot([0:0.01:2],1./(u_0 - [0:0.01:2]),'--g',...
+    'LineWidth',2); hold on;
+% 绘制求出的近似解的图像
+plot(t_0:(T - t_0)/M:T,u,'-ok','MarkerSize',3,...
+    'LineWidth',1); hold on;
+axis([0 2 -30 30]); xlabel('t'); ylabel('u');
+\end{lstlisting}
+\end{framed}
+
+这个函数通过在$M = 50$时的算法~\eqref{Ch1_ROS1_ODE}，以及通过对参数$a_{11}$进行不同的取值，对测试问题~\eqref{Ch1_test_syst}--\eqref{Ch1_set_of_parameters}求解，工作的结果在~\ref{Fig_1_2}上予以展示。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.00\textwidth]{Chapter-1-2.eps}\\
+    \caption{在相同数量的小间隔$M = 50$时运用算法~\eqref{Ch1_ROS1_ODE}，以及通过对参数$a_{11}$进行不同的取值，对测试问题~\eqref{Ch1_test_syst}--\eqref{Ch1_set_of_parameters}求解的结果。}
+    \label{Fig_1_2}
+\end{figure}
+
+可以发现，对于所有$t \in [t_0,T] \equiv [0,2]$的取值都存在一个数值解，因此出现了一个合理的问题，即如何分析确定解爆裂的事实并确定哪一部分数值解我们可以确信，而哪些不能。这个问题对于解决更复杂的问题尤其重要，这些问题的解析解是无法求取的。接下来我们将详细研究这个问题。
+
+
+
+\section{解的爆破现象的数值分析}
+
+我们在此书中讨论的解的爆破现象的数值分析方法基于误差的后验渐近精确估计的计算（请参考，例如\S~2，章节Ⅱ，\cite{Kalitkin_book_3}）。
+
+假设我们通过使用对时间$t$均分网格$T_M$，步长为$\tau = (T - t_0)/M$: $T_M = \{t_m, \; 0 \leqslant m \leqslant M: \; t_m = t_0 + m \tau\}$的$p$阶精确算法已经找到了柯西问题~\eqref{Ch1_test_syst}的网格数值解。这意味着，对于所有的节点$t \in T_M$都成立等式
+\begin{equation}
+    \label{Ch1_Runge-Romberg_formula_deducing_1}
+    u(t) = u^{(M)}(t) + O(\tau^p).
+\end{equation}
+这里的上标 $(M)$ 意味着通过相应的有$M$个区间的网格的数值算法找到了 $u^{(M)}(t)$。
+
+现在我们将等式~\eqref{Ch1_Runge-Romberg_formula_deducing_1} 写成以下形式
+\begin{equation}
+    \label{Ch1_Runge-Romberg_formula_deducing_2}
+    u(t) = u^{(M)}(t) + c(t) \tau^p + O(\tau^{p + 1}),
+\end{equation}
+将近似解$u(t)$的误差$u(t) - u^{(M)}(t)$的泰勒级数的首项提取出来。这里我们假设存在相应的连续导数。
+
+假设我们通过已知$p$阶精度的算法在有$M$个区间（）区间的数量唯一确定了网格步长$\tau$的固定网格上进行运算$u^{(M)}(t)$, $t \in T_M$。  这样, 方程~\eqref{Ch1_Runge-Romberg_formula_deducing_2} 含有两个未知量: $u(t)$ 和 $c(t)$. 为了求出这两个未知量, 我们需要两个方程. 在$r$倍紧密的网格（）就是说在含有$rM$个区间的网格上进行计算，得到第二个方程：
+\begin{equation}
+    \label{Ch1_Runge-Romberg_formula_deducing_3}
+    u(t) = u^{(rM)}(t) + c(t) \Big(\frac{\tau}{r}\Big)^p + O\bigg(\Big(\frac{\tau}{r}\Big)^{p + 1}\bigg).
+\end{equation}
+
+从方程~\eqref{Ch1_Runge-Romberg_formula_deducing_3} 减去方程~\eqref{Ch1_Runge-Romberg_formula_deducing_2} 然后通过得到的等式表达 $c(t)$:
+\begin{equation*}
+    \label{Ch1_Runge-Romberg_formula_deducing_4}
+    c(t) = \frac{u^{(rM)}(t) - u^{(M)}(t)}{r^p - 1}\frac{r^p}{\tau^p} + O(\tau^1).
+\end{equation*}
+
+因此,
+\begin{equation}
+    \label{Ch1_Runge-Romberg_formula_deducing_5}
+    R^{(rM)}(t) \equiv c(t) \Big(\frac{\tau}{r}\Big)^p = \frac{u^{(rM)}(t) - u^{(M)}(t)}{r^p - 1} + O(\tau^{p + 1}).
+\end{equation}
+
+在等式右侧的分式~\eqref{Ch1_Runge-Romberg_formula_deducing_5}, 是精确解$u(t)$泰勒级数的$p$阶项的后验渐近精确估计，或者同样地，是近似解$u(t)$的误差$u(t) - u^{(rM)}(t)$的泰勒级数的首项的后验渐近精确估计。因此，
+\begin{equation*}
+    \label{Ch1_Runge-Romberg_formula_deducing_6}
+    u(t) = u^{(rM)}(t) + R^{(rM)}(t) + O(\tau^{p + 1}).
+\end{equation*}
+从这里可以得出, 当 $\tau \to 0$ 时 $R^{(rM)}(t)$ 大于所有误差$u(t) - u^{(rM)}(t)$的泰勒级数中的其他项，这一项可以看作$u^{(rM)}(t)$的误差的后验渐近精确估计。 忽略$O(\tau^{p + 1})$（但此时不要忘记相应公式的渐近特征），之后将 $R^{(rM)}(t)$ 当作
+\begin{equation}
+    \label{Ch1_Runge-Romberg_formula_deducing_7}
+    R^{(rM)}(t)  = \frac{u^{(rM)}(t) - u^{(M)}(t)}{r^p - 1},
+\end{equation}
+这就是经典的龙格-龙贝格公式。
+
+我们再在一个网格上进行计算~--- 网格有 $r^2M$个区间,~--- 我们可以这样计算
+\begin{equation*}
+    \label{Ch1_Runge-Romberg_formula_deducing_8}
+    R^{(r^2M)}(t) \equiv c(t) \Big(\frac{\tau}{r^2}\Big)^p = \frac{u^{(r^2M)}(t) - u^{(rM)}(t)}{r^p - 1} + O(\tau^{p + 1}).
+\end{equation*}
+
+注意到
+\begin{equation}
+    \label{Ch1_Runge-Romberg_formula_deducing_9}
+    R^{(rM)}(t) \equiv c(t) \Big(\frac{\tau}{r}\Big)^p, \quad R^{(r^2M)}(t) \equiv c(t) \Big(\frac{\tau}{r^2}\Big)^p,
+\end{equation}
+并且通过这两个式子的范数的关系求出精确度有效阶数的表达式
+\begin{equation}
+    \label{Ch1_Runge-Romberg_formula_deducing_10}
+    p^{eff}  = \log_r \frac{\|R^{(rM)}(t)\|}{\|R^{(r^2M)}(t)\|},
+\end{equation}
+通过这个式子计算出在$t \in [t_0,T]$时间段的近似解且它具有这样的性质: 当 $\tau \to 0$时$p^{eff} \to p^{\, theor} \equiv p$ . 注意，我们这里所说的就是精确度\emph{有效的}阶数, 因为他忽略公式~(\ref{Ch1_Runge-Romberg_formula_deducing_7})（请和(\ref{Ch1_Runge-Romberg_formula_deducing_5})进行比较）的近似特征，通过已知的近似解计算得出。
+
+精确度的有效阶数也可以通过对每个单独的网格节点$t_m \in T_M$, $0 \leqslant m \leqslant M$进行计算。相应的公式可以从~\eqref{Ch1_Runge-Romberg_formula_deducing_9}的公式关系得到：
+\begin{equation}
+    \label{Ch1_Runge-Romberg_formula_deducing_11}
+    p^{eff}(t)  = \log_r \frac{R^{(rM)}(t)}{R^{(r^2M)}(t)}.
+\end{equation}
+由此我们得知，如果误差函数泰勒展开级数中更高阶的项胜于~$p$阶项，在~(\ref{Ch1_Runge-Romberg_formula_deducing_11})中的对数变量可能是负数。这种情况可能会发生，比如，如果在特定的问题特定的点第$p$项的系数偶然等于零或者如果网格还是个比较稀疏的。所以在实际里，为了避开计算过程的突然停止，有必要在~(\ref{Ch1_Runge-Romberg_formula_deducing_11})选取分子和分母的模。
+
+现在根据上述推论写出执行精确度有效阶估计的实际代码，这将在以后让我们在解的异常存在的时候对其进行分析。
+
+首先我们引入基础网格$T_M$: $\{t_m\}$, $0 \leqslant m \leqslant M$。然后从基础网格开始，对网格进行逐步变细，并在通过$p$阶精确度得到的网格$T_{r^{s - 1}M}$ ($s$~--- 网格集合$s = \overline{1,S}$ 中的网格序号)上求出此方程的解
+\begin{equation*}
+    u_{(s)}(t) \equiv u^{(r^{s - 1}M)}(t)
+\end{equation*}
+在这种情况下，如果~$r$是整数，每下一个网格$T_{r^{s - 1}M}$有和基础网格$t_m \in T_M$, $0 \leqslant m \leqslant M$的节点重合的节点。在这些节点$t$我们可以在每个编号为$s$的网格上通过龙格-龙贝格公式~\eqref{Ch1_Runge-Romberg_formula_deducing_7}进行误差的后验渐近精确估计
+\begin{equation*}
+	%\label{Error_estimation}   % Эта ссылка не используется!
+	\Delta_{(s)}(t_m) \equiv R^{(r^{s - 1}M)}(t_m) =  \frac{u_{(s)}(t_m) - u_{(s - 1)}(t_m)}{r^p - 1},
+\end{equation*}
+并在整个时间段$t \in [t_0,T]$估计~\eqref{Ch1_Runge-Romberg_formula_deducing_10}精确度的有效阶。
+\begin{equation}
+    \label{p_eff_total}
+	p^{\, eff}_{(s)} = \log_{r}{\dfrac{\sqrt{\sum\limits_{m = 0}^M \big(u_{(s - 1)}(t_m) - u_{(s - 2)}(t_m)\big)^2}}{\sqrt{\sum\limits_{m = 0}^M  \big(u_{(s)}(t_m) - u_{(s - 1)}(t_m)\big)^2}}}
+\end{equation}
+(这里选择了最适合的范数~---欧几里得范数)。
+当在整个时间段$t \in [t_0,T]$问题的解有对时间的$p$次连续导数，有如下收敛性
+\begin{equation*}
+    \label{convergence_1}
+    p^{\, eff}_{(s)} \xrightarrow[s \to \infty]{} p^{\, theor} \equiv p.
+\end{equation*}
+收敛性的破坏意味着精确解在时间段$t \in [t_0,T]$光滑性的缺失。换句话说，等于$p$的理论精确度的阶数描述了相应数值方法给出精确解泰勒级数的前$p$项(在其存在的时候！)的性能。而精确度的有效阶有利于我们确定，实际上给出了多少精确解泰勒级数的项。具体来说，当$p^{\, eff} \leqslant 0 $时可以得出无法将精确解分解为泰勒级数的结论，这意味着不存在解(或者换句话说，在时间段$t \in [t_0,T]$某个点解的爆破)（或者解的光滑性的缺失）。
+
+为了确定发生解爆破的具体的时间点，可以点态地~\eqref{Ch1_Runge-Romberg_formula_deducing_11}在每个节点$t_m \in T_M$, $0 \leqslant m \leqslant M$估计精确度有效阶，
+\begin{equation}
+    \label{p_eff_for_every_time}
+	p^{\, eff}_{(s)}(t_m) = \log_{r}{\dfrac{|u_{(s - 1)}(t_m) - u_{(s - 2)}(t_m)|}{|u_{(s)}(t_m) - u_{(s - 1)}(t_m)|}}.
+%\log_{r}{\dfrac{|u^{(r^{s - 2} M)}(t) - u^{(r^{s - 3}M)}(t)|}{|u^{(r^{s - 1}M)}(t) - u^{(r^{s - 2} M)}(t)|}},
+\end{equation}
+
+在原问题的解有对时间的$p$阶连续导数的点$t$存在如下收敛性
+\begin{equation*}
+    \label{convergence_2}
+    p^{\, eff}_{(s)}(t) \xrightarrow[s \to \infty]{} p^{\, theor} \equiv p
+\end{equation*}
+并且对应的误差估计是当$s \to \infty$时(或者$N,M \to \infty$)渐近精确的。收敛性破环意味着精确解光滑性的丢失。具体来说，针对幂"奇异性"$u(t) \sim (T_{bl} - t)^{-\beta}$，其中$T_{bl}$是爆破时间(指数"bl"~---"blow-up"，"爆破"的缩写)的情况，对于任意$t > T_{bl}$ 精度有效阶 $p_{(s)}^{\, eff}(t) \xrightarrow[s \to \infty]{}  -\beta$. 这有助于寻找相应的幂数$\beta$。如果$p_{(s)}^{\, eff}(t) \xrightarrow[s \to \infty]{}  -\infty$对于任意$t > T_{bl}$，我们可以得出解是指数级地增长，就是说$u(t) = \infty$；如果$p_{(s)}^{\, eff}(t) \xrightarrow[s \to \infty]{} 0$对于任意$t > T_{bl}$，那么解在满足"奇异性"的邻域内的增长就是对数级的：$u(t) \sim \ln(T_{bl} - t)$。相应结论的得出可以在~\cite{BUE_basic_1,BUE_basic_2}中找到。解的爆破时间$T_{bl}$可以在精确到对时间$T_M$的基础网格区间的长度值的程度得出。
+
+
+
+
+接下来给出变形的MatLab-函数ODESolving的例子，这个函数通过CROS1方法在序号$s$的网格实现了问题~\eqref{Ch1_ODE}的解$u_{(s)}(t) \equiv u^{(r^{s - 1}M)}(t)$的近似数值解的寻找，包括了只从和基本网格$T_M$节点重合的节点选择网格点数值。
+
+\newpage
+\begin{lstlisting}
+function u_basic = ODESolving(t_0,T,M_0,u_0,f,f_u,s,r)
+    % 函数计算微分方程(ODE)的近似数值解
+
+    % 输入参数:
+    % t\_0, T - 计时初始(§ $t_0$ §)和终止(§ $T$ §)时刻
+    % M\_0 - 对时间的基础网格的区间数量
+    % u\_0 - 初始条件
+    % f 和 f\_u -定义所解的微分方程和她对u的导数的齐次性
+    % s - 网格序号，在此网格求解(如果s = 1，那么在基础网格求解)
+    % r - 网格加细的系数
+
+    % 输出参数:
+    % u\_basic - 含有只和基础网格节点重合的微分方程解网格点数值的数组
+
+    % 构造加细 $r^(s - 1)$ 倍的序号为s的网格
+
+    M = M_0*r^(s - 1);  % 计算序号s网格的区间数量
+    tau = (T - t_0)/M;  % 定义加细网格的步长
+    t = t_0:tau:T;      % 定义加细网格
+
+    % 分配内存给数组 u\_basic，在这上面将存储和基础网格节点重合的节点值
+    u_basic = zeros(1,M_0 + 1);
+
+    % 分配内存给在加细网格的解的节点值数组
+    u = zeros(1,M + 1);
+
+    u(1) = u_0;         % 给定初始条件
+
+    for m = 1:M
+
+        % CROS1算法的实现
+        % (对于自治函数)
+        w_1 = (1 - (1 + 1i)/2*(t(m + 1) - t(m))*...
+            f_u(u(m)))^(-1)*f(u(m));
+        u(m + 1) = u(m) + (t(m + 1) - t(m))*real(w_1);
+
+    end
+
+    % 从数组u选择和基础网格重合的节点的节点值
+    for m = 1:(M_0 + 1)
+        u_basic(1,m) = u((m - 1)*r^(s - 1) + 1);
+    end
+
+end
+\end{lstlisting}
+
+
+\emph{推论 1.} 再次注意到，这里及以后当访问向量$u$和$t$的分量时所有的索引位移$+1$，因为在MatLab数组元素序号从$1$开始(所以$u_0 \equiv u(1)$, $u_1 \equiv u(2)$, \ldots, $u_M \equiv u(M + 1)$ и $t_0 \equiv t(1)$, $t_1 \equiv t(2)$, \ldots, $t_M \equiv t(M + 1)$)。
+
+\emph{推论 2.} \label{rem02} 需要注意的是, 算法CROS1 ($a_{11} = \frac{1 + i}{2}$) 有助于爆破特性的数值诊断~\cite{BUE_basic_1,BUE_basic_2}避开数值溢出。所以这里给出的MatLab-函数和所有以下的例子只针对算法CROS1。
+
+\newpage
+为了从网格$T_M$,$M = 50$开始，在不同的网格得到问题~\eqref{Ch1_test_syst}--\eqref{Ch1_set_of_parameters}的网格点解$u_{(s)}(t) \equiv u^{(r^{s - 1}M)}(t)$, $s = \overline{1,S}$集合，这个函数的执行可以通过以下指令集合实现。
+%\lstinputlisting{test_1_2.m}
+\begin{lstlisting}
+% 定义计时开始和终止时刻
+t_0 = 0; T = 2;
+
+M = 50; % 定义基础网格的区间数量
+
+f = @(u) u^2;       % 定义函数 (§ $f(u) = u^2$ §)
+f_u = @(u) 2*u;     % 定义函数 (§ $f_u(u) = 2u$ §)
+
+u_0 = 1; % 定义初始条件
+
+S = 10; % 网格数量，在这些网格上寻找近似解
+r = 2;  % 加细网格系数
+
+% 分配内存给在不同序号为(§ $s = \overline{1,S}$ §)的网格上的微分方程解网格点值的数组
+% 第一个索引 - 来自加细网格序列的网格序号s，在这些加细网格寻找解
+% 第二个索引定义数组(对于固定的s),数组中存储和基础网格节点重合的节点值
+array_of_u = zeros(S,M + 1);
+
+% "大循环", 不断在加细网格的序列上计算解S次
+% 解的节点值数组只包含和基础网格节点重合的节点值
+for s = 1:S
+    u = ODESolving(t_0,T,M,u_0,f,f_u,s,r);
+    array_of_u(s,:) = u;
+    s
+end
+
+% 存储Workspace对于接下来解的爆破诊断必要数据到文件
+save('data.mat','array_of_u','M','r','S','t_0','T');
+\end{lstlisting}
+
+
+
+由于在每个按顺序的网格的计算时间增加$r$倍，在不同网格对近似解的寻找可以通过变体的单独的代码实现，这些代码计算所有对于接下来数值诊断的必要数据并存储到文件~data.mat。他的内容将被接下来的运算中输入函数载入，而不需要重复在加细网格序列上求解。
+
+
+\newpage
+
+之后给出MatLab代码的例子，他通过利用来自已经在上个程序形成的文件data.mat里的数据的计算在时间段 $t \in [t_0,T]$~\eqref{p_eff_total}的近似解精度有效阶。
+%\lstinputlisting{BlowUpDiagnostics.m}
+\begin{lstlisting}
+% 载入在不断加细r倍的网格序列上计算的近似解的结果
+load('data.mat');
+
+% 分配内存给在不同网格上近似解计算(过程)精度有效阶数值的数组
+p_eff = zeros(S,1);
+
+% 计算精度有效阶
+p_eff(1) = NaN; % 无法计算 (§ $p^{\, eff}_{(1)}$ §)
+p_eff(2) = NaN; % 无法计算 (§ $p^{\, eff}_{(2)}$ §)
+for s = 3:S
+    p_eff(s) = log(...
+        sqrt(sum((array_of_u(s - 1,:) - ...
+        array_of_u(s - 2,:)).^2))/...
+        sqrt(sum((array_of_u(s,:) - ...
+        array_of_u(s - 1,:)).^2)))/...
+        log(r);
+end
+
+% 得出数值(§ $p^{\, eff}_{(s)}$ §)序列
+for s = 1:S
+    X = ['p^eff_(',int2str(s),')=',...
+        num2str(p_eff(s),'%6.4f')];
+    disp(X);
+end
+\end{lstlisting}
+
+注意到，无法计算$p^{\, eff}_{(1)}$ 和~$p^{\, eff}_{(1)}$是因为对于精度有效阶的寻找需要知道在前两个网格的近似解(см.~\eqref{p_eff_total})。
+
+在表~1.1和~\ref{Table_1_2}给出对于不同时间区间$t \in [t_0,T]$的序列值$p^{\, eff}_{(s)}$计算结果的例子。容易看出，对于存在柯西问题~\eqref{Ch1_test_syst}解的时间区间，精度有效阶序列$p^{\, eff}_{(s)}$收敛于理论精度阶$p^{theor} \equiv p$。对于不存在可行解的时间区间，精度有效阶序列$p^{\, eff}_{(s)}$很快收敛于小于零的数。
+\begin{table}[t]
+    \label{Table_1_1}
+    \begin{center}
+        \begin{tabular}{c||c|c|c|c|c}
+            s & $T = 0.50$ & $T = 0.90$ & $T = 0.95$ & $T = 0.99$ & $T = 2.00$ \\
+            \hline\hline
+            3 & 1.9994 & 1.9356 & 1.7304 & 0.1521 & -0.9986 \\
+            4 & 1.9998 & 1.9830 & 1.9203 & 0.9111 & -0.9999 \\
+            5 & 2.0000 & 1.9957 & 1.9789 & 1.5437 & -1.0000 \\
+            6 & 2.0000 & 1.9989 & 1.9946 & 1.8555 & -1.0000 \\
+            7 & 2.0000 & 1.9997 & 1.9986 & 1.9606 & -1.0000 \\
+            8 & 2.0000 & 1.9999 & 1.9997 & 1.9899 & -1.0000 \\
+            9 & 2.0000 & 2.0000 & 1.9999 & 1.9974 & -1.0000 \\
+            10 & 2.0000 & 2.0000 & 2.0000 & 1.9994 & -1.0000 \\
+            11 & 2.0000 & 2.0000 & 2.0000 & 1.9998 & -1.0000 \\
+            12 & 1.9999 & 2.0000 & 2.0000 & 2.0000 & -1.0000 \\
+            %13 &  & 2.0002 & 2.0000 & 2.0000 & -1.0000 \\
+            %14 &  & 1.9992 & 1.9999 & 2.0000 & -1.0000 \\
+            %15 &  & 1.9991 & 2.0002 & 2.0001 & -1.0000 \\
+            %16 &  & 2.0006 & 2.0046 & 1.9997 & -1.0000 \\
+        \end{tabular}
+    \end{center}
+    \caption{对于不同时间区间$t \in [t_0,T] \equiv [0,T]$，带有初始条件$u_0 = 1$，带有具备相同区间数$M = 50$ 和网格加细系数$r = 2$的初始网格$T_M$的问题~\eqref{Ch1_test_syst}综合计算的数值集合$p^{\, eff}_{(s)}$}
+\end{table}
+
+\begin{table}[t]
+    \label{Table_1_2}
+    \begin{center}
+        \begin{tabular}{c||c|c|c|c|c}
+            s & $T = 0.50$ & $T = 0.90$ & $T = 0.95$ & $T = 0.99$ & $T = 2.00$ \\
+            \hline\hline
+            3 & 1.9994 & 1.9803 & 1.9189 & 0.9294 & -0.9996 \\
+            4 & 1.9998 & 1.9950 & 1.9784 & 1.5443 & -1.0000 \\
+            5 & 2.0000 & 1.9987 & 1.9945 & 1.8547 & -1.0000 \\
+            6 & 2.0000 & 1.9997 & 1.9986 & 1.9603 & -1.0000 \\
+            7 & 2.0000 & 1.9999 & 1.9997 & 1.9898 & -1.0000 \\
+            8 & 2.0000 & 2.0000 & 1.9999 & 1.9974 & -1.0000 \\
+            9 & 2.0000 & 2.0000 & 2.0000 & 1.9994 & -1.0000 \\
+            10 & 2.0000 & 2.0000 & 2.0000 & 1.9998 & -1.0000 \\
+            11 & 2.0000 & 2.0000 & 2.0000 & 2.0000 & -1.0000 \\
+            12 & 1.9999 & 2.0000 & 2.0000 & 2.0000 & -1.0000 \\
+            %13 &  & 2.0000 & 2.0000 & 2.0000 & -1.0000 \\
+            %14 &  & 1.9994 & 1.9999 & 1.9999 & -1.0000 \\
+            %15 &  & 2.0064 & 2.0031 & 2.0008 & -1.0000 \\
+            %16 &  & 1.9359 & 1.9697 & 1.9931 & -1.0000 \\
+        \end{tabular}
+    \end{center}
+	\caption{对于不同时间区间$t \in [t_0,T] \equiv [0,T]$，带有初始条件$u_0 = 1$，带有具备相同初始步长$\tau = 0.01$ ($M = T/0.01$)和网格加细系数$r = 2$的网格$T_M$的问题~\eqref{Ch1_test_syst}综合计算的数值集合$p^{\, eff}_{(s)}$}
+\end{table}
+
+
+
+接下来给出Matlab代码例子，这个代码利用已经创建的文件data.mat中的数据，计算在和基础网格节点重合的节点的近似解精度有效阶~(\ref{p_eff_for_every_time})，为了定义具体发生解爆破现象的时刻。
+
+
+\newpage
+%\lstinputlisting{BlowUpDiagnostics_for_each_t.m}
+\begin{lstlisting}
+% 载入在S个不断加细r倍网格组成的序列上得到的近似解计算结果
+load('data.mat');
+
+% 分配内存给在除了(§ $t_0$§)的不同节点(§ $t_m$, \: $1 \leqslant m \leqslant M$ §)(第二个数组的索引)上
+% 近似解计算(过程)精度有效阶数值的数组，因为在那个排除的节点可行解精确给定。
+% 同时在不同网格上(第一个数组的索引)进行操作
+p_eff_ForEveryTime = zeros(S,M + 1);
+
+% 精度有效阶的计算
+for m = 2:(M + 1)
+
+    % 无法计算 (§ $p^{\, eff}_{(1)}(t_m)$ §) и (§ $p^{\, eff}_{(2)}(t_m)$ §)
+    p_eff_ForEveryTime(1,m) = NaN;
+    p_eff_ForEveryTime(2,m) = NaN;
+
+    for s = 3:S
+        p_eff_ForEveryTime(s,1) = inf;
+        p_eff_ForEveryTime(s,m) = log(...
+            abs(array_of_u(s-1,m)-array_of_u(s-2,m))/...
+            abs(array_of_u(s,m)-array_of_u(s-1,m)))/...
+            log(r);
+    end
+end
+
+% 优化序号为s的网格上的计算结果
+% S = 8;
+figure;
+t = t_0:(T - t_0)/M:T; % 定义基础网格
+% 画出精度理论阶和基础网格节点的相关关系
+plot(t,t*0 + 2,'-*k','MarkerSize',3); hold on;
+% 画出精度有效阶和基础网格节点的相关关系
+plot(t(2:M+1),p_eff_ForEveryTime(S,2:M + 1),...
+    '-sk','MarkerSize',5,'LineWidth',1);
+axis([t(1) t(M + 1) -2.0 3.0]);
+xlabel('t'); ylabel('p^{eff}');
+\end{lstlisting}
+
+
+在图~\ref{Fig_1_3}展示了求解问题~\eqref{Ch1_test_syst}--\eqref{Ch1_set_of_parameters}的代码工作结果。取带有$M = 50$个区间的网格作为基础网格，并通过加细系数$r = 2$进行逐次网格加细。给出了在第八个网格上求解后的计算结果，对于这个网格得到了渐近精确解直观的点态精度有效阶$p^{\, eff}_{(s)}(t_m)$, $0 \leqslant m \leqslant M$的数值。为了比较，在图~\ref{Fig_1_4}展示了对于不同$s$的函数$p^{\, eff}_{(s)}(t)$的图像，这通过实验的方式解释了展示在~\ref{Fig_1_3}的$p^{\, eff}_{(8)}(t_m)$的渐近性。
+
+通常认为，我们不知道问题~\eqref{Ch1_test_syst}--\eqref{Ch1_set_of_parameters}的精确解，可以这样进行论述。在$S = 8$个内嵌的网格进行计算后精度有效阶$p^{\, eff}_{(s)}(t)$点态数值从$m\leqslant24$开始对于每个不同时刻$t_m$收敛于$p^{theor} \equiv 2$($p = 2$对于使用的算法CROS1)。对于$t_m$, $m \geqslant 25$，有: $p^{\, eff}_{(s)}(t_{25}) \to -1$。这就是说，当~$t=t_{25}$精确解已经不存在，而当~$t=t_{24}$解很有可能仍然存在。因此，解的爆破发生在时刻~$T_{bl} \in (t_{24},t_{25}] \equiv (0.960,1.000]$。此外，根据上述论证爆破特性和精度有效阶的关系，我们可以得出，在点$T_{bl}$解有类似极点$u(t) \sim (T_{bl} - t)^{-1}$的特性。
+
+\emph{推论 3.} 不幸的是，数值方法很少能完全保证得到经典数学证明中给出的结果。即使~$p^{\, eff}$ 不收敛于理论精度阶，严格上来说，不能在有限的步骤内得到。我们仅从以下的事实出发: 在$p^{\, eff}$ 明显地"吸引到(收敛于)"~$-1$ 之后发生趋势的变化，这种情况在实践中是极少发生的。而理论表明(这次是十分严格地说)，在存在精确经典解的时候，差分算法收敛于精确解，那么根据这种收敛性不存在可以推出不存在经典解。 更进一步，就像在~\cite{BUE_basic_1}中展示的那样，在爆破时刻之后当~$s\to+\infty$时$p^{\, eff}$的极限值可以得出特殊点的特性。从另一方面来说，精度有效阶明显的"吸引"到(收敛于)理论值有助于让我们确信在这种"吸引"区域存在经典解，还有数值解对经典解的收敛性。
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Chapter-1-3.eps}\\
+    \caption{对于问题~\eqref{Ch1_test_syst}--\eqref{Ch1_set_of_parameters}及以下参数集合:$M = 50$, $r = 2$, $S = 8$的精度有效阶$p^{\, eff}_{(S)}(t_m)$, $0 \leqslant m \leqslant M$计算结果。}
+    \label{Fig_1_3}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.05\textwidth]{Chapter-1-4.eps}\\
+    \caption{对于问题~\eqref{Ch1_test_syst}--\eqref{Ch1_set_of_parameters}及以下参数集合$M = 50$, $r = 2$ 和不同的 $s$: $s = \{3,4,5,7\}$的精度有效阶$p^{\, eff}_{(s)}(t_m)$, $0 \leqslant m \leqslant M$ 计算结果。}
+    \label{Fig_1_4}
+\end{figure}
+
+\newpage
+
+最终我们可以得出的结论是，哪部分在第八个内嵌的网格得到的数值解(请看图.~\ref{Fig_1_5})我们可以确信，哪一部分不可以。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{Chapter-1-5.eps}\\
+    \caption{对于以下参数:$M = 50$, $r = 2$, $s = 8$的问题~\eqref{Ch1_test_syst}--\eqref{Ch1_set_of_parameters}中$u_{(s)}(t) \equiv u^{(r^{s - 1}M)}(t)$的计算结果。只标出和基础网格节点重合的节点。.}
+    \label{Fig_1_5}
+\end{figure}
+
+
+\newpage
+
+在第八个网格($s = 8$)得到的解通过以下代码得到。
+
+%\lstinputlisting{draw.m}
+\begin{lstlisting}
+% 载入在S个不断加细r倍网格组成的序列上得到的近似解计算结果
+load('data.mat');
+
+% 从在不同网格的解组成的数组中选择第八个网格的网格点解
+s = 8;
+
+u = array_of_u(s,:);
+
+% 解的优化
+figure;
+t = t_0:(T - t_0)/M:T; % 定义对t的基础网格
+plot(t,u,'-ok','MarkerSize',3,'LineWidth',1);
+axis([0 2 -0 30]); xlabel('t'); ylabel('u');
+\end{lstlisting}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\chapter{伪抛物线型偏微分方程边界问题的解的爆破分析}\label{Chapter_2}
+
+本章节将对伪抛物线型偏微分方程边界问题的解的爆破进行数值分析，并探讨其特性。我们将引入长波理论中Benjamena - Bona - Mahoney – Burgers方程的例子 ~\cite{Panin_1} 需要找到定义在$(x,t) \in [a,b] \times [t_0,T]$范围的函数$u(x,t)$， \footnote{\emph{注释.} 我们提出持续到时间~$T$的数值解的寻找问题，尽管我们知道该时间下可能无解，甚至在此之前可能出现爆破。这是由于我们想要对数值解的爆破进行分析，也就意味着需要找到到该时间为止的\emph{数值的\/} 解。} 并满足方程。
+\begin{equation}
+\label{Ch2_main_equation}
+    \left\{
+        \begin{aligned}
+            &\dfrac{\partial}{\partial t} \big(u_{xx} - u\big) + u_{xx} + u u_x = 0, \quad x \in (a,b], \quad t \in (t_0,T], \\
+            &u(a,t) = 0, \quad u_x(a,t) = 0, \quad t \in (t_0,T], \\
+            &u(x,t_0) = u_{init}(x), \quad x \in [a,b],
+        \end{aligned}
+    \right.
+\end{equation}
+与通过分析方法获得的先验估计（若有）相比，还可以分析出解（若存在）爆破的事实，并确定其在时间和空间上的位置。
+
+
+\section{数值解的寻找} \label{Ch_2_Numerical_solving}
+
+对于问题~\eqref{Ch2_main_equation}的数值解我们使用直接法(MOL)~\cite{Kalitkin&Ko_1,Kalitkin,Hairer&Wanner}。该方法的实质如下：首先，在空间变量中引入网格，并对空间导数进行逼近。最后，带有偏微分方程的原始微分问题被大量的普通微分方程组（以及可能的一定数量的近似边界条件的代数方程）取代。然后，在所得的微分方程组中，对时间导数进行了逼近，使用具有复数系数CROS1的Rosenbrock一级算法可以最有效地完成这一工作~\cite{Kalitkin&Ko_1,Rosenbrock}。
+
+因此，首先我们仅在空间变量$x$中引入步长为$h = (b - a)/N$(对应$N + 1$个网格节点)带有$N$个区间的均分网格$X_N$： $X_N = \{x_n, \; 0 \leqslant n \leqslant N: \; x_n = a + n h\}$。这样，通过二阶精度空间导数的有限差分逼近我们得到微分代数方程组，这个方程组需要定义$N + 1$个未知函数$u_{n} \equiv  u_{n}(t) \equiv u(x_n,t)$, $n = \overline{0,N}$:
+\begin{equation*}
+    \left\{
+    \begin{aligned}
+        &\dfrac{d}{d t} \Big(\dfrac{u_{n + 1} - 2u_n + u_{n - 1}}{h^2} - u_n\Big) + \dfrac{u_{n + 1} - 2u_n + u_{n - 1}}{h^2} + \\
+        &\qquad\qquad + u_n \dfrac{u_{n + 1} - u_{n - 1}}{2h} = 0, \quad n = \overline{1,N - 1}, \quad t \in (t_0,T], \\
+        &u_0 = 0, \quad \frac{-\frac{3}{2}u_0 + 2u_1 - \frac{1}{2}u_2}{h} = 0, \quad t \in (t_0,T], \\
+        &u_n(t_0) = u_{init}(x_n), \quad n = \overline{0,N}.
+    \end{aligned}
+    \right.
+\end{equation*}
+
+为了方便后续转换，我们将方程组改写成下面的形式，把微分部分放在每个方程的左侧：
+\begin{equation*}
+    \left\{
+    \begin{aligned}
+        &\dfrac{d u_{n - 1}}{d t} - \big(2 + h^2\big)\dfrac{d u_n}{d t} + \dfrac{d u_{n + 1}}{d t} = - \big(u_{n + 1} - 2u_n + u_{n - 1}\big) - \\
+        &\qquad\qquad - \dfrac{h}{2}u_n \big(u_{n + 1} - u_{n - 1}\big), \, n = \overline{1,N - 1}, \quad t \in (t_0,T], \\
+        &u_0 = 0, \quad u_1 = \frac{3}{4}u_0 + \frac{1}{4}u_2, \quad t \in (t_0,T], \\
+        &u_n(t_0) = u_{init}(x_n), \quad n = \overline{0,N}.
+    \end{aligned}
+    \right.
+\end{equation*}
+
+得到的方程组即为微分代数方程组，因为它既包含微分方程又包含代数（两个由边界条件定义的方程）。通过将$u_0$ 和 $u_1$ ($u_0 = 0$, $u_1 = \frac{1}{4}u_2$) 代入前两个微分方程(当$n = \{1,2\}$)可以将方程组转化为纯微分形式：
+\begin{equation*}
+    \left\{
+    \begin{aligned}
+        &\frac{1}{4}\big(2 - h^2\big)\dfrac{d u_{2}}{d t} = -\frac{1}{2}u_2 - \dfrac{h}{8} u_{2}^2, \quad t \in (t_0,T], \\
+        &-\Big(\frac{7}{4} + h^2\Big)\dfrac{d u_2}{d t} + \dfrac{d u_{3}}{d t} = - \Big(u_{3} - \frac{7}{4}u_{2}\Big) - \\
+        &\qquad\qquad - \dfrac{h}{2}u_2 \Big(u_{3} - \frac{1}{4}u_{2}\Big), \quad t \in (t_0,T], \\
+        &\dfrac{d u_{n - 1}}{d t} - \big(2 + h^2\big)\dfrac{d u_n}{d t} + \dfrac{d u_{n + 1}}{d t} = - \big(u_{n + 1} - 2u_n + u_{n - 1}\big) - \\
+        &\qquad\qquad - \dfrac{h}{2}u_n \big(u_{n + 1} - u_{n - 1}\big), \, n = \overline{3,N - 1}, \quad t \in (t_0,T], \\
+        &u_n(t_0) = u_{init}(x_n), \quad n = \overline{0,N}.
+    \end{aligned}
+    \right.
+\end{equation*}
+
+这个包含了$N - 1$个方程和$N - 1$个未知函数$u_{n}$，$n = \overline{2,N}$的方程组，可以写成下面的形式：
+\begin{equation}
+    \label{Ch_2_System_of_ODEs}
+    \left\{
+    \begin{aligned}
+        &\emph{\textbf{D}} \dfrac{d \emph{\textbf{y}}}{d t} = \emph{\textbf{f}} \, (\emph{\textbf{y}}), \quad t \in (t_0,T],\\
+        &\emph{\textbf{y}}(t_0) = \emph{\textbf{y}}_{init},
+    \end{aligned}
+    \right.
+\end{equation}
+其中 $\emph{\textbf{y}} = \big(u_2 \; u_3 \;  \ldots \; u_{N} \big)^T$, $\emph{\textbf{f}} = \big(f_1 \; f_2 \; \ldots \; f_{N - 1}\big)^T$且$\emph{\textbf{y}}_{init} = \big(u_2(t_0) \; u_3(t_0) \;  \ldots \; u_{N}(t_0)\big)^T$.
+
+这里向量函数$\emph{\textbf{f}}$有如下结构：
+\begin{equation*}
+    f_n = \begin{cases}
+        \vspace{0.1cm}
+        -\frac{1}{2}y_1 - \dfrac{h}{8} y_1^2,&\text{若 $n = 1$,}\\
+        - \Big(y_{2} - \frac{7}{4}y_1\Big) - \dfrac{h}{2}y_1 \Big(y_{2} - \frac{1}{4}y_{1}\Big),&\text{若 $n = 2$,}\\
+        - \big(y_{n} - 2y_{n - 1} + y_{n - 2}\big) - \\
+        \qquad - \dfrac{h}{2}y_{n - 1} \big(y_{n} - y_{n - 2}\big),&\text{若 $n = \overline{3,N-1}$.}\\
+    \end{cases}
+\end{equation*}
+
+
+下面给出了MatLab函数的例子，这个函数用于实现向量函数$\emph{\textbf{f}}$的元素的计算。
+%\lstinputlisting{f.m}
+\begin{lstlisting}
+function f = f(y,h,N)
+
+    % 函数计算所求常微分方程组右侧的向量
+
+    % 输入数据：
+    % y – 在当前时间点的微分方程组向量解
+    % h – 变量x的网格步数
+    % N - 变量x的网格区间数
+
+    % 输出数据：
+    % f – 所求向量f
+
+    f = zeros(N - 1,1);
+
+    f(1) = -1/2*y(1) - h/8*y(1)^2;
+    f(2) = -(y(2) - 7/4*y(1)) - ...
+        h/2*y(1)*(y(2) - 1/4*y(1));
+    for n = 3:(N - 1)
+        f(n) = -(y(n) - 2*y(n - 1) + y(n - 2)) + ...
+            -h/2*y(n - 1)*(y(n) - y(n - 2));
+    end
+
+end
+\end{lstlisting}
+
+且矩阵 $\emph{\textbf{D}}$ 有以下非零元素：
+\begin{equation*}
+    \begin{aligned}
+        &D_{n,n-2} & &= \begin{cases}
+            1,&\text{若 $n = \overline{3,N-1}$,}\\
+        \end{cases}\\
+        &D_{n,n-1} & &= \begin{cases}
+            -\Big(\frac{7}{4} + h^2\Big),&\text{若 $n = 2$,}\\
+            - \big(2 + h^2\big),&\text{若 $n = \overline{3,N-1}$,}\\
+        \end{cases}\\
+        &D_{n,n} & &= \begin{cases}
+            \frac{1}{4}\big(2 - h^2\big),&\text{若 $n = 1$,}\\
+            1,&\text{若 $n = \overline{2,N-1}$.}\\
+        \end{cases}\\
+    \end{aligned}
+\end{equation*}
+
+
+下面给出了MatLab函数的例子，用于实现矩阵$\emph{\textbf{D}}$元素的计算。
+%\lstinputlisting{D.m}
+\begin{lstlisting}
+function D = D(h,N)
+
+    % 函数计算所求常微分方程组的微分算子矩阵
+
+    % 输入数据：
+    % h – 变量x的网格步数
+    % N – 变量x的网格区间数
+
+    % 输出数据：
+    % D – 所求微分算子矩阵
+
+    D = zeros(N - 1,N - 1);
+
+    D(1,1) = 1/4*(2 - h^2);
+    D(2,1) = -(7/4 + h^2);
+    D(2,2) = 1;
+    for n = 3:(N - 1)
+        D(n,n - 2) = 1;
+        D(n,n - 1) = -(2 + h^2);
+        D(n,n) = 1;
+    end
+
+end
+\end{lstlisting}
+
+现在我们引入时间 $t$ 下步数为 $\tau = (T - t_0)/M$且带有$M$个区间的均分网格$T_M$(即$M + 1$个结点)： $T_M = \{t_m, \; 0 \leqslant m \leqslant M: \; t_m = t_0 + m \tau\}$。
+
+最后我们可以用Rosenbrock算法CROS1来解方程组~\eqref{Ch_2_System_of_ODEs}：
+\begin{equation}
+    \label{Ch_2_CROS1}
+    \begin{aligned}
+        &\emph{\textbf{y}}(t_{m + 1}) = \emph{\textbf{y}}(t_m) + (t_{m + 1} - t_m) \, \mathrm{Re} \, \emph{\textbf{w}}_1 \, ,\\
+        &\mbox{此处 $\emph{\textbf{w}}_1$ 为代数方程组的解} \\
+        &\left[\emph{\textbf{D}} - \dfrac{1 + i}{2} (t_{m + 1} - t_m) \, \emph{\textbf{f}}_\emph{\textbf{y}}\Big(\emph{\textbf{y}}(t_m)\Big)\right] \emph{\textbf{w}}_1 = \emph{\textbf{f}} \, \Big(\emph{\textbf{y}}(t_m)\Big).
+    \end{aligned}
+\end{equation}
+此处 $\emph{\textbf{f}}_\emph{\textbf{y}}$~---元素是$\left(f_y\right)_{n,m}  \equiv \frac{\partial f_n}{\partial y_{m}}$ 的矩阵（雅可比矩阵），该矩阵对于所研究的方程组有以下非零元素：
+\begin{align*}
+    &\hspace{-1.0cm}
+    \left(f_y\right)_{n,n - 2} = -1 + \frac{h}{2}y_{n - 1}, \quad \text{若 $n = \overline{3,N - 1}$,}
+\end{align*}
+\begin{align*}
+    &\hspace{-0.0cm}
+    \left(f_y\right)_{n,n - 1} = \begin{cases}
+        \frac{7}{4} - \frac{h}{2}(y_2 - \frac{1}{2}y_{1}),&\text{若 $n = 2$,}\\
+        2 - \frac{h}{2}(y_n - y_{n - 2}),&\text{若 $n = \overline{3,N - 1}$,}\\
+    \end{cases}
+\end{align*}
+\begin{align*}
+    &\hspace{-1.1cm}
+    \left(f_y\right)_{n,n} = \begin{cases}
+        -\frac{1}{2} - \frac{h}{4}y_1,&\text{若 $n = 1$,}\\
+        -1 - \frac{h}{2}y_{n - 1},&\text{若 $n = \overline{2,N - 1}$.}\\
+    \end{cases}
+\end{align*}
+
+
+
+下面我们引入MatLab函数的例子，用于实现雅可比矩阵元素的计算$\emph{\textbf{f}}_\emph{\textbf{y}}$。
+%\lstinputlisting{f_y.m}
+\begin{lstlisting}
+function f_y = f_y(y,h,N)
+
+    % 函数计算所求常微分方程组右侧的雅可比矩阵
+
+    % 输入数据：
+    % y – 在当前时间点微分方程组的向量解
+    % h – 变量x的网格步数
+    % N – 变量x的网格区间数
+
+    % 输出数据：
+    % $f_y$ – 所求雅可比矩阵
+
+    f_y = zeros(N - 1,N - 1);
+
+    f_y(1,1) = -1/2 - h/4*y(1);
+    f_y(2,1) = 7/4 - h/2*(y(2) - 1/2*y(1));
+    f_y(2,2) = -1 - h/2*y(1);
+    for n = 3:(N - 1)
+        f_y(n,n - 2) = -1 + h/2*y(n - 1);
+        f_y(n,n - 1) = 2 - h/2*(y(n) - y(n - 2));
+        f_y(n,n) = -1 - h/2*y(n - 1);
+    end
+
+end
+\end{lstlisting}
+
+
+
+继续引入Matlab函数的例子，该函数通过算法~\eqref{Ch_2_CROS1}及前面的函数f， D 和 f\_y实现问题~\eqref{Ch2_main_equation}在变式~\eqref{Ch_2_System_of_ODEs}中的数值解的寻找。
+%\lstinputlisting{PDESolving.m}
+\begin{lstlisting}
+function u = PDESolving(a,b,N_0,t_0,T,M_0,...
+    u_init,s,r_x,r_t)
+
+    % 函数寻找偏微分方程的近似数值解
+
+    % 输入变量：
+    % a,b – 区域(§ $[a,b]$ §)在变量x的边界
+    % $N_0$ – 空间下的基础网格的区间数
+    % $t_0$, T – 计时开始(§ $t_0$ §)和终止(§ $T$ §)时刻
+    % $M_0$ – 时间下的基础网格的区间数
+    % $u_{init}$ – 定义初始条件的函数
+    % s – 网格序号，在该网格求解（若s=1，则在基础网格求解）
+    % $r_x$ , $r_t$ – 网格加细至x和t的系数
+
+    % 输出变量：
+% u-包含偏微分方程解的网格值的数组，数组中节点
+% 只和基础网格节点重合
+
+% 构造对空间变量x加细 $r_x^(s - 1)$ 倍
+% 和对时间变量t加细 $r_t^(s - 1)$ 倍的序号为s的网格
+
+
+    N = N_0*r_x^(s - 1);  % 序号为s的网格区间数的计算
+    M = M_0*r_t^(s - 1);
+
+    h = (b - a)/N;     % 确定x的网格步数
+    x = a:h:b;         % 确定x的加细网格
+    tau = (T - t_0)/M; % 确定t的网格步数
+    t = t_0:tau:T;     % 确定t的加细网格
+
+    % 为数组u分配内存
+    % 在该数组(m + 1)序号行中存储解的网格值
+    % 此网格值为时间下的基础网格中(§ $t_m$ §)时刻对应网格值
+    u = zeros(M_0 + 1,N_0 + 1);
+
+    % 为当前时间(§ $t_m$ §)下微分方程组的解的网格值数组分配内存
+    y = zeros(1,N - 1);
+
+    % 所求微分方程组的起始条件值
+    for n = 1:(N - 1)
+        y(1,n) = u_init(x(n + 2));
+    end
+
+    % 从初始条件下的 $u_{init}$ 数组的第一行开始，
+    % 从与空间中基本网格的节点重合的节点中选择网格值
+    for n = 1:(N_0 + 1)
+        u(1,n) = u_init(x((n - 1)*r_x^(s - 1) + 1));
+    end
+
+    % 引入一个索引，该索引负责在网格上选择编号为s的
+    % 与基本网格的时间点重合的时间点
+    % 在该时刻我们将跟踪在加细网格中
+    % 与基础网格中(§ $t_{m_{basic}}$ §)对应的(§ $t_m$ §)
+    m_basic = 2;
+
+    for m = 1:M
+
+        % CROS1算法实现
+
+        w_1 = (D(h,N) - (1+1i)/2*(t(m + 1) - ...
+            t(m))*f_y(y,h,N))\f(y,h,N);
+
+        y = y + (t(m + 1) - t(m))*real(w_1)';
+
+        % 执行加细网格中(§ $t_{m + 1}$ §)
+        % 与基础网格中(§ $t_{m_{basic}}$ §)的重合检验
+        if (m + 1) == (m_basic - 1)*r_t^(s - 1) + 1
+
+            % 偏微分方程原始题解的网格值数组的填充
+
+            % 考虑左边界条件
+            u(m_basic,1) = 0;
+            if s==1
+                u(m_basic,2) = 1/2*y(1);
+            else
+                u(m_basic,2) = y(r_x^(s - 1) - 1);
+            end
+
+            % 在当前时间点选择与基础网格节点对应的空间节点
+            % (边界除外，在前面已经考虑过)
+            for n = 3:(N_0 + 1)
+                u(m_basic,n) = y((n - 1)*r_x^(s - 1)- 1);
+            end
+
+            % 现在将关注加细网格中(§ $t_{m + 1}$ §)
+            % 与基础网格中有序的(§ $t_{m_{basic}}$ §)的重合
+            m_basic = m_basic + 1;
+
+        end
+
+    end
+
+end
+\end{lstlisting}
+
+\emph{注释.} 注意PDESolving函数的一些特性。
+\begin{enumerate}
+    \item 在函数中已经实现了在加细网格数列中寻找近似数值解的可能，包括从仅与基础网格节点重合的节点中选择网格值。在实现爆破解的数值分析时，我们需要这个特性，这在接下来的章节中也会考虑到。现在我们将利用这个函数计算仅在单一（基础）网格下的解。这种情况对应于输入参数$s := 1$的值，因此参数$r_x$和$r_t$的值并不重要，目前不影响任何内容。
+
+        在图.~\ref{Fig_2_1}中给定算法, 该算法展示了向量$\emph{\textbf{y}}(t_m)$ 的结构并解释代码82-88行，其中实现了与基本网格的节点重合的节点的选择。
+        \begin{figure}[t]
+            \centering
+            \includegraphics[width=0.95\textwidth]{Chapter-2-1.eps}\\
+            \caption{向量$\emph{\textbf{y}}(t_m)$在不同网格的结构。}
+            \label{Fig_2_1}
+        \end{figure}
+
+    \item 为了节省内存 (这对大数值$s$非常重要)，仅将当前计算时间下的向量$\emph{\textbf{y}}(t_m)$的一组网格值存储在内存中。
+
+    \item 需要注意的是，当访问向量$t$和$x$的分量时，所有索引都有$+1$的位移（和之前的解析公式相比），因为在Matlab中数组元素的编号从$1$开始。(因此 $x_0 \equiv x(1)$, $x_1 \equiv x(2)$, \ldots, $x_N \equiv x(N + 1)$)。
+\end{enumerate}
+
+
+
+例如，可以使用以下命令集调用PDESolving函数，这些命令被写入单独的Matlab文件test\_2\_1\_PDESolving.m中，扩展名为<<.m>>，内容如下：
+%\lstinputlisting{test_2_1_PDESolving.m}
+\begin{lstlisting}
+% 定义计时的初试和终止时间
+t_0 = 0; T = 1.667;
+
+% 定义区间(§ $x \in [a,b]$ §)的边界
+a = 0; b = 1;
+
+% 定义基础网格的区间数
+N = 50; M = 50;
+
+% 定义初始条件
+u_init = @(x) -100*sin(pi*x)^100+100*x^2;
+
+s = 1;   % 网格编号（仅基础网格）
+r_x = 2; % x的加细网格系数
+r_t = 2; % t的加细网格系数
+
+u = PDESolving(a,b,N,t_0,T,M,u_init,s,r_x,r_t);
+
+
+% 解决优化
+figure;
+x = a:(b - a)/N:b; % 定义x的基础网格
+for m = 0:M
+    % 绘制初始条件图像
+    plot(x,u(1,:),'--k','LineWidth',1); hold on;
+    % 绘制时间(§ $t_m$ §)下的解的图像
+    plot(x,u(m + 1,:),'-ok',...
+        'MarkerSize',3,'LineWidth',1); hold on;
+    axis([a b -120 120]); xlabel('x'); ylabel('u');
+    hold off; drawnow; pause(0.1);
+end
+\end{lstlisting}
+
+该命令集将为问题~\eqref{Ch2_main_equation}的下列参数求解：
+\begin{equation}
+    \label{Ch_2_parameters_2_a}
+    \begin{aligned}
+        &a = 0, \quad b = 1, \quad t_0 = 0, \quad T = 1.667, \\
+        &u_{init}(x) = -100\sin(\pi x)^{100} + 100 x^2, \\
+    \end{aligned}
+\end{equation}
+其中空间与时间的网格参数如下：
+\begin{equation}
+    \label{Ch_2_parameters_2_b}
+    N = 50, \quad M = 50.
+\end{equation}
+
+注意，将时间~$T$作为爆破时间的理论上限，即我们知道，根据~(\ref{Ch_2_parameters_2_a})当进行参数的选择时，在区间~$[t_0,T]$发生了解的爆破。
+
+在图.~\ref{Fig_2_2}中展示了几组单独时刻$t_m$下的函数$u(x,t_m)$的网格值。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Chapter-2-2.eps}\\
+    \caption{根据算法~\eqref{Ch_2_CROS1}对参数~\eqref{Ch_2_parameters_2_a}--\eqref{Ch_2_parameters_2_b}问题~\eqref{Ch2_main_equation}的解示例。在图片上展示了几组单独时刻$t_m$下的函数$u(x,t_m)$的网格值。}
+    \label{Fig_2_2}
+\end{figure}
+
+
+
+\section{数值计算的优化}
+
+对于解的爆破现象的数值分析我们需要在不断加细网格序列中进行计算（一般情况下，在空间变量$x$加细$r_x$倍，在时间变量$t$加细$r_t$倍）。随着序列$s = \overline{1,S}$上的网格序号$s$的增加，网格尺寸$X_{r_x^{s - 1}N} \times T_{r_t^{s - 1}M}$快速增长，这会导致程序的运行时间显著增加，有时还会导致计算机内存不足。计算时间的显著增加主要是由于以下事实：当通过高斯法求解代数方程组~\eqref{Ch_2_CROS1}时，需要执行$O(N^3)$阶运算，其中$N$是所求方程组的维数。由于每次转换到下一时间点时需要对代数方程组求解，程序的运行总时间与空间上的网格维度的立方和时间上的网格维度的一次方成比例。但是方程组矩阵~\eqref{Ch_2_CROS1}具有特殊的形式~---其内部结构如图.~\ref{Fig_2_3}所示（非零元素只位于对角线和两个下方的副对角线上）。这使得我们可以开发出运算复杂度在$O(N^1)$内的算法来对这种特殊形式的代数方程组求解，该算法无论在计算执行时间方面（运算复杂度为$O(N^1)$）还是在算法操作所需内存方面（这对$S$ 值非常大时在非常密集的网格的计算至关重要）对于实现用高斯法对特殊形式矩阵的代数方程组求解都高效得多。最主要的是，程序运行总时间将与空间上的网格维度的一次方和时间上的网格维度的一次方成比例。在下文中我们一般把这个开发的算法称为退化高斯法（此名称通常不被接受）。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.45\textwidth]{Chapter-2-3.eps}\\
+    \caption{代数方程组矩阵的结构~\eqref{Ch_2_CROS1}.}
+    \label{Fig_2_3}
+\end{figure}
+
+\medskip
+
+现在，假设有形如$AX = B$的代数方程组，其中矩阵$A$有如图.~\ref{Fig_2_3}所示的特殊形式。为了方便我们假设矩阵大小为$N \times N$。矩阵~$A$在内存中的存储形式不为二维数组（需要存储$3 \times  N$个元素），而是三个数组，这些数组含有位于相应对角线上的矩阵非零元素。
+
+\emph{注释.}由图.~\ref{Fig_2_3}可知，对角线具有不同的长度。但是为了便于算法的程序实现我们将把他们的值存储在相同长度$N$的数组中。因此第一个副对角线的元素将从数组的第二个元素开始写入相应的数组，第二个副对角线的元素将从数组的第三个元素开始写入相应的数组。
+
+下面将给出Matlab函数的例子，该函数用于实现对$AX = B$的代数方程组求解的其中一种可能的算法，其中矩阵$A$有特殊形式（图.~\ref{Fig_2_3}），函数仅使用长度为$N$的4个一维数组作为输入：前三个数组包含矩阵$A$的位于对角线和两个副对角线上的非零元素，第四个包含右侧的向量。
+%\lstinputlisting{SpecialMatrixAlgorithm.m}
+\begin{lstlisting}
+function X = SpecialMatrixAlgorithm...
+    (diag_m,diag_d_1,diag_d_2,B)
+
+    % 函数实现AX = B代数方程组的求解
+    % 其中矩阵A具有特殊形式
+    % 其非零元素仅位于对角线和两个下侧副对角线
+
+    % 输入变量：
+    % diag\_m, diag\_d\_1, diag\_d\_2 -
+    % - 长度为N的数组
+    % 包含矩阵A的位于对角线和两个下侧副对角线的非零元素
+    % （不使用数组元素 diag\_d\_1(1), diag\_d\_2(1)
+    % 和 diag\_d\_2(2)）
+    % B - 长度为N的右侧向量
+
+    N = length(B);
+    X = zeros(N,1);
+
+    % 通过将位于主对角线下方的矩阵A的元素归零
+    % 将方程组简化为具有对角线形式的矩阵方程组
+
+    for n = 1:(N - 2)
+        c = diag_d_1(n + 1)/diag_m(n);
+        B(n + 1) = B(n + 1) - c*B(n);
+        c = diag_d_2(n + 2)/diag_m(n);
+        B(n + 2) = B(n + 2) - c*B(n);
+    end
+    c = diag_d_1(N)/diag_m(N - 1);
+    B(N) = B(N) - c*B(N - 1);
+
+    % 解X
+    for n = 1:N
+        X(n) = B(n)/diag_m(n);
+    end
+
+end
+\end{lstlisting}
+
+
+
+因此，为了使用研发的退化高斯法来对代数方程组~\eqref{Ch_2_CROS1}求解，首先我们需要构造含有对应矩阵位于对角线的非零元素的数组。
+\begin{equation*}
+    \left[\emph{\textbf{D}} - \dfrac{1 + i}{2} \, (t_{m + 1} - t_m) \, \emph{\textbf{f}}_\emph{\textbf{y}}\Big(\emph{\textbf{y}}(t_m)\Big)\right].
+\end{equation*}
+下面将引入对应的Matlab函数的例子，实际上该函数是在前面提到的函数D和 f\_y基础上小作修改。
+
+%\lstinputlisting{DiagonalsPreparation.m}
+\begin{lstlisting}
+function [diag_m,diag_d_1,diag_d_2] = ...
+    DiagonalsPreparation(y,tau,h,N)
+
+% 函数构造数组
+    % 数组包含矩阵[D - (1+1i)/2*tau*f\_y(y)]
+    % 位于对角线和两个下侧副对角线的非零元素
+
+    % 输入数据：
+    % y – 在当前时间点的微分方程组的向量解
+    % tau – 当前时间步数
+    % h – 变量x上的网格步数
+    % N - 变量x上的网格区间数
+
+    % 输出变量：
+    % diag\_m,diag\_d\_1,diag\_d\_2 – 所求数组
+
+    % 为所求数组分配内存
+    diag_m = zeros(1,N-1);
+    diag_d_1 = zeros(1,N-1);
+    diag_d_2 = zeros(1,N-1);
+
+    diag_m(1) = 1/4*(2 - h^2) - ...
+        (1+1i)/2*tau*(-1/2 - h/4*y(1));
+    diag_m(2) = 1 - (1+1i)/2*tau*(-1 - h/2*y(1));
+    diag_d_1(2) = -(7/4 + h^2) - ...
+        (1+1i)/2*tau*(7/4 - h/2*(y(2) - 1/2*y(1)));
+    for n = 3:(N - 1)
+        diag_m(n) = 1 - (1+1i)/2*tau*(-1 - h/2*y(n - 1));
+        diag_d_1(n) = -(2 + h^2) - (1+1i)/2*tau*...
+            (2 - h/2*(y(n) - y(n - 2)));
+        diag_d_2(n) = 1 - (1+1i)/2*tau*...
+            (-1 + h/2*y(n - 1));
+    end
+
+end
+\end{lstlisting}
+
+最后为了在Matlab的PDESolving函数中使用这些函数，需要用下面的命令集替换第68-73行上的代码块（此时不再使用D和f\_y函数）。
+\begin{lstlisting}
+    % 算法CROS1的实现
+
+    % 构造包含矩阵[D - (1+1i)/2*tau*f\_y(y)]的
+    % 位于主对角线和两个下侧副对角线的非零元素的数组
+    [diag_m,diag_d_1,diag_d_2] = ...
+        DiagonalsPreparation(y,t(m + 1) - t(m),h,N);
+
+    % 使用退化高斯法找到 w\_1
+    w_1 = SpecialMatrixAlgorithm...
+        (diag_m,diag_d_1,diag_d_2,f(y,h,N));
+
+    y = y + (t(m + 1) - t(m))*real(w_1)';
+\end{lstlisting}
+
+当寻找问题~\eqref{Ch2_main_equation}的近似解时，需要进行下一个时间点的转化，让我们比较一下实现该转化的以下两个算法的操作数：一般高斯法和前面改造后的算法。
+
+如前所述，在使用一般高斯法时算法运行时间和方程组~\eqref{Ch_2_CROS1}矩阵大小的立方成比例，对该问题来说，运行时间成比例于
+\begin{equation*}
+    \sim \dfrac{2}{3}\big(N - 1\big)^3 \sim \dfrac{2}{3} N^3 \sim O(N^3).
+\end{equation*}
+
+在使用退化高斯法实现时，程序运行时间将成比例于
+\begin{equation*}
+    \sim 7N - 9 \sim O(N^1).
+\end{equation*}
+
+可见，在使用退化高斯法实现时运行时间大大缩短。
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{以程序代码形式实现数值算法的正确性检验}
+
+	在数值算法的开发以及后续的程序编写中，任何人都有可能犯错(而且甚至可能不只是一个人)。因此，有必要掌握检验数值算法及其程序实现正确性的方法。这种检验的经典方法是对已知确定解的输入数据集进行测试计算。然后，在算法正确实现情况下，用于寻找解的网格维度增加了，近似的数值解应该收敛于可以肉眼锁定的精确解。
+
+	我们正在考虑的问题类别的特征之一是不可能为问题的任何输入数据集构造具有已知精确解的模型示例。关于这方面，我们建议使用以下方法。
+	
+	我们更改问题~\eqref{Ch2_main_equation}的公式，以便于能够构建有已知解的例子，但与此同时，对已经开发出的用于问题数值解的方案的更改要最小。为此，我们在原始方程的右侧引入了不均匀性~$f_{model}(x,t)$:
+	\begin{equation*}
+		\left\{
+		\begin{aligned}
+			&\dfrac{\partial}{\partial t} \big(u_{xx} - u\big) + u_{xx} + u u_x = f_{model}(x,t), \quad x \in (a,b], \quad t \in (t_0,T], \\
+			&u(a,t) = 0, \quad u_x(a,t) = 0, \quad t \in (t_0,T], \\
+			&u(x,t_0) = u_{init}(x), \quad x \in [a,b].
+		\end{aligned}
+		\right.
+	\end{equation*}
+
+	这样就可以把任何满足边界条件的函数$u_{model}(x,t)$设置为精确模型解。例如，如果我们想的话，修改后的问题的精确解可以是定义在在区间 $[a,b] \equiv [0,1]$上的函数
+	\begin{equation*}
+		u_{model}(x,t) = e^{-t}\big(100x^2 - 100\sin^{100}(\pi x)\big),
+	\end{equation*}
+	我们可以将该函数带入方程组，并结果确定
+	\begin{align*}
+		&f_{model}(x,t) = e^{-t}\big(100x^2 - 100\sin^{100}(\pi x)\big) +{} \\
+		&\qquad\qquad\qquad + e^{-2t}(200x - 10\,000 \pi \cos(\pi x) \sin^{99}(\pi x)\big) \times {}\\
+		&\qquad\qquad\qquad \times \big(100x^2 - 100\sin^{100}(\pi x)\big),\\
+	&u_{init}(x) = e^{-t_0}\big(100x^2 - 100\sin^{100}(\pi x)\big).
+	\end{align*}
+
+	 由于原问题~\eqref{Ch2_main_equation}的修改，常微分方程组~\eqref{Ch_2_System_of_ODEs}不再具有自治性，因为方程组的右侧~---向量函数 $\emph{\textbf{f}}$~--- 将取决于时间变量 $t$ (存在于$f_{model}(x,t)$的非均一性中的时间变量):
+	\begin{equation*}
+		\left\{
+		\begin{aligned}
+			&\emph{\textbf{D}} \dfrac{d \emph{\textbf{y}}}{d t} = \emph{\textbf{f}} \, (\emph{\textbf{y}},t), \quad t \in (t_0,T],\\
+			&\emph{\textbf{y}}(t_0) = \emph{\textbf{y}}_{init},
+		\end{aligned}
+		\right.
+	\end{equation*}
+	
+	也就是说，向量函数$\emph{\textbf{f}}$将有以下结构:
+	\begin{equation*}
+		f_n = \begin{cases}
+			\vspace{0.1cm}
+			-\frac{1}{2}y_1 - \dfrac{h}{8} y_1^2 + f_{model}(x_1,t) \, h^2,&\text{$n = 1$,}\\
+			- \Big(y_{2} - \frac{7}{4}y_1\Big) - \dfrac{h}{2}y_1 \Big(y_{2} - \frac{1}{4}y_{1}\Big) + \\
+			\qquad\qquad\qquad + f_{model}(x_2,t) \, h^2,&\text{$n = 2$,}\\
+			- \big(y_{n} - 2y_{n - 1} + y_{n - 2}\big) - \\
+			- \dfrac{h}{2}y_{n - 1} \big(y_{n} - y_{n - 2}\big) + f_{model}(x_n,t) \, h^2,&\text{$n = \overline{3,N-1}$.}\\
+		\end{cases}
+	\end{equation*}
+
+
+
+\newpage	
+
+	下面是MatLab-函数f的相应修改的例子，与之相对较早引入的主要区别是存在额外的输入参数~--- 变量$t$.
+\begin{lstlisting}
+	function f = f(y,x,h,N,t)
+	% 该函数计算可解的常微分方程组的右侧向量
+	
+	% 输入数据：
+	% y -- 常微分方程组在当前时间层面的解向量
+	% x -- 变量x网格
+	% h -- 变量x网格间距
+	% N -- 变量x的网格间隔数
+	% t -- 当前时刻
+	
+	% 输出数据:
+	% f -- 所求向量 f
+	
+	f = zeros(N - 1,1);
+	
+	f(1) = -1/2*y(1) - h/8*y(1)^2 +...
+	f_model(x(2),t)*h^2;
+	f(2) = -(y(2) - 7/4*y(1)) - ...
+	h/2*y(1)*(y(2) - 1/4*y(1))+...
+	f_model(x(3),t)*h^2;
+
+	for n = 3:(N - 1)
+	f(n) = -(y(n) - 2*y(n - 1) + y(n - 2)) + ...
+	-h/2*y(n - 1)*(y(n) - y(n - 2)) + ...
+	f_model(x(n + 1),t)*h^2;
+	end
+	
+	end
+\end{lstlisting}
+
+	
+	\emph{附注.} 我们再次提出请注意以下事实：当转变向量$x$的分量时，所有的序数平移了$+1$(与上面的解析公式相比)，这是因为在MatLab中，数组元素的编号从 $1$开始(因此$x_0 \equiv x(1)$, $x_1 \equiv x(2)$, \ldots, $x_N \equiv x(N + 1)$)。
+	
+	这里还使用MatLab函数 f\_model，该函数定义了模型函数$f_{model}(x,t)$。 例如，该函数可以通过以下形式实现：
+	\begin{lstlisting}
+	function f_model = f_model(x,t)
+	
+	% 函数给出了模型函数 (§ $f\_{model}(x,t)$ §)
+	
+	f_model = exp(-t)*(100*x^2 - 100*sin(pi*x)^100) + ...
+	exp(-2*t)*(200*x -10000*pi*cos(pi*x)*...
+	sin(pi*x)^99)*(100*x^2 - 100*sin(pi*x)^100);
+	end
+	\end{lstlisting}
+	
+	由于常微分方程组~\eqref{Ch_2_System_of_ODEs}不再是自治的(这意味着$\emph{\textbf{f}}$的右侧不再明确依赖于$t$)，因此具有复系数的第一阶段罗森布鲁克方案(схема Розенброка)CROS1将有以下形式:
+
+	\begin{equation*}
+	%\label{Ch_2_CROS1}
+	\begin{aligned}
+	&\emph{\textbf{y}}(t_{m + 1}) = \emph{\textbf{y}}(t_m) + (t_{m + 1} - t_m) \, \mathrm{Re} \, \emph{\textbf{w}}_1 \, ,\\
+	&\mbox{$\emph{\textbf{w}}_1$ is the solution of the system of linear algebric equations} \\
+	&\left[\emph{\textbf{D}} - \dfrac{1 + i}{2} (t_{m + 1} - t_m) \, \emph{\textbf{f}}_\emph{\textbf{y}}\Big(\emph{\textbf{y}}(t_m),t_m\Big)\right] \emph{\textbf{w}}_1 = \emph{\textbf{f}} \, \Big(\emph{\textbf{y}}(t_m),\frac{t_m + t_{m + 1}}{2}\Big).
+	\end{aligned}
+	\end{equation*}
+	请注意，此方案中的变量~$t$的近似顺序仍然等于~2。
+
+	
+	结果，修改后的MatLab函数PDE求解将与原函数之间的不同，仅在于位于68-73行并负责实现CROS1方案的那段代码将必须替换为以下命令集:
+	\begin{lstlisting}
+	% CROS1方案的实现
+	
+	w_1 = (D(h,N) - (1+1i)/2*(t(m + 1) - t(m))*...
+	f_y(y,h,N))\f(y,x,h,N,(t(m + 1) + t(m))/2);
+	
+	y = y + (t(m + 1) - t(m))*real(w_1)';
+	\end{lstlisting}
+
+	或者，在简并高斯法使用的情况下:
+\newpage
+	\begin{lstlisting}
+	% CROS1方案的实现
+	
+	% 准备包含非零矩阵元素的数组
+	% [D - (1+1i)/2*tau*f\_y(y)],
+	% 位于对角线和两个更低的余对角线
+	[diag_m,diag_d_1,diag_d_2] = ...
+	DiagonalsPreparation(y,t(m + 1) - t(m),h,N);
+	
+	% 使用简并高斯法搜寻 w\_1
+	w_1 = SpecialMatrixAlgorithm...
+	(diag_m,diag_d_1,diag_d_2,...
+	f(y,h,N,(t(m + 1) + t(m))/2));
+	
+	y = y + (t(m + 1) - t(m))*real(w_1)';
+	\end{lstlisting}
+	
+	最后，在MatLab函数绘制中在\hbox{16-й}之后需要插入已下代码，这将允许在一张图上显示找到的近似数值解和精确模型解，当细化在其上寻求近似解的网格时，这将有可能在视觉上将近似解的收敛到精确解。
+	
+	\begin{lstlisting}
+	% 绘制初始条件图表
+	t = t_0:(T - t_0)/M:T;  % 用t确定基础网格
+	u_model = exp(-t(m + 1))*...
+	(-100*sin(pi*x).^100 + 100*x.^2);
+	plot(x(1:k:N+1),u_model,'-*g',...
+	'LineWidth',1); hold on;
+	\end{lstlisting}
+	
+	请注意，使用这种具有已知精确解的模型示例的构造，仅对函数$\emph{\textbf{f}}$和CROS1方案进行了轻微的修改。 在检验了相应数值算法的正确性之后，设置$ f_ {model}（x，t）\ equiv 0 $，我们将系统恢复为原形式~\eqref{Ch2_main_equation}。
+
+	
+	\section{爆破解的数值判断}
+	\label{Ch2_numerical_diagnostics_of_the_solutions_blowup}
+	
+	概括爆破解的数值判断方法，已经在~\ref{Chapter_1}章节常微分方程组的柯西问题中描述过他们，将其推广到本节考虑的拟抛物线型偏微分方程初始边界问题。
+	
+	假设我们找到了初始边界问题~\eqref{Ch2_main_equation}的网格解，并使用了一个方案，该方案在一个统一的基础网格$X_N \times T_M$上使用了精度为$p_x$的空间变量$x$和精度为$p_t$的时间变量$t$: $X_N \times T_M = \{(x_n,t_m), \; 0 \leqslant n \leqslant N, \; 0 \leqslant m \leqslant M: \; x_n = a + n \, h,  \; t_m = t_0 + m \tau, \; h = (b - a)/N, \; \tau = (T - t_0)/M\}$。这意味着，对于所有的节点$(x,t) \in X_N \times T_M$下方等式恒成立
+	\begin{equation}
+	\label{Ch2_Runge-Romberg_formula_deducing_1}
+	u(x,t) = u^{(N,M)}(x,t) + O(h^{p_x} + \tau^{p_t}).
+	\end{equation}
+	
+	这里上标 $(N,M)$表示，$u^{(N,M)}(x,t)$在维度$N\times M$对应~$x$ 和~$t$间距的网格上数量上求得。
+	
+	现在将关系~\eqref{Ch2_Runge-Romberg_formula_deducing_1}重写为
+	\begin{align}
+	&u(x,t) = u^{(N,M)}(x,t) + c_x(x,t) h^{p_x} + c_t(x,t) \tau^{p_t} + \notag \\
+	&\hspace{+4.3cm}+ O(h^{p_x + 1} + \tau^{p_t + 1}), \label{Ch2_Runge-Romberg_formula_deducing_2}
+	\end{align}
+	
+	显着地强调$u(x,t)$的近似计算误差$u(x,t) - u^{(N,M)}(x,t)$的泰勒展开主项$R^{(N,M)}(t) \equiv c_x(x,t) h^{p_x} + c_t(x,t) \tau^{p_t}$。这种情况下，将从解的相应连续导函数存在的假设下出发。
+
+	假设，$u^{(N,M)}(x,t)$, $(x,t) \in X_N \times T_M$的计算是根据已知空间和时间变量精度分为$p_x$和$p_t$的方案，在固定网格间距$N$和$M$(通过每个变量的网格步长$h$和$\tau$的数目是唯一确定的)上进行的。也就是说，方程~\eqref{Ch2_Runge-Romberg_formula_deducing_2}包含三个未知数: $u(x,t)$, $c_x(x,t)$和$c_t(x,t)$。为了找到三个未知数，我们需要三个方程。同时，如果把加数组合$c_x(x,t) h^{p_x} + c_t(x,t) \tau^{p_t}$看作一个未知数，我们只需要两个方程。在空间变量$x$细$r_x$倍，时间变量$t$细$r_t$倍的网格上(即，在对应区间$[a,b]$和$[t_0,T]$上包含有$r_x N$和$r_t M$个间距的网格)计算，来得到第二个方程:
+	\begin{align}
+	&u(x,t) = u^{(r_x N,r_t M)}(x,t) + c_x(x,t) \Big(\frac{h}{r_x}\Big)^{p_x} +  c_t(x,t) \Big(\frac{\tau}{r_t}\Big)^{p_t} + \notag \\
+	&\hspace{+4.2cm} + O\bigg(\Big(\frac{h}{r_x}\Big)^{p_x + 1} + \Big(\frac{\tau}{r_t}\Big)^{p_t + 1}\bigg).\label{Ch2_Runge-Romberg_formula_deducing_3}
+	\end{align}
+	
+	从方程~\eqref{Ch2_Runge-Romberg_formula_deducing_3}中减去方程~\eqref{Ch2_Runge-Romberg_formula_deducing_2}，从得到的等式中我们尝试表示$c_x(x,t) h^{p_x} + c_t(x,t) \tau^{p_t}$。仅当方程~\eqref{Ch2_Runge-Romberg_formula_deducing_3}的右侧加数$c_x(x,t) h^{p_x}$与$c_t(x,t) \tau^{p_t}$拥有公因子的时候，这样做才能成功。仅当下述关系成立时，这才有可能。
+	\begin{equation}
+	\label{Ch2_meshes_matching}
+	{r_x}^{p_x} = {r_t}^{p_t},
+	\end{equation}
+	
+	这确定了不同变量中网格$r_x$与$r_t$增稠系数与方案$p_x$与$p_t$的精度阶数的一致性(有关多维问题中增稠系数选择特性的更详细讨论，请参见~4 \S~2 главы II~\cite{Kalitkin_book_3})。
+	
+	结果，当满足关系~\eqref{Ch2_meshes_matching}时，得出
+	\begin{align}
+	&c_x(x,t) h^{p_x} + c_t(x,t) \tau^{p_t} = \notag\\
+	&\hspace{+1.3cm} = \frac{u^{(r_x N,r_t M)}(x,t) - u^{(N,M)}(x,t)}{{r_t}^{p_t} - 1}\frac{{r_t}^{p_t}}{\tau^{p_t}} + O(h^1 + \tau^1). \label{Ch2_Runge-Romberg_formula_deducing_4}
+	\end{align}
+	
+	由此可见，
+	\begin{align}
+	\label{Ch2_Runge-Romberg_formula_deducing_5}
+	&R^{(r_x N, r_t M)}(x,t) \equiv c_x(x,t) \Big(\frac{h}{r_x}\Big)^{p_x} +  c_t(x,t) \Big(\frac{\tau}{r_t}\Big)^{p_t} = \notag\\
+	&= \frac{u^{(r_x N,r_t M)}(x,t) - u^{(N,M)}(x,t)}{{r_t}^{p_t} - 1} + O(h^{p_x + 1} + \tau^{p_t + 1}).
+	\end{align}
+	
+	等式~\eqref{Ch2_Runge-Romberg_formula_deducing_5}右边的分数是精确解$u(x,t)$泰勒展开式的主项(即，最慢递减)的后验渐进精确估计，也即，近似计算$u(x,t)$误差$u(x,t) - u^{(r_x N, r_t M)}(x,t)$的泰勒展开主项的后验渐进精确估计。由此可知，
+	\begin{equation*}
+	\label{Ch2_Runge-Romberg_formula_deducing_6}
+	u(x,t) = u^{(r_x N, r_t M)}(x,t) + R^{(r_x N, r_t M)}(x,t) + O(h^{p_x + 1} + \tau^{p_t + 1}).
+	\end{equation*}
+	
+	由此出发，当$(h,\tau) \to 0$时，加数 $R^{(r_x N, r_t M)}(x,t)$ 超过了误差$u(x,t) - u^{(r_x N, r_t M)}(x,t)$泰勒展开的全部余项，他可以被理解为计算误差$u^{(r_x N, r_t M)}(x,t)$的后验渐进精确估计。下面将使用$R^{(r_x N, r_t M)}(x,t)$表示，省略$O(h^{p_x + 1} + \tau^{p_t + 1})$(但不是忘记了相应公式的渐进性质)，数值
+	\begin{equation}
+	\label{Ch2_Runge-Romberg_formula_deducing_7}
+	R^{(r_x N, r_t M)}(x,t)  = \frac{u^{(r_x N, r_t M)}(x,t) - u^{(N,M)}(x,t)}{{r_t}^{p_t} - 1},
+	\end{equation}
+	这是经典Runge-Romberga公式~\eqref{Ch1_Runge-Romberg_formula_deducing_7}在计算两变量函数情况下的推广。
+	
+	在另一个网格上执行计算~---在相应变量中使用间隔数$r_x^2 N$和$r_t^2 M$,~---将能够计算
+	\begin{align*}
+	\label{Ch2_Runge-Romberg_formula_deducing_8}
+	&R^{(r_x^2 N, r_t^2 M)}(x,t) \equiv c_x(x,t) \Big(\frac{h}{r_x^2}\Big)^{p_x} +  c_t(x,t) \Big(\frac{\tau}{r_t^2}\Big)^{p_t} = \\
+	&\vspace{+2.1cm}=\frac{u^{(r_x^2 N, r_t^2 M)}(x,t) - u^{({r_x} N, {r_t} M)}(x,t)}{{r_t}^{p_t} - 1} + O(h^{p_x + 1} + \tau^{p_t + 1}).
+	\end{align*}
+	
+	注意，
+	\begin{equation}
+	\label{Ch2_Runge-Romberg_formula_deducing_9}
+	\begin{aligned}
+	&R^{({r_x} N, {r_t} M)}(x,t) \equiv c_x(x,t) \Big(\frac{h}{r_x}\Big)^{p_x} +  c_t(x,t) \Big(\frac{\tau}{r_t}\Big)^{p_t},\\
+	&R^{(r_x^2 N, r_t^2 M)}(x,t) \equiv c_x(x,t) \Big(\frac{h}{r_x^2}\Big)^{p_x} +  c_t(x,t) \Big(\frac{\tau}{r_t^2}\Big)^{p_t},
+	\end{aligned}
+	\end{equation}
+	根据这两个变量的范数之比，只要满足关系~\eqref{Ch2_meshes_matching}，就可以找到一个找到一个精度有效阶的表达式
+	%\begin{equation}
+	%    \label{Ch2_Runge-Romberg_formula_deducing_10}
+	%    {p_t}^{eff}  = \log_{r_t} \frac{\|R^{({r_x} N, {r_t} M)}(x,t)\|}{\|R^{(r_x^2 N, r_t^2 M)}(x,t)\|},
+	%\end{equation}
+	\begin{equation}
+	\label{Ch2_Runge-Romberg_formula_deducing_10}
+	{p}^{eff}  = \log_{r_t} \frac{\|R^{({r_x} N, {r_t} M)}(x,t)\|_{X_{N}\times T_{M}}}{\|R^{(r_x^2 N, r_t^2 M)}(x,t)\|_{X_{N}\times T_{M}}},
+	\end{equation}
+	
+	使用以上表达式在时间区间$t \in [t_0,T]$上计算近似解，并具有以下性质：在$(h,\tau) \to 0$时${p_t}^{eff} \to {p_t}^{\, theor} \equiv {p_t}$。这些表达式中的范数是欧几里得范数，是基本网格~$X_{N}\times T_{M}$的值的平方和的根。请注意，我们提到的是谈论的是精度\emph{有效}阶，因为他是基与可用近似解计算的，而忽略了公式~(\ref{Ch2_Runge-Romberg_formula_deducing_7})的近似性质(与~(\ref{Ch2_Runge-Romberg_formula_deducing_5})相较而言)。
+	
+	可以对网格的每一层$t \in T_M$单独计算精度有效阶数。可以从表达式~\eqref{Ch2_Runge-Romberg_formula_deducing_9}范数的比中得到相应的公式:
+	\begin{equation}
+	\label{Ch2_Runge-Romberg_formula_deducing_11}
+	{p_t}^{eff}(t)  = \log_{r_t} \frac{\|R^{(r_x N, r_t M)}(x,t)\|_{X_N}}{\|R^{(r_x^2 N, r_t^2 M)}(x,t)\|_{X_N}},
+	\end{equation}
+	仅根据网格~$X_N$取范数，而$t\in T_M$是参数。
+	
+	同样，可以在固定时间$t$上针对每个单独的$x \in X_N$逐点计算精度有效阶数。可以从基础网格的每个节点上的表达式~\eqref{Ch2_Runge-Romberg_formula_deducing_9}的比中得到相应的公式：
+	\begin{equation}
+	\label{Ch2_Runge-Romberg_formula_deducing_12}
+	{p_{xt}}^{eff}(x,t)  = \log_{r_t} \frac{R^{(r_x N, r_t M)}(x,t)}{R^{(r_x^2 N, r_t^2 M)}(x,t)}.
+	\end{equation}
+	
+	应当理解，如果误差的泰勒展开高阶项表面上多于~$p$阶主项，则~(\ref{Ch2_Runge-Romberg_formula_deducing_12}) 的对数参数可能变为负数。
+
+	例如，如果在特定问题上特定点主项的系数偶然等于零，或网格仍然过于粗糙，这就有可能发生的。因此，实际上，为了避免计算的事故性中断，在~(\ref{Ch2_Runge-Romberg_formula_deducing_12})使用分子与分母模块是有意义的。
+	
+	现在描述一种实用的算法，用于估算精度有效阶数，接下来，他将有可能判断出爆破解存在的事实。
+	
+	\emph{附注.} 我们已经以精度$O(h^2)$近似了~\eqref{Ch2_main_equation}中的所有空间导数，而对于系统~\eqref{Ch_2_System_of_ODEs}的数值积分，我们使用用精度约为~$O(\tau^2)$的方案CROS1~\eqref{Ch_2_CROS1}。因此方程组~\eqref{Ch2_main_equation}解的构造方法具有精度$O(\tau^2 + h^2)$，即$p_x = p_x^{\, theor} \equiv 2$和$p_t = p_t^{\, theor} \equiv 2$。由此可知，由条件~\eqref{Ch2_meshes_matching}可以推出，为了满足Runge-Romberga公式~\eqref{Ch2_Runge-Romberg_formula_deducing_7}的使用条件，在不同变量中的稠密系数$r_x$与$r_t$应当满足关系$r_x = r_t$。对于计算，最方便的选择是$r_x = r_t \equiv 2$。
+	
+	
+	首先我们引入基础网格$X_N \times T_M$: $\{x_n,t_m\}$,$0 \leqslant m \leqslant M$。然后从基础网格开始，对网格进行逐步细化，根据数值方法得到网格$T_{r^{s - 1}M}$ ($s$~--- 网格集$s = \overline{1,S}$上的网格数)，在其上求出此方程的解，该方案下，空间变量$x$具有精度$p_x$，时间变量$t$具有精度$p_t$。
+	\begin{equation*}
+	u_{(s)}(x,t) \equiv u^{(r_x^{s - 1}N,r_t^{s - 1}M)}(x,t)
+	\end{equation*}
+	
+	在这种情况下，如上所述，如果$r_x$与$r_t$是整数，则每一个后续的网格$X_{r_x^{s - 1}N} \times T_{r_t^{s - 1}M}$有与基础网格$(x_n,t_m) \in X_N \times T_M$, $0 \leqslant n \leqslant N$, $0 \leqslant m \leqslant M$的节点重合的节点。在这些节点$(x,t)$上，我们可以使用Runge-Romberga格公式~\eqref{Ch2_Runge-Romberg_formula_deducing_7}在每个编号为$s$的每个网格上进行误差的后验渐近精确估计。
+	\begin{align*}
+	%\label{Error_estimation}   % Эта ссылка не используется!
+	&\Delta_{(s)}(x_n,t_m) \equiv R^{(r_x^{s - 1}N,r_t^{s - 1}M)}(x_n,t_m) = \\
+	&\hspace{+4.8cm} = \frac{u_{(s)}(x_n,t_m) - u_{(s - 1)}(x_n,t_m)}{r_t^{p_t} - 1},
+	\end{align*}
+	并在整个时间区间$t \in [t_0,T]$估算精度有效阶~\eqref{Ch2_Runge-Romberg_formula_deducing_10}
+	\begin{equation}
+	\label{Ch2_p_eff_total}
+	{p_t}^{\, eff}_{(s)} = \log_{r_t}{\dfrac{\sqrt{\sum\limits_{n = 0}^N \sum\limits_{m = 0}^M \big(u_{(s - 1)}(x_n,t_m) - u_{(s - 2)}(x_n,t_m)\big)^2}}{\sqrt{\sum\limits_{n = 0}^N\sum\limits_{m = 0}^M  \big(u_{(s)}(x_n,t_m) - u_{(s - 1)}(x_n,t_m)\big)^2}}}
+	\end{equation}
+	(这里选择了可行的最方便的范数~---欧几里得范数).
+	
+	如果在整个时间区间$t \in [t_0,T]$上，问题的解相对于变量~$x$有~$p_x$阶连续导数，相对于变量~$t$有~$p_t$阶连续导数，有如下收敛性
+	\begin{equation*}
+	\label{Ch2_convergence_1}
+	{p_t}^{\, eff}_{(s)} \xrightarrow[s \to \infty]{} {p_t}^{\, theor} \equiv {p_t}.
+	\end{equation*}
+	
+	该收敛性的违背意味着时间区间$t \in[t_0,T]$上精确解光滑性的丢失。换而言之，理论上的精确度阶数分别等于~$p_x$和~$p_t$，表征了相应数值方法将所有展开项转换为精确解的泰勒级数的能力，这些精确解低于~$c_xh^{p_x}+c_t\tau^{p_t}$。而有效精度有利于我们判断是否所有低于~$c_xh^{p_x}+c_t\tau^{p_t}$的项都已经被转换。特别地，在${p_t}^{\, eff} \leqslant 0 $地情况下，我们可以得出结论，精确解不能展开为泰勒级数，这表明没有解(或者说，在区间$t \in [t_0,T]$上的某个点，解的爆破现象的事实)或者失去光滑性。
+	
+	为了确定解发生爆破的特殊时间点，可以点态地~\eqref{Ch2_Runge-Romberg_formula_deducing_11}在每一个节点$t_m \in T_M$, $0 \leqslant m \leqslant M$估算精度有效阶
+	\begin{equation}
+	\label{Ch2_p_eff_for_every_time}
+	{p_t}^{\, eff}_{(s)}(t_m) = \log_{r_t}{\dfrac{\sqrt{\sum\limits_{n = 0}^N \big(u_{(s - 1)}(x_n,t_m) - u_{(s - 2)}(x_n,t_m)\big)^2}}{\sqrt{\sum\limits_{n = 0}^N  \big(u_{(s)}(x_n,t_m) - u_{(s - 1)}(x_n,t_m)\big)^2}}}
+	\end{equation}
+	
+	在原问题的解具有，对时间变量~$p_t$阶连续导数，对空间变量~$p_x$阶连续导数的点$t$，存在如下收敛性
+	\begin{equation*}
+	\label{convergence_2}
+	{p_t}^{\, eff}_{(s)}(t) \xrightarrow[s \to \infty]{} {p_t}^{\, theor} \equiv {p_t}
+	\end{equation*}
+	
+	在$s \to \infty$(或者说，$N,M \to \infty$)的情况下，相应的误差估计是渐进精确的。该收敛性的违背意味着精确解光滑性的丢失。特别地，在幂"奇异性"$u(x,t) \sim (T_{bl} - t)^{-\beta}$的情况下，$T_{bl}$~---爆破时间(指数"bl"~---"blow-up"，“爆破”的简写)，对于任意$t > T_{bl}$，精度有效阶${p_t}_{(s)}^{\, eff}(t) \xrightarrow[s \to \infty]{}  -\beta$。这允许我们找道对应的指数$\beta$。对于任意$t > T_{bl}$，如果${p_t}_{(s)}^{\, eff}(t) \xrightarrow[s \to \infty]{} -\infty$，则我们可以确定，解成倍增长，即，$u(x,t) = \infty$；对于任意$t > T_{bl}$，如果${p_t}_{(s)}^{\, eff}(t) \xrightarrow[s \to \infty]{} 0$，则解在满足"奇异性"的邻域内的增长呈对数性的: $u(x,t) \sim \ln(T_{bl}-t)$。相应论点的结论可以在~\cite{BUE_basic_1,BUE_basic_2}中找到。解的爆破时间$T_{bl}$可以在精确到对时间$T_M$的基础网格区间的长度值的程度得出。
+	
+	在爆破发生时刻$t$的定位之后，可以通过公式~\eqref{Ch2_Runge-Romberg_formula_deducing_12}在每一个节点$x_n \in X_N$, $1 \leqslant n \leqslant N$,对每一个特定时刻$t$定位爆破解的空间点。
+	\begin{equation}
+	\label{Ch2_p_eff_for_every_spatial_point}
+	{p_{xt}}^{\, eff}_{(s)}(x_n,t_m) = \log_{r_t}{\dfrac{|u_{(s - 1)}(x_n,t_m) - u_{(s - 2)}(x_n,t_m)|}{|u_{(s)}(x_n,t_m) - u_{(s - 1)}(x_n,t_m)|}}.
+	\end{equation}
+
+	
+	以下是一组MatLab命令的示例，这些命令设计为单独的文件test\_2\_1.m，通过多次重复运行先前引入的MatLab函数PDESolving.m，可以获取一组网格解$u_{(s)}(x,t) \equiv u^{(r_x^{s - 1}N,r_t^{s - 1}M)}(x,t)$, $s = \overline{1,S}$，从基本网格$X_N \times T_M$同时$N = 50$且$M= 50$开始，问题~\eqref{Ch2_main_equation}在不同的网格上具有一组参数~\eqref{Ch_2_parameters_2_a}。
+	%\lstinputlisting{test_2_1.m}
+	\begin{lstlisting}
+	% 确定计算的开始与结束时间
+	t_0 = 0; T = 1.667;
+	
+	% 确定闭区间的边界 (§ $x \in [a,b]$ §)
+	a = 0; b = 1;
+	
+	% 确定基础网格的间隔数
+	N = 50; M = 50;
+	
+	% 确定初始条件
+	u_init = @(x) -100*sin(pi*x)^100+100*x^2;
+	
+	S = 10;   % 在其上寻找近似解的网格数
+	r_x = 2; % x的网格稠密系数
+	r_t = 2; % t的网格稠密系数
+	
+	% 为网格值数组分配内存
+	% 不同编号网格的常微分方程解 (§ $s = \overline{1,S}$ §)
+	% 第一个序数 - 从其上寻找解的细化网格序列中网格的编号s
+
+	% 第二与第三个序数确定了一个数组，
+	% 该数组中的序数(m + 1)存储
+	% 从与基本网格一致的节点中
+	% 存储与时间点(§ $t_m$ §)
+	% 对应的解的网格值
+	array_of_u = zeros(S,M + 1,N + 1);
+	
+	% "大循环", 不断在加细网格的序列上计算解S次
+	% 解的节点值数组只包含和基础网格节点重合的节点值
+
+
+
+	for s = 1:S
+	u = PDESolving(a,b,N,t_0,T,M,u_init,s,r_x,r_t);
+	array_of_u(s,:,:) = u;
+	s
+	end
+	
+	% 存储Workspace对于接下来解的爆破诊断必要数据到文件
+	save('data.mat','array_of_u','N','M',...
+	'r_x','r_t','S','a','b','t_0','T');
+	\end{lstlisting}
+	
+	由于在每个按顺序的网格的计算时间增加$r_x r_t$倍，在不同网格对近似解的寻找可以通过变体的单独的代码实现，这些代码计算所有对于接下来数值诊断的必要数据并存储到文件~data.mat。他的内容将被接下来的运算中输入函数载入，而不需要重复在加细网格序列上求解。
+
+	
+	之后给出MatLab代码的例子，他通过利用来自已经在上个程序形成的文件data.mat里的数据的计算在时间段 $t \in [t_0,T]$~\eqref{Ch2_p_eff_total}的近似解精度有效阶。
+	%\lstinputlisting{BlowUpDiagnostics.m}
+	\begin{lstlisting}
+	%加载在S个细化网格序列中近似解的计算结果
+	load('data.mat');
+	
+	% 分配内存给在不同网格上近似解计算(过程)精度有效阶数值的数组
+	p_eff = zeros(S,1);
+	
+	% 计算精度有效阶
+	p_eff(1) = NaN; % Вычисление (§ $p^{\, eff}_{(1)}$ §) невозможно
+	p_eff(2) = NaN; % Вычисление (§ $p^{\, eff}_{(2)}$ §) невозможно
+	for s = 3:S
+	p_eff(s) = log(...
+	sqrt(sum(sum((array_of_u(s - 1,:,:) - ...
+	array_of_u(s - 2,:,:)).^2)))/...
+	sqrt(sum(sum((array_of_u(s,:,:) - ...
+	array_of_u(s - 1,:,:)).^2))))/...
+	log(r_t);
+	end
+	
+	% 得出数值(§ $p^{\, eff}_{(s)}$ §)序列
+	for s = 1:S
+	X = ['p^eff_(',int2str(s),')=',...
+	num2str(p_eff(s),'%6.4f')];
+	disp(X);
+	end
+	\end{lstlisting}
+	
+	注意到，无法计算$p^{\, eff}_{(1)}$ 和~$p^{\, eff}_{(2)}$是因为对于精度有效阶的寻找需要知道在三个网格(当前网格与前两个网格)的近似解(参考 公式~(\ref{Ch2_p_eff_total}))。
+
+	
+	在表~\ref{Table_2_1}给出对于不同时间区间$t \in [t_0,T]$的序列值$p^{\, eff}_{(s)}$计算结果的例子。容易看出，对于存在有着输入数据~\eqref{Ch_2_parameters_2_a}的问题~\eqref{Ch2_main_equation}解的时间区间，精度有效阶序列${p_t}^{\, eff}_{(s)}$收敛于理论精度阶${p_t}^{theor} \equiv p$。对于不存在可行解的时间区间，精度有效阶序列很快收敛于非负数。
+
+\begin{table}
+		\begin{center}
+			\begin{tabular}{c||c|c|c|c|c}
+				s & $T = 0.400$ & $T = 0.600$ & $T = 1.000$ & $T = 1.667$ \\
+				\hline\hline
+				3 & 1.7837 & 1.1368 & -27.0854 & -36.3775 \\
+				4 & 1.9415 & 1.7175 & -62.5598 & -57.2937 \\
+				5 & 1.9851 & 1.9229 & -83.9025 & -116.6789 \\
+				6 & 1.9963 & 1.9802 & -259.7775 & $-\infty$ \\
+				7 & 1.9991 & 1.9950 & $-\infty$ & $-\infty$ \\
+				8 & 1.9998 & 1.9950 & $-\infty$ & $-\infty$ \\
+				9 & 2.0001 & 1.9998 & $-\infty$ & $-\infty$ \\
+				10 & 1.9987 & 1.9985 & $-\infty$ & $-\infty$ \\
+			\end{tabular}
+		\end{center}
+		\caption{对于不同时间区间$t \in [t_0,T] \equiv [0,T]$，带有输入数据~\eqref{Ch_2_parameters_2_a}，带有具备相同区间数 $N = 50$, $M = 50$和网格加细系数$r_x = 2$, $r_t = 2$的初始网格$X_N \times T_M$的问题~\eqref{Ch2_main_equation}综合计算的数值集合${p_t}^{\, eff}_{(s)}$}
+		\label{Table_2_1}
+\end{table}
+	%
+	%\begin{table}[t]
+	%    \label{Table_1_2}
+	%    \begin{center}
+	%        \begin{tabular}{c||c|c|c|c|c}
+	%            s & $T = 0.50$ & $T = 0.90$ & $T = 0.95$ & $T = 0.99$ & $T = 2.00$ \\
+	%            \hline\hline
+	%            3 & 1.9994 & 1.9803 & 1.9189 & 0.9294 & -0.9996 \\
+	%            4 & 1.9998 & 1.9950 & 1.9784 & 1.5443 & -1.0000 \\
+	%            5 & 2.0000 & 1.9987 & 1.9945 & 1.8547 & -1.0000 \\
+	%            6 & 2.0000 & 1.9997 & 1.9986 & 1.9603 & -1.0000 \\
+	%            7 & 2.0000 & 1.9999 & 1.9997 & 1.9898 & -1.0000 \\
+	%            8 & 2.0000 & 2.0000 & 1.9999 & 1.9974 & -1.0000 \\
+	%            9 & 2.0000 & 2.0000 & 2.0000 & 1.9994 & -1.0000 \\
+	%            10 & 2.0000 & 2.0000 & 2.0000 & 1.9998 & -1.0000 \\
+	%            11 & 2.0000 & 2.0000 & 2.0000 & 2.0000 & -1.0000 \\
+	%            12 & 1.9999 & 2.0000 & 2.0000 & 2.0000 & -1.0000 \\
+	%            %13 &  & 2.0000 & 2.0000 & 2.0000 & -1.0000 \\
+	%            %14 &  & 1.9994 & 1.9999 & 1.9999 & -1.0000 \\
+	%            %15 &  & 2.0064 & 2.0031 & 2.0008 & -1.0000 \\
+	%            %16 &  & 1.9359 & 1.9697 & 1.9931 & -1.0000 \\
+	%        \end{tabular}
+	%    \end{center}
+	%    \caption{Наборы значений $p^{\, eff}_{(s)}$ по итогам расчёта задачи~\eqref{Ch1_test_syst} с начальным условием $u_0 = 1$ для разных временных промежутков $t \in [t_0,T] \equiv [0,T]$ с сетками $T_M$ с одинаковым начальным шагом $\tau = 0.01$ ($M = T/0.01$) и коэффициентом сгущения сеток $r = 2$.}
+	%\end{table}
+	
+	现在，从``整体''评估精度有效阶以判断``整个''爆破事实，让我们继续进行详细的定位。首先，我们找到解的爆破发生的时间点，其精度为网格时间步长的阶数。 然后，让我们继续进行空间变量定位。
+	
+	以下是MatLab代码的示例，格式为单独的文件BlowUpDiagnostics\_for\_each\_t.m，该文件计算与基础网格$T_M$~\eqref{Ch2_p_eff_for_every_time}的节点$t_m$一致的节点处近似解的精度有效阶。使用已经生成的data.mat文件中的数据。这将使我们能够确定解的爆破发生的具体时间。
+	%\lstinputlisting{BlowUpDiagnostics_for_each_t.m}
+	\begin{lstlisting}
+	% 加载在S个细化网格序列中近似解的计算结果
+	load('data.mat');
+	
+	% 分配内存给在除了(§ $t_0$§)的不同节点(§ $t_m$, \: $1 \leqslant m \leqslant M$ §)(第二个数组的序数)上
+	% 近似解计算(过程)精度有效阶数值的数组，因为在那个排除的节点可行解精确给定。
+	% 同时在不同网格上(第一个数组的序数)进行操作
+
+	p_eff_ForEveryTime = zeros(S,M + 1);
+	
+	% 精度有效阶的计算
+	for m = 2:(M + 1)
+	
+	% 无法计算(§ $p^{\, eff}_{(1)}(t_m)$ §) и (§ $p^{\, eff}_{(2)}(t_m)$ §)
+	p_eff_ForEveryTime(1,m) = NaN;
+	p_eff_ForEveryTime(2,m) = NaN;
+	
+	for s = 3:S
+	p_eff_ForEveryTime(s,1) = inf;
+	p_eff_ForEveryTime(s,m) = log(...
+	sqrt(sum((array_of_u(s - 1,m,:) - ...
+	array_of_u(s - 2,m,:)).^2))/...
+	sqrt(sum((array_of_u(s,m,:) - ...
+	array_of_u(s - 1,m,:)).^2)))/...
+	log(r_t);
+	end
+	end
+	
+	% 优化序号为s的网格上的计算结果
+	% S = 9;
+	
+	figure;
+	t = t_0:(T - t_0)/M:T; % 定义基础网格定义基础网格
+	% 画出精度理论阶和基础网格时间节点的相关关系
+	plot(t,t*0 + 2,'-*k','MarkerSize',3); hold on;
+	% 画出精度有效阶和基础网格时间节点的相关关系
+	plot(t(2:M+1),p_eff_ForEveryTime(S,2:M + 1),...
+	'-sk','MarkerSize',5,'LineWidth',1);
+	axis([t(1) t(M + 1) -2.0 3.0]);
+	xlabel('t'); ylabel('p^{eff}');
+	\end{lstlisting}
+	
+	请注意，在基础网格$T_M$的节点$t_0$有效精度阶${p_t}_{(s)}^{\, eff}(t_0)$无法计算，这是因为在任何网格该节点上解已经由初始条件精确给出。由于精度有效阶数确定了精确解泰勒级数展开中的实数项，数值方法精确地表达了该解，因此我们可以规定~${p_t}_{(s)}^{\, eff}(t_0)=+\infty$。
+	
+	在图~\ref{Fig_2_4}展示了问题~\eqref{Ch2_main_equation}伴随不同网格中的参数组~\eqref{Ch_2_parameters_2_a} 的代码工作结果。取带有$N = 50$且$M = 50$个区间的网格作为基础网格，并通过加细系数$r_x = r_t = 2$进行逐次网格加细。给出了在第九个网格上($s = 9$)求解后的计算结果，对于这个网格得到了渐近精确解直观的点态精度有效阶${p_t}^{\, eff}_{(s)}(t_m)$, $0 \leqslant m \leqslant M$的数值。为了比较，在图~\ref{Fig_2_5}展示了对于不同$s$的函数$p^{\, eff}_{(s)}(t)$的图像，通过实验证实了值${p_t}^{\, eff}_{(9)}(t_m)$的渐进性，其展示于图~\ref{Fig_2_4}。
+
+	由此可知，对于有关参数集~\eqref{Ch_2_parameters_2_a}的问题\eqref{Ch2_main_equation}的数值解，我们可以得出以下结论。在$S = 9$上计算出嵌套网格后，精度有效阶${p_t}^{\, eff}_{(s)}(t)$的逐点值对于每一个时刻$t_m \in T_M$ 到~$m=20$(包括~$m=20$)收敛于${p_t}^{theor} \equiv 2$，而对于更大的~$m$值，显然收敛于~$-\infty$。这意味着，爆破发生在时刻~$T_{bl} \in (t_{20},t_{21}] \equiv (0.667,0.700]$，并且在~$m\geqslant21$ 趋向于~$-\infty$的条件下，精度有效阶允许假设，在点$T_{bl}$解具有指数破坏形式的特异性。
+	
+	\begin{figure}[t]
+		\centering
+		\includegraphics[width=0.75\textwidth]{Chapter-2-4.eps}\\
+		\caption{对于问题~\eqref{Ch2_main_equation}伴随输入数据~\eqref{Ch_2_parameters_2_a}及以下参数集合:$N = 50$, $M = 50$, $r_x = 2$, $r_t = 2$, $S = 9$的精度有效阶${p_t}^{\, eff}_{(S)}(t_m)$, $0 \leqslant m \leqslant M$的计算结果。}
+		\label{Fig_2_4}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=1.00\textwidth]{Chapter-2-5.eps}\\
+		\caption{对于问题~\eqref{Ch2_main_equation}伴随输入数据~\eqref{Ch_2_parameters_2_a}及以下参数集合:$N = 50$, $M = 50$, $r_x = 2$, $r_t = 2$以及不同的 $s$: $s = \{3,4,5,7\}$的精度有效阶${p_t}^{\, eff}_{(s)}(t_m)$, $0 \leqslant m \leqslant M$的计算结果。}
+		\label{Fig_2_5}
+	\end{figure}
+	
+	如果关于空间变量在整个区域中同时发生解的光滑性的违背，则网格$X_N$有第一时间层$t \geqslant T_{bl}$在所有点出现${p_t}_{(s)}^{\, eff}(x,t)$~\eqref{Ch2_p_eff_for_every_spatial_point}相对于2的收敛性偏差。如果解的爆破发生在单独的点$x^*$，则描述的方法使得可以及时追踪到在其他点的解的爆破过程。解的爆破过程的该判断方法是可行的，因为解释问题的解趋向无穷大~\cite{BUE_basic_1,BUE_basic_2}，方法CROS1也不会导致溢出。
+
+
+
+	以下是MatLab代码的示例，格式为单独的文件BlowUpDiagnostics\_for\_specified\_t.m，该文件计算在特定的时刻$t_m \in T_M$~\eqref{Ch2_p_eff_for_every_spatial_point}，与基础网格 $X_N$的节点在空间上重合的节点处近似解的精度有效阶。使用已经生成的data.mat文件中的数据。目的是定位爆破发生的空间变量$x$。
+\begin{framed}
+	%\lstinputlisting{BlowUpDiagnostics_for_specified_t.m}
+	\begin{lstlisting}
+	% 加载在S个细化网格序列中近似解的计算结果
+	load('data.mat');
+	
+	% 分配内存给在除了(§ $x_0$§)的不同节点(§ $x_n$, \: $1 \leq n \leq N$ §)  (第二个数组的序数)上
+	% 近似解计算(过程)精度有效阶数值的数组，因为在那个排除的节点可行解精确给定。
+	% 同时在不同网格上(第一个数组的序数)进行操作
+	p_eff_ForSpecifiedTime = zeros(S,N + 1);	
+	% 计算所有空间点的有效精度阶
+	% 除了左边界外
+	% 在确定时间层( $t_{m - 1}$ ) 及序数 (m-1)
+	% (考虑到MatLab中的索引偏移+1)
+
+	m = 21;
+	for n = 2:(N + 1)
+	
+	% 无法计算(§ $p^{\, eff}_{(1)}(x_n)$ §) и (§ $p^{\, eff}_{(2)}(x_n)$ §)
+	p_eff_ForSpecifiedTime(1,n) = NaN;
+	p_eff_ForSpecifiedTime(2,n) = NaN;
+	
+	for s = 3:S
+	p_eff_ForSpecifiedTime(s,1) = inf;
+	p_eff_ForSpecifiedTime(s,n) = log(...
+	abs(array_of_u(s-1,m,n)-array_of_u(s-2,m,n))/...
+	abs(array_of_u(s,m,n)-array_of_u(s-1,m,n)))/...
+	log(r_t);
+	end
+	end
+	
+	% 优化序号为s的网格上的计算结果
+	% S = 9;
+	figure;
+	x = a:(b - a)/N:b; % 确定基础网格
+	% 画出精度理论阶和基础网格空间节点的相关关系
+	plot(x,x*0 + 2,'-*k','MarkerSize',3); hold on;
+	% 画出精度有效阶和基础网格空间节点的相关关系
+	plot(x(2:N+1),p_eff_ForSpecifiedTime(S,2:N + 1),...
+	'-sk','MarkerSize',5,'LineWidth',1);
+	axis([x(1) x(N + 1) -2.0 3.0]);
+	xlabel('x'); ylabel('p^{eff}');
+	\end{lstlisting}
+\end{framed}
+	
+	请注意，在基础网格$X_N$的节点$x_0$有效精度阶${p_t}_{(s)}^{\, eff}(x_0,t_m)$无法计算，这是因为在任何网格该节点上解已经由自己的边界条件精确给出。因此我们可以规定精度有效阶等于$+\infty$。
+	
+	在图~\ref{Fig_2_6} 展示了问题~\eqref{Ch2_main_equation}伴随参数组~\eqref{Ch_2_parameters_2_a}在不同时刻(解的爆破发生之前与之后)的代码工作结果。可以清楚地看到，最初的爆破发生在沿着空间坐标的区间的右端，爆破区域逐渐向左扩散。
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=1.00\textwidth]{Chapter-2-6.eps}\\
+		\caption{对于问题~\eqref{Ch2_main_equation}伴随输入数据~\eqref{Ch_2_parameters_2_a}及以下参数集合:$N = 50$, $M = 50$, $r_x = 2$, $r_t = 2$, $S = 9$的精度有效阶${p_{xt}}^{\, eff}_{(S)}(x,t_m)$的计算结果。展示了了$m = \{20,21,22,30\}$的图}
+		\label{Fig_2_6}
+	\end{figure}
+	
+	结果，我们可以得出一个结论：在第九个嵌套网格上获得的数值解的哪一部分(参考图~\ref{Fig_2_7})，我们可以信任，而哪一个不可以。
+	\begin{figure}[t]
+		\centering
+		\includegraphics[width=0.85\textwidth]{Chapter-2-7.eps}\\
+		\caption{对于问题~\eqref{Ch2_main_equation}伴随输入数据~\eqref{Ch_2_parameters_2_a}及以下参数集合:$N = 50$, $M = 50$, $r_x = 2$, $r_t = 2$, $s = 9$的解$u_{(s)}(x,t) \equiv u^{(r_x^{s - 1}N,r_t^{s - 1}M)}(x,t)$ 计算结果。仅标记与基础网格的节点一致的节点。}
+		\label{Fig_2_7}
+	\end{figure}
+	
+	另外，请注意图~\ref{Fig_2_2} 与~\ref{Fig_2_7}中显示的解之间的差异，这是因为对于同一组输入参数，将呈现针对不同$s$的计算结果。
+
+	第9个网格上的解($s = 9$)是通过以下命令集获得的，这些命令的格式为单独的MatLab文件draw.m。
+
+\begin{framed}
+	%\lstinputlisting{draw.m}
+	\begin{lstlisting}
+	% 加载在S个不断加细r倍网格组成的序列上得到的近似解计算结果
+	load('data.mat');
+	
+	% 从不同网格上的解组成的数组中，
+	% 选择第9个网格上的网格解
+	s = 9;
+	
+	u(:,:) = array_of_u(s,:,:);
+	
+	% 解的呈现
+	figure;
+	x = a:(b - a)/N:b; % 基础网格关于x的确定
+	for m = 0:M
+	% 画出初始条件图
+	plot(x,u(1,:),'-g','LineWidth',1); hold on;
+	% 画出边界条件在时刻(§ $t_m$ §)的图
+	plot(x,u(m + 1,:),'-ok',...
+	'MarkerSize',3,'LineWidth',1); hold on;
+	axis([a b -120 120]); xlabel('x'); ylabel('u');
+	hold off; drawnow; pause(0.1);
+	end
+	\end{lstlisting}
+\end{framed}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\chapter{伪双曲型偏微分方程初-边值问题爆破解的诊断}\label{Chapter_3}
+
+ 本章讨论了伪双曲型偏微分方程初-边值问题解的爆破现象的数值分析特点。首先我们分析一个例子——在等离子体中的离子声波理论中出现的索伯列夫型方程~\cite{Lukyanenko_1}。我们需要找到定义在区域 $(x,t) \in [a,b] \times [t_0,T]$\footnote{\emph{注：}我们的任务是，在时间点~$T$之前（包含~$T$）用数值的方式找到解，虽然我们知道这个解在时间点~$T$上可能不存在，甚至在更早的时间点上就出现爆破，但是这与我们想要以数值方式分析出爆破解的目的相关，所以我们需要找到在时间点~$T$之前（包含~$T$）的\emph{数值\/}解}上且满足以下方程组的函数 $u(x,t)$。同时与通过分析方法获得的先验估计（如果存在）相较，判断出爆破解存在的事实（如果存在），确定出爆破解在时间和空间上的位置。
+
+	
+	\begin{equation}
+	\label{Ch3_main_equation}
+	\left\{
+	\begin{aligned}
+	&\dfrac{\partial^2}{\partial t^2} \Big(u_{xx} - e^{\varepsilon u}\Big) + u_{xx} = 0, \quad x \in (a,b), \quad t \in (t_0,T], \\
+	&u_x(a,t) = 0, \quad u_x(b,t) = 0, \quad t \in (t_0,T], \\
+	&u(x,t_0) = u_{init_0}(x), \; x \in [a,b],\\
+	&u_t(x,t_0) = u_{init_1}(x), \; x \in [a,b],
+	\end{aligned}
+	\right.
+	\end{equation}
+	
+\section{数值解的寻找} \label{Ch_3_Numerical_solving}
+	首先我们将原始的初-边值问题~\eqref{Ch3_main_equation}化为自变量时间为一阶的方程组，这对于我们后面描述的数值方法的应用是必要的：
+	\begin{equation}
+	\label{Ch3_reduced_equation_V1}
+	\left\{
+	\begin{aligned}
+	&\dfrac{\partial}{\partial t} \Big(u_{xx} - e^{\varepsilon u}\Big) = v, \quad x \in (a,b), \quad t \in (t_0,T], \\
+	&\dfrac{\partial}{\partial t} \, v + u_{xx} = 0, \quad x \in (a,b), \quad t \in (t_0,T], \\
+	&u_x(a,t) = 0, \quad u_x(b,t) = 0, \quad t \in (t_0,T],\\
+	&u(x,t_0) = u_{init_0}(x), \quad x \in [a,b],\\
+	&v(x,t_0) = {u_{init_1}(x)}_{xx} -\varepsilon u_{init_1}(x) e^{\varepsilon u_{init_0}(x)}, \quad x \in (a,b).
+	\end{aligned}
+	\right.
+	\end{equation}
+	
+    对于问题~\eqref{Ch3_reduced_equation_V1}的数值解，我们运用直线法（(MOL)~\cite{Kalitkin&Ko_1,Kalitkin,Hairer&Wanner}将偏微分方程组近似为常微分方程组，最终问题可通过运用复系数单阶段Rosenbrock法CROS1~\cite{Kalitkin&Ko_1,Rosenbrock}得到有效解决。
+
+    我们在空间变量x方向上以步长 $h = (b - a)/N$剖分出具有$N$个间距的等距网格$X_N$（	相应的具有 $N + 1$ 个网格点）：$X_N = \{x_n, \; 0 \leqslant n \leqslant N: \; x_n = a + n h\}$。如此一来，在对空间二阶导数的有限差分近似后，我们得到了一个微分代数方程组，从中我们需要定义出$N + 1$个未知函数$u_{n} \equiv  u_{n}(t) \equiv u(x_n,t)$, $n = \overline{0,N}$和$N - 1$个辅助函数$v_{n} \equiv  v_{n}(t) \equiv v(x_n,t)$, $n = \overline{1,N - 1}$ ($v_0$ 与 $v_N$ 不包含在方程组内):
+	\begin{equation*}
+	\left\{
+	\begin{aligned}
+	&\dfrac{d}{d t} \Big(\dfrac{u_{n + 1} - 2u_n + u_{n - 1}}{h^2} - e^{\varepsilon u_n}\Big) = v_n, \: n = \overline{1,N - 1}, \: t \in (t_0,T], \\
+	&\dfrac{d}{d t} \, v_n + \dfrac{u_{n + 1} - 2u_n + u_{n - 1}}{h^2} = 0, \quad n = \overline{1,N - 1}, \quad t \in (t_0,T], \\
+	&\frac{-\frac{3}{2}u_0 + 2u_1 - \frac{1}{2}u_2}{h} = 0, \, \frac{\frac{3}{2}u_N - 2u_{N - 1} + \frac{1}{2}u_{N - 2}}{h} = 0, \, t \in (t_0,T],\\
+	&u_n(t_0) = u_{init_0}(x_n), \quad n = \overline{0,N},\\
+	&v_n(t_0) = \frac{u_{init_1}(x_{n + 1}) - 2u_{init_1}(x_n) + u_{init_1}(x_{n - 1})}{h^2} - {}\\
+	&\hspace{2.5cm} - \varepsilon u_{init_1}(x_n) e^{\varepsilon u_{init_0}(x_n)}, \quad n = \overline{1,N - 1}.
+	\end{aligned}
+	\right.
+	\end{equation*}
+    以方便后续变换，我们将方程组写成如下形式，将每个方程的微分部分移到等式的左侧:
+	\begin{equation*}
+	\left\{
+	\begin{aligned}
+	&\dfrac{d u_{n - 1}}{d t} - \big(2 + \varepsilon h^2 e^{\varepsilon u_n}\big)\dfrac{d u_n}{d t} + \dfrac{d u_{n + 1}}{d t} = h^2 v_n, \, n = \overline{1,N - 1}, \\ %\, t \in (t_0,T], \\
+	&\dfrac{d v_n}{dt} = -\frac{u_{n + 1} - 2u_n + u_{n - 1}}{h^2}, \quad n = \overline{1,N - 1}, \quad t \in (t_0,T], \\
+	&u_0 = \frac{4}{3}u_1 - \frac{1}{3}u_2, \quad u_N = \frac{4}{3}u_{N - 1} - \frac{1}{3}u_{N - 2}, \quad t \in (t_0,T],\\
+	&u_n(t_0) = u_{init_0}(x_n), \quad n = \overline{0,N},\\
+	&v_n(t_0) = \frac{u_{init_1}(x_{n + 1}) - 2u_{init_1}(x_n) + u_{init_1}(x_{n - 1})}{h^2} - {}\\
+	&\hspace{2.5cm} - \varepsilon u_{init_1}(x_n) e^{\varepsilon u_{init_0}(x_n)}, \quad n = \overline{1,N - 1}.
+	\end{aligned}
+	\right.
+	\end{equation*}
+	我们得到的方程组是微分代数方程组，因为其中包含微分方程和代数方程（ 由边界条件定义的两个方程）。通过将$u_0$ 和 $u_N$的表达式代入微分方程，此方程组可化为纯微分方程组。
+	\begin{equation*}
+	\left\{
+	\begin{aligned}
+	&\dfrac{d}{d t}\Big(\frac{4}{3}u_1 - \frac{1}{3}u_2\Big) - \Big(2 + \varepsilon h^2 e^{\varepsilon u_1}\Big)\dfrac{d u_1}{d t} + \dfrac{d u_{2}}{d t} = h^2 v_1,  \, t \in (t_0,T], \\
+	&\dfrac{d u_{n - 1}}{d t} - \Big(2 + \varepsilon h^2 e^{\varepsilon u_n}\Big)\dfrac{d u_n}{d t} + \dfrac{d u_{n + 1}}{d t} = h^2 v_n, \, n = \overline{2,N - 2}, \\ %\, t \in (t_0,T], \\
+	&\dfrac{d u_{N - 2}}{d t} - \Big(2 + \varepsilon h^2 e^{\varepsilon u_{N - 1}}\Big)\dfrac{d u_{N - 1}}{d t} + {}\\
+	&\hspace{2.5cm}+\dfrac{d}{d t}\Big(\frac{4}{3}u_{N - 1} - \frac{1}{3}u_{N - 2}\Big) = h^2 v_{N - 1}, \, t \in (t_0,T], \\
+	&\dfrac{d v_1}{dt} = -\frac{u_{2} - 2u_1 + \big(\frac{4}{3}u_1 - \frac{1}{3}u_2\big)}{h^2}, \quad t \in (t_0,T], \\
+	&\dfrac{d v_n}{dt} = -\frac{u_{n + 1} - 2u_n + u_{n - 1}}{h^2}, \quad n = \overline{2,N - 2}, \quad t \in (t_0,T], \\
+	&\dfrac{d v_{N - 1}}{dt} = -\frac{\big(\frac{4}{3}u_{N - 1} - \frac{1}{3}u_{N - 2}\big) - 2u_{N - 1} + u_{N - 2}}{h^2}, \quad t \in (t_0,T], \\
+	&u_n(t_0) = u_{init_0}(x_n), \quad n = \overline{0,N},\\
+	&v_n(t_0) = \frac{u_{init_1}(x_{n + 1}) - 2u_{init_1}(x_n) + u_{init_1}(x_{n - 1})}{h^2} - {}\\
+	&\hspace{2.5cm} - \varepsilon u_{init_1}(x_n) e^{\varepsilon u_{init_0}(x_n)}, \quad n = \overline{1,N - 1},
+	\end{aligned}
+	\right.
+	\end{equation*}
+	我们注意到，现在的方程组包含$2N - 2$个方程和$2N - 2$个未知函数$u_{n}$ 和 $v_{n}$, $n = \overline{1,N - 1}$。此方程组可写成如下形式：
+	\begin{equation}
+	\label{Ch_3_System_of_ODEs_V1}
+	\left\{
+	\begin{aligned}
+	&\emph{\textbf{D}}(\emph{\textbf{y}}) \dfrac{d \emph{\textbf{y}}}{d t} = \emph{\textbf{f}} \, (\emph{\textbf{y}}), \quad t \in (t_0,T],\\
+	&\emph{\textbf{y}}(t_0) = \emph{\textbf{y}}_{init},
+	\end{aligned}
+	\right.
+	\end{equation}
+	$\emph{\textbf{y}} = \big(u_1 \; u_2 \;  \ldots \; u_{N - 1} \; v_1 \; v_2 \;  \ldots \; v_{N - 1} \big)^T$， $\emph{\textbf{f}} = \big(f_1 \; f_2 \; \ldots \; f_{2N - 2}\big)^T$ ， $\emph{\textbf{y}}_{init} = \big(u_1(t_0) \; u_2(t_0) \;  \ldots \; u_{N - 1}(t_0) \; v_1(t_0) \; v_2(t_0) \;  \ldots \; v_{N - 1}(t_0) \big)^T$。
+	这里的函数-向量 $\emph{\textbf{f}}$ 有如下结构：
+	\begin{equation*}
+	f_n = \begin{cases}
+	\vspace{0.1cm}
+	h^2 y(N - 1 + n),&\text{если $n = \overline{1,N-1}$,}\\
+	\vspace{0.2cm}
+	-\dfrac{y_{2} - 2y_1 + \big(\frac{4}{3}y_1 - \frac{1}{3}y_2\big)}{h^2},&\text{если $n = N$,}\\
+	\vspace{0.1cm}
+	-\dfrac{y_{n - N + 2} - 2y_{n - N + 1} + y_{n - N}}{h^2},&\text{\!\!\!\!\!если $n = \overline{N + 1,2N - 3}$,} \\
+	-\dfrac{\big(\frac{4}{3}y_{N - 1} \!\! -\!\! \frac{1}{3}y_{N - 2}\big)\!\! - \!\!2y_{N - 1} \!\!+\!\! y_{N - 2}}{h^2},&\text{если $n = 2N - 2$.}
+	\end{cases}
+	\end{equation*}
+	
+	%\begin{align*}
+	%    &\hspace{-3.3cm}f_n = h^2 y(N - 1 + n),\quad \text{для $n=\overline{1,N-1}$}
+	%\end{align*}
+	%\begin{align*}
+	%    &\hspace{-4.8cm}f_N = -\frac{y_{2} - 2y_1 + \big(\frac{4}{3}y_1 - \frac{1}{3}y_2\big)}{h^2},
+	%\end{align*}
+	%\begin{align*}
+	%    &f_n =  -\frac{u_{n - N + 2} - 2u_{n - N + 1} + u_{n - N}}{h^2}, \quad \text{для $n=\overline{N + 1, 2N-3}$},
+	%\end{align*}
+	%\begin{align*}
+	%    &\hspace{-2.5cm}f_{2N - 2} = -\frac{\big(\frac{4}{3}y_{N - 1} - \frac{1}{3}y_{N - 2}\big) - 2y_{N - 1} + y_{N - 2}}{h^2}.
+	%\end{align*}
+	以下为实现向量-函数$\emph{\textbf{f}}$分量计算的MatLab函数示例：
+	%\lstinputlisting{f.m}
+
+
+	\begin{lstlisting}	
+	function f = f(y,h,N)
+	
+	% 函数计算待解常微分方程组右侧部分的向量
+	
+	% 输入数据：
+	% y - 当前时间层上常微分方程组的解向量
+	% h - 变量x方向上的网格步长
+	% N - 变量x方向上的网格间隔数量
+	
+	% 输出数据：
+	% f - 所求向量 f
+	
+	f = zeros(2*N - 2,1);
+	
+	for n = 1:(N - 1)
+	f(n) = h^2*y(N - 1 + n);
+	end
+	f(N) = -(y(2) - 2*y(1) + (4/3*y(1) - 1/3*y(2)))/h^2;
+	for n = (N + 1):(2*N - 3)
+	f(n) = -(y(n - N + 2) - 2*y(n - N + 1) + ...
+	y(n - N))/h^2;
+	end
+	f(2*N - 2) =  -((4/3*y(N - 1) - 1/3*y(N - 2)) - ...
+	2*y(N - 1) + y(N - 2))/h^2;
+	
+	end
+	\end{lstlisting}
+
+
+	矩阵函数 $\emph{\textbf{D}}$ 存在以下非零元素：
+	\begin{equation*}
+	\begin{aligned}
+	&D_{n,n-1} & &= \begin{cases}
+	1,&\text{если $n = \overline{2,N-2}$,}\\
+	1 - \frac{1}{3},&\text{если $n = N - 1$,}\\
+	\end{cases}\\
+	&D_{n,n} & &= \begin{cases}
+	\frac{4}{3} - \big(2 +  \varepsilon h^2 e^{\varepsilon y_1}\big),&\text{若 $n = 1$,}\\
+	- \big(2 +  \varepsilon h^2 e^{\varepsilon y_n}\big),&\text{若 $n = \overline{2,N-2}$,}\\
+	- \big(2 +  \varepsilon h^2 e^{\varepsilon y_{N - 1}}\big) + \frac{4}{3},&\text{若 $n = N - 1$,}\\
+	1,&\text{если $n = \overline{N,2N - 2}$,}
+	\end{cases}\\
+	&D_{n,n+1} & &= \begin{cases}
+	-\frac{1}{3} + 1,&\text{若 $n = 1$,}\\
+	1,&\text{若 $n = \overline{2,N-2}$.}\\
+	\end{cases}
+	\end{aligned}
+	\end{equation*}
+	以下为实现矩阵函数$\emph{\textbf{f}}$分量计算的MatLab函数示例：
+
+	\begin{lstlisting}
+	function D = D(eps,y,h,N)
+	
+	% 函数计算待解常微分方程组微分算子的矩阵
+	
+	% 输入数据：
+	% eps - 数值较小的参数
+	% y - 当前时间层上常微分方程组的解向量
+	% h - 变量x方向上的网格步长
+	% N - 变量x方向上的网格间隔数量
+	
+	% 输出数据：
+	% D - 所求的微分算子的矩阵
+	
+	D = zeros(2*N - 2,2*N - 2);
+	
+	D(1,1) = 4/3 - (2 + eps*h^2*exp(eps*y(1)));
+	D(1,2) = -1/3 + 1;
+	for n = 2:(N - 2)
+	D(n,n - 1) = 1;
+	D(n,n) = - (2 + eps*h^2*exp(eps*y(n)));
+	D(n,n + 1) = 1;
+	end
+	D(N - 1,N - 2) = 1 - 1/3;
+	D(N - 1,N - 1) = -(2 + eps*h^2*exp(eps*y(N-1))) +4/3;
+	for n = N:(2*N - 2)
+	D(n,n) = 1;
+	end
+	
+	end
+	\end{lstlisting}
+
+
+	\emph{注意:}    需要注意的是，下面运用到的具有复系数的Rosenbrock算法CROS1仅在常数矩阵函数$\emph{\textbf{D}}$的情况下才具有精度为$O(\tau^2)$的阶(在文章~\cite{BUE_basic_1,BUE_basic_2}中有更详细的解释)。如果我们在~\eqref{Ch3_reduced_equation_V1} 中引入一个辅助变量$g = u_{xx} - e^{\varepsilon u}$，那么可以得到如~\eqref{Ch_3_System_of_ODEs_V1}一般的隐式且具有常数矩阵的常微分方程组。关于问题~\eqref{Ch3_main_equation}此种形式的解我们稍后进行分析（在本章的结尾部分）。在矩阵函数$\emph{\textbf{D}}(\emph{\textbf{y}})$不是常数的情况下，CROS1算法将具有精度为$O(\tau^1)$的阶。
+
+	
+	下面我们在时间t方向上以步长 $\tau = (T - t_0)/M$剖分出具有$M$个间距的等距网格 $T_M$（	相应的具有 $M + 1$ 个网格点）$T_M = \{t_m, \; 0 \leqslant m \leqslant M: \; t_m = t_0 + m \tau\}$。
+	于是我们可以运用Rosenbrock算法CROS1来求解方程组~\eqref{Ch_3_System_of_ODEs_V1}:
+	\begin{equation}
+	\label{Ch_3_CROS1_V1}
+	\hspace{-0.1cm}
+	\begin{aligned}
+	&\emph{\textbf{y}}(t_{m + 1}) = \emph{\textbf{y}}(t_m) + (t_{m + 1} - t_m) \, \mathrm{Re} \, \emph{\textbf{w}}_1 \, ,\\
+	&\mbox{$\emph{\textbf{w}}_1$为线性方程组的解} \\
+	&\left[\emph{\textbf{D}}\Big(\emph{\textbf{y}}(t_m)\Big) - \dfrac{1 + i}{2} (t_{m + 1} - t_m) \, \emph{\textbf{f}}_\emph{\textbf{y}}\Big(\emph{\textbf{y}}(t_m)\Big)\right] \emph{\textbf{w}}_1 = \emph{\textbf{f}} \, \Big(\emph{\textbf{y}}(t_m)\Big).
+	\end{aligned}
+	\end{equation}
+
+
+	这里 $\emph{\textbf{f}}_\emph{\textbf{y}}$~———由元素 $\left(f_y\right)_{n,m}  \equiv \frac{\partial f_n}{\partial y_{m}}$构成的矩阵（雅可比矩阵)。其中存在以下非零元素：
+	\begin{align*}
+	&\hspace{-1.9cm}
+	\left(f_y\right)_{n,N - 1 + n} = h^2, \quad \text{если $n = \overline{1,N - 1}$,}
+	\end{align*}
+	\begin{align*}
+	&\hspace{-0.5cm}
+	\left(f_y\right)_{n,n - N} = \begin{cases}
+	-\frac{1}{h^2},&\text{若 $n = \overline{N + 1,2N - 3}$,}\\
+	\frac{1/3 - 1}{h^2},&\text{если $n = 2N - 2$.}
+	\end{cases}
+	\end{align*}
+
+	\begin{align*}
+	&\hspace{-0.0cm}
+	\left(f_y\right)_{n,n - N + 1} = \begin{cases}
+	\frac{2 - 4/3}{h^2},&\text{若 $n = N$,}\\
+	\frac{2}{h^2},&\text{若 $n = \overline{N + 1,2N - 3}$,}\\
+	\frac{-4/3 + 2}{h^2},&\text{若 $n = 2N - 2$,}
+	\end{cases}
+	\end{align*}
+
+	\begin{align*}
+	&\hspace{-0.1cm}
+	\left(f_y\right)_{n,n - N + 2} = \begin{cases}
+	\frac{-1 + 1/3}{h^2},&\text{若 $n = N$,}\\
+	-\frac{1}{h^2},&\text{若 $n = \overline{N + 1,2N - 3}$.}
+	\end{cases}
+	\end{align*}
+
+
+	以下为实现雅可比矩阵$\emph{\textbf{f}}_\emph{\textbf{y}}$分量计算的MatLab函数示例：
+	%\lstinputlisting{f_y.m}
+	\begin{lstlisting}
+	function f_y = f_y(y,h,N)	
+	% 函数计算待求常微分方程组右侧部分的雅可比矩阵
+	
+	% 输入数据：
+	% y - 当前时间层上常微分方程组的解向量
+	% h - 变量x方向上的网格步长
+	% N - 变量x方向上的网格间隔数量
+	
+	% 输出数据：
+	% f\_y - 所求得的雅可比矩阵
+	
+	f_y = zeros(2*N - 2,2*N - 2);
+	
+	for n = 1:(N-1)
+	f_y(n,N - 1 + n) = h^2;
+	end
+	f_y(N,1) = (2 - 4/3)/h^2;
+	f_y(N,2) = (-1 + 1/3)/h^2;
+	for n = (N + 1):(2*N - 3)
+	f_y(n,n - N) = -1/h^2;
+	f_y(n,n - N + 1) = 2/h^2;
+	f_y(n,n - N + 2) = -1/h^2;
+	end
+	f_y(2*N - 2,N - 2) = (1/3 - 1)/h^2;
+	f_y(2*N - 2,N - 1) = (-4/3 + 2)/h^2;
+	
+	end
+	\end{lstlisting}
+
+	以下为实现雅可比矩阵$\emph{\textbf{f}}_\emph{\textbf{y}}$分量计算的MatLab函数示例：
+	%\lstinputlisting{f_y.m}
+	\begin{lstlisting}
+	function f_y = f_y(y,h,N)
+	
+	% 函数计算待求常微分方程组右侧部分的雅可比矩阵
+	
+	% 输入数据：
+	% y - 当前时间层上常微分方程组的解向量
+	% h - 变量x方向上的网格步长
+	% N - 变量x方向上的网格间隔数量
+	
+	% 输出数据：
+	% f\_y - 所求得的雅可比矩阵
+	
+	f_y = zeros(2*N - 2,2*N - 2);
+	
+	for n = 1:(N-1)
+	f_y(n,N - 1 + n) = h^2;
+	end
+	f_y(N,1) = (2 - 4/3)/h^2;
+	f_y(N,2) = (-1 + 1/3)/h^2;
+	for n = (N + 1):(2*N - 3)
+	f_y(n,n - N) = -1/h^2;
+	f_y(n,n - N + 1) = 2/h^2;
+	f_y(n,n - N + 2) = -1/h^2;
+	end
+	f_y(2*N - 2,N - 2) = (1/3 - 1)/h^2;
+	f_y(2*N - 2,N - 1) = (-4/3 + 2)/h^2;
+	
+	end
+	\end{lstlisting}
+
+
+	以下为一MatLab函数的实例，该函数使用上述函数f, D 和 f\_y，按照~\eqref{Ch_3_CROS1_V1}的格式，对问题~\eqref{Ch3_main_equation}求解数值解。
+	%\lstinputlisting{PDESolving.m}
+	\begin{lstlisting}
+	function u = PDESolving(eps,a,b,N_0,t_0,T,M_0,...
+	u_init_0,u_init_1,s,r_x,r_t)
+	
+	% 函数寻找偏微分方程的近似数值解。
+	
+	% 输入的参数：
+	% eps - 数值较小的参数
+	% a,b - 变量x区域(§ $[a,b]$ §)的边界值
+	% N\_0 - 空间方向上基础网格的间隔数量
+	% t\_0, T - 初始时间点与终止时间点 (§ $t_0$ §) 和 (§ $T$ §)
+	% M\_0 - 时间方向上基础网格的间隔数量
+	% u\_init\_0 和 u\_init\_1 - 定义初始条件的函数
+	% s - 用于计算解的网格序号(如果 s = 1, 则在基础网格上寻找解)
+	% r\_x 和 r\_t - x方向上与t方向上的加细网格系数
+	
+	% 输出的参数：
+	% u- 由偏微分方程解的网格值构成的数组（仅在网格节点与基础网格节点重合时取得）
+	% 在空间变量x方向上构造加细 $r_x^{s - 1}$ 倍序号为s的网格
+	% 在时间变量t方向上构造加细 $r_t^{s - 1}$ 倍序号为s的网格
+	
+	
+	N = N_0*r_x^(s - 1);    % 计算序号为s的网格的间隔数量
+	M = M_0*r_t^(s - 1);    %
+	
+	h = (b - a)/N;     % x方向上网格步长的定义
+	x = a:h:b;         % x方向上加细网格的定义
+	tau = (T - t_0)/M; % t方向上网格步长的定义
+	t = t_0:tau:T;     % t方向上加细网格的定义
+	
+	% 分配内存给数组u
+	% 该数组的第m+1行存储了时间方向上基础网格在时间点(§ $t_m$ §)上的网格值
+	u = zeros(M_0 + 1,N_0 + 1);
+	
+	% 分配内存给在当前时间点(§ $t_m$ §)常微分方程组的解的网格值数组
+	y = zeros(1,2*N - 2);
+	
+	% 设置要求解的常微分方程组的初始条件
+	for n = 1:(N - 1)
+	y(1,n) = u_init_0(x(n + 1));
+	y(1,N - 1 + n) = (u_init_1(x(n + 2)) - ...
+	2*u_init_1(x(n +1)) + u_init_1(x(n)))/h^2 -...
+	eps*u_init_1(x(n + 1))*...
+	exp(eps*u_init_0(x(n + 1)));
+	end
+	
+	% 从与初始条件对应的数组u的第一行中，选择空间方向上的网格中与基本网格节点重合的节点的网格值
+	for n = 1:(N_0 + 1)
+	u(1,n) = u_init_0(x((n - 1)*r_x^(s - 1) + 1));
+	end
+	
+	% 输入符合在网格s上与基础网格上对应时间层相同的时间层选择的索引
+	% 在这一点上，我们将追踪加细网格上(§ $t_m$ §)与基础网格上(§ $t_{m_{basic}}$ §)的匹配
+	m_basic = 2;
+	
+	for m = 1:M
+	
+	% CROS1算法的实现
+	
+	w_1 = (D(eps,y,h,N) - (1+1i)/2*(t(m + 1) - ...
+	t(m))*f_y(y,h,N))\f(y,h,N);
+	
+	y = y + (t(m + 1) - t(m))*real(w_1)';
+	
+	% 完成加密网格上(§ $t_{m + 1}$ §)与基础网格上(§ $t_{m_{basic}}$ §)匹配度的检验
+	if (m + 1) == (m_basic - 1)*r_t^(s - 1) + 1
+	
+	% 填写待求偏微分方程问题的网格值数组
+	
+	% 考虑左边界和右边界条件
+	u(m_basic,1) = 4/3*y(1) - 1/3*y(2);
+	u(m_basic,N_0 + 1) = 4/3*y(N - 1)  - ...
+	1/3*y(N - 2);
+	
+	% 在当前时间层上，选择与基础网格节点相同的空间节点（除去上面以考虑的边界节点）
+	for n = 2:N_0
+	u(m_basic,n) = y((n - 1)*r_x^(s - 1));
+	end
+	
+	% 现在将追踪在加细网格上(§ $t_{m + 1}$ §)与一系列(§ $t_{m_{basic}}$ §)的匹配度
+	m_basic = m_basic + 1;
+	
+	end
+	
+	end
+	
+	end
+	\end{lstlisting}
+
+
+\emph{注意：} 注意PDESolving函数的一些功能。
+
+	\begin{enumerate}
+		\item 该函数已经实现了在一系列加细网格上寻找近似数值解的功能，包括仅从与基本网格节点匹配的节点中选择网格值。 在实现数值诊断爆破解时，我们需要运用此功能，这将在下一节中进行讨论。 现在我们使用此函数来计算只在一个（基本）网格上的解。这种情况与输入参数$s:=1$的值相对应，因此参数$r_x$和$r_t$的值不是本质的，目前不会影响任何内容。
+		\item 为了节省内存（这对于$s$值较大时至关重要），在当前计算时间内内存上仅保留一组向量$\emph{\textbf{y}}(t_m)$的网格值，并且作序号为$s$的网格上的的网格解。该函数不返回一组完整的网格值，而只返回一组与基本网格中的节点匹配的节点中的值。
+		\item 需要注意的是，当访问向量$t$ 和 $x$的分量时，所有的索引需要位移$+1$（与述解析公式相较），因为在Matlab中数组元素的编号从$1$开始（故 $x_0 \equiv x(1)$, $x_1 \equiv x(2)$, \ldots, $x_N \equiv x(N + 1)$）。
+	\end{enumerate}
+
+
+     可以使用以下例如命令集运行PDESolving函数:
+
+%\lstinputlisting{test_3_1_PDESolving.m}
+\begin{lstlisting}
+% 定义计算开始和结束的时间
+t_0 = 0; T = 5;
+
+% 定义截断区间(§ $x \in [a,b]$ §)的边界
+a = 0; b = pi;
+
+% 定义基础网格的间隔数量
+N = 50; M = 50;
+
+% 定义问题的参数
+epsilon = 0.1;
+
+% 定义初始条件
+u_init_0 = @(x) 0;
+u_init_1 = @(x) -(x*(pi-x))^2*sin(x/3);
+
+s = 1;   % 网格序号（仅基础网格）
+r_x = 2; % x方向上加细网格系数
+r_t = 4; % t方向上加细网格系数
+
+u = PDESolving(epsilon,a,b,N,t_0,T,M,...
+u_init_0,u_init_1,s,r_x,r_t);
+
+% 计算解
+figure;
+x = a:(b - a)/N:b; % 定义x方向上基础网格
+for m = 0:M
+% 绘制初始条件图像
+plot(x,u(1,:),'--k','LineWidth',1); hold on;
+% 绘制在时间点 (§ $t_m$ §)上解的图像
+plot(x,u(m + 1,:),'-ok',...
+'MarkerSize',3,'LineWidth',1); hold on;
+axis([a b -20.5 0.01]); xlabel('x'); ylabel('u');
+hold off; drawnow; pause(0.1);
+end
+\end{lstlisting}
+
+
+通过这一组命令我们可获得下一组问题参数的解~\eqref{Ch3_main_equation}:
+\begin{equation}
+\label{Ch_3_parameters_3_1_a}
+\begin{aligned}
+&\varepsilon = 0.1, \quad a = 0, \quad b = \pi, \quad t_0 = 0, \quad T = 5, \\
+&u_{init_0}(x) = 0, \quad u_{init_1}(x) = -\big(x(\pi-x)\big)^2\sin\frac{x}{3}, \\
+\end{aligned}
+\end{equation}
+其空间和时间上的网格参数:
+\begin{equation}
+\label{Ch_3_parameters_3_1_b}
+N = 50, \quad M = 50.
+\end{equation}
+
+
+在图~\ref{Fig_3_1}中显示了在各个时间点$t_m$上函数$u(x,t_m)$的几组网格值。
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Chapter-3-1.eps}\\
+\caption{以参数为~\eqref{Ch_3_parameters_3_1_a}--\eqref{Ch_3_parameters_3_1_b}按照格式为~\eqref{Ch_3_CROS1_V1}求解问题~\eqref{Ch3_main_equation}的实例。该图显示了函数$u(x,t_m)$在单独的时间点$t_m$上的几组网格值}
+\label{Fig_3_1}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{数值计算的优化}
+
+为了分析确定出爆破解存在的事实，我们需要对一系列的加细网格进行计算（每一个加细网格都要对空间变量实行$r_x$次加细，时间变量实行$r_t$次加密）。随着网格序号s的增加（$s=\overline{1,S}$），网格的维数$X_{r_x^{s - 1}N} \times T_{r_t^{s - 1}M}$会迅速增长，这会导致程序的运行时间显著增长，有时还会导致计算机内存不足。计算时间的增长本质上首先与求解线性方程组~\eqref{Ch_3_CROS1_V1}所用的高斯法有关，其需要执行$O(N^3)$阶运算，$N$为待解方程组的维度。由于每次移动到下一时间层时我们都要求解线性方程组，故程序执行的总时间与空间方向上网格维度的三阶和时间方向上网格维度的一阶成比例。然而方程组\eqref{Ch_3_CROS1_V1}的矩阵有着特殊的形式且由四个$(N - 1) \times(N - 1)$维的子块组成，他们的内部结构在图~\ref{Ch_3_Structure_of_the_matrix_V1}中显示。（非零元素仅位于标注出的对角线上）这使得我们能够开发一种在求解具有特殊类型矩阵的线性方程组时复杂度仅为$O(N^1)$算法，无论是在计算的执行时间方面（复杂度为$O(N^1)$），还是所需要的内存方面（当$S$较大时，内存对于在非常密集的网格上进行计算是至关重要的）此算法都能够更“经济”地实现高斯法。主要地，程序执行总时间与空间方向上网格维度的一阶和时间方向上网格维度的一阶成比例。
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Chapter-3-2.eps}\\
+	\caption{线性方程组~\eqref{Ch_3_CROS1_V1}的矩阵结构}
+	\label{Ch_3_Structure_of_the_matrix_V1}
+\end{figure}
+
+
+\subsection{退化高斯法的使用} \label{sweep_method}
+
+假设有形式为 $AX = B$ 的线性方程组，其矩阵$A$拥有如图~\ref{Ch_3_Structure_of_the_matrix_V1}中所示结构，为方便起见，我们假设每个子块的维数相等 $N \times N$. 我们认为，矩阵$A$不以二维数组的形式存储在内存中（需在内存存储$4 \times N \times N$个元素），而是以八个形为${\operatorname{diag}_{(i,j)}}_{m/d/u}$的 $1 \times N$维数组的形式存储，其中包含位于相应对角线上的非零元素（需在内存存储$8 \times 1 \times N$个元素）这里的一对下标 $(i,j)$表示相应的对角线所在子块的坐标。最后一个下标可以取 m$\equiv$“main”$\equiv$“主的”，或者 d$\equiv$“down”$\equiv$“下方的”，或者 u$\equiv$“up”$\equiv$“上方的”其代表对角线或者余对角线在子块中的位置。
+\emph{注意：} 从图~\ref{Ch_3_Structure_of_the_matrix_V1} 中我们可以看到，对角线们有着不同的长度，为了方便算法的实现，我们将不同长度对角线的元素存到相同长度$N$的数组中。下对角线的元素将从数组的第二个元素开始记入（如此，元素${\operatorname{diag}_{(1,1)}}_{d}(1)$ 和 ${\operatorname{diag}_{(2,1)}}_{d}(1)$可以是任意的，因为算法实现中不会用到该数值）。上对角线的元素从对应矩阵的第一个元素开始记入（元素${\operatorname{diag}_{(1,1)}}_{u}(N)$ 和 ${\operatorname{diag}_{(2,1)}}_{u}(N)$可以是任意的，因为算法实现中不会用到该数值）
+如下为一可求解此方程组的算法描述（还存在很多其他可以实现的算法）：
+
+\begin{enumerate}
+	\item 我们将增广矩阵$A|B$的$\overline{1, N}$行减去相对应的$\overline{N + 1, 2N}$行，如此可使子块(1,2)中的对角线归零。于是我们得到了新的线性方程组$\tilde{A}X = \tilde{B}$。其前$N$个方程表示了仅关于向量$X$前$N$个分量，对应矩阵为三对角矩阵的线性方程组。
+	\item 我们使用追赶法（具体讲解请参见书~\cite{Kalitkin_book_1}第二章节的2.1.4小节）寻找向量$X$的前$N$个分量。矩阵$\tilde{A}$中的三个对角线上的元素构成的三个向量，向量$\tilde{B}$前$N$个分量构成的一个向量将作为此法的输入数据。
+	\item 增广矩阵$\tilde{A}|\tilde{B}$的第$n = \overline{N + 1,2N}$行对应的线性方程组，在通过将上一步骤计算出的向量$X$的前$N$分量替换后，其中的每一个方程都为仅包含一个未知数（向量$X$的第$n$分量）的方程，其可以通过简单的代数变换求解得到。
+\end{enumerate}
+
+
+下面为上述算法的MatLab函数实现，此函数用于求解具有特殊形式矩阵(如图~\ref{Ch_3_Structure_of_the_matrix_V1})的线性代数方程组$AX = B$。其输入数据为9个一维数组，前8个由矩阵$A$的非零元素所构成，第9个由等式右半部分的向量构成。
+%\lstinputlisting{SpecialMatrixAlgorithm.m}
+\begin{lstlisting}
+function X = SpecialMatrixAlgorithm...
+(diag_11_m,diag_11_d,diag_11_u,diag_12_m,...
+diag_21_m,diag_21_d,diag_21_u,diag_22_m,B)
+
+% 函数求解具有特殊形式矩阵（由四个的N阶方块构成，方块(1,1) 和 (2,1) -三对角矩阵，方块(1,2) 和 (2,2) - 对角矩阵）的线性方程组 AX = B
+
+
+% 输入参数:
+% diag\_11\_m,diag\_11\_d,diag\_11\_u,diag\_12\_m,
+% diag\_21\_m,diag\_21\_d,diag\_21\_u,diag\_22\_m -
+% - 长度为N的数组，包含矩阵A对角线上的非零元素
+% (数组中元素 diag\_11\_d(1), diag\_21\_d(1),
+% diag\_11\_u(N) 和 diag\_21\_u(N) 不使用)
+% B - 右侧长度为2N的向量
+
+N = length(B)/2;
+X = zeros(2*N,1);
+
+% 将子块(1,2)的对角线归零
+% 重新定义块(1,1)中的对角线元素和向量B的前N个元素
+for n = N:-1:1
+c = diag_12_m(n)/diag_22_m(n);
+diag_11_d(n) = diag_11_d(n) - c*diag_21_d(n);
+diag_11_m(n) = diag_11_m(n) - c*diag_21_m(n);
+diag_11_u(n) = diag_11_u(n) - c*diag_21_u(n);
+B(n) = B(n) - c*B(n + N);
+end
+
+% 使用追赶法求解向量X的前N个元素
+X(1:N) = TridiagonalMatrixAlgorithm...
+(diag_11_m,diag_11_d,diag_11_u,B(1:N));
+
+% 计算向量X中剩余的元素
+X(N + 1) = (B(N + 1) - diag_21_m(1)*X(1) - ...
+diag_21_u(1)*X(2))/diag_22_m(1);
+for n = 2:(N - 1)
+X(N + n) = (B(N + n) - diag_21_d(n)*X(n - 1) ...
+-diag_21_m(n)*X(n) -diag_21_u(n)*X(n+1))/...
+diag_22_m(n);
+end
+X(2*N) = (B(2*N) - diag_21_d(N)*X(N - 1) - ...
+diag_21_m(N)*X(N))/diag_22_m(N);
+
+end
+\end{lstlisting}
+
+这里使用的TridiagonalMatrixAlgorithm函数实现了求解具有三对角矩阵的线性方程组$AX = B$(维数为 $N$)的追赶法（具体讲解请参见书~\cite{Kalitkin_book_1}第二章节的2.1.4小节）。而此处的输入数据不是矩阵$A$（需要在内存中存储$N \times N$个元素）而仅为三个由对应对角线上的非零元素构成的向量$a$, $b$ 和 $c$ （此种情况下在内存中仅需存储$3 \times n \times 1$个元素）。
+\begin{equation*}
+\begin{pmatrix}
+a(1) &c(1) \\
+b(2) &a(2) &c(2) \\
+&b(3) &a(3) &c(3) \\
+&     &\ddots &\ddots &\ddots \\
+&       &       &b(n) &a(n) \\
+\end{pmatrix}
+\begin{pmatrix}
+X(1) \\
+X(2) \\
+X(3) \\
+\vdots \\
+X(n)
+\end{pmatrix}
+=
+\begin{pmatrix}
+B(1) \\
+B(2) \\
+B(3) \\
+\vdots \\
+B(n)
+\end{pmatrix}
+\end{equation*}
+
+
+\begin{lstlisting}
+function [X] = TridiagonalMatrixAlgorithm(a,b,c,B)
+
+% 函数实现求解具有三对角矩阵的线性方程组A X = B的追赶法（托马斯算法）
+% 输入参数：
+% B - 等式右边长度为n的向量（行向量或者列向量）
+% a, b, c - 由对角线元素构成的的长度为n的向量（(b(1)与c(n)不被使用）
+
+% [ a(1) c(1)                      ] [ X(1) ]   [ B(1) ]
+% [ b(2) a(2) c(2)                 ] [ X(2) ]   [ B(2) ]
+% [      b(3) a(3) c(3)            ] [      ]   [      ]
+% [           ...  ...  ...        ] [ ...  ] = [ ...  ]
+% [                ...  ...  c(n-1)] [X(n-1)]   [B(n-1)]
+% [                     b(n)  a(n) ] [ X(n) ]   [ B(n) ]
+
+n = length(B);
+v = zeros(n,1);
+X = zeros(n,1);
+
+w = a(1);
+X(1) = B(1)/w;
+for i = 2:n
+v(i - 1) = c(i - 1)/w;
+w = a(i) - b(i)*v(i - 1);
+X(i) = (B(i) - b(i)*X(i - 1))/w;
+end
+for j = n-1:-1:1
+X(j) = X(j) - v(j)*X(j + 1);
+end
+
+end
+\end{lstlisting}
+
+因此，对于使用既定的退化高斯法来求解线性方程组~\eqref{Ch_3_CROS1_V1}，首先我们需要准备好由矩阵上相应对角线上非零元素构成的数组。
+\begin{equation*}
+\left[\emph{\textbf{D}}\Big(\emph{\textbf{y}}(t_m)\Big) - \dfrac{1 + i}{2} \, (t_{m + 1} - t_m) \, \emph{\textbf{f}}_\emph{\textbf{y}}\Big(\emph{\textbf{y}}(t_m)\Big)\right].
+\end{equation*}
+下面是相对应的MatLab函数的实例，其本质上是对之前编写的函数D 和 f\_y的一个微小修改。
+%\lstinputlisting{DiagonalsPreparation.m}
+\begin{lstlisting}
+function [diag_11_m,diag_11_d,diag_11_u,diag_12_m,...
+diag_21_m,diag_21_d,diag_21_u,diag_22_m] = ...
+DiagonalsPreparation(eps,y,tau,h,N)
+
+% 函数准备包含待求常微分方程组的矩阵子块的对角线元素的数组
+
+% 此矩阵有如下形式
+% [D - (1+1i)/2*tau*f\_u] 是由四个N-1阶方块构成的分块矩阵
+%
+% 方块 (1,1) 和 (2,1) - 三对角矩阵
+% 方块 (1,2) 和 (2,2) - 对角矩阵
+
+% 输入数据:
+% eps - 数值较小的参数
+% y - 在当前时间层上常微分方程组的解向量
+
+% tau - 时间方向上的当前步长
+% h - x方向上的网格步长
+% N - x方向上的网格间隔数量
+
+% 输出参数:
+% diag\_11\_m,diag\_11\_d,diag\_11\_u,diag\_12\_m,diag\_21\_m,
+% diag\_21\_d,diag\_21\_u,diag\_22\_m - 待求数组
+
+% 为待求数组分配内存
+diag_11_m = zeros(1,N-1); diag_11_d = zeros(1,N-1);
+diag_11_u = zeros(1,N-1); diag_12_m = zeros(1,N-1);
+diag_21_m = zeros(1,N-1); diag_21_d = zeros(1,N-1);
+diag_21_u = zeros(1,N-1); diag_22_m = zeros(1,N-1);
+
+for n = 2:(N - 2)
+diag_11_d(n) = 1;
+end
+diag_11_d(N - 1) = 1 - 1/3;
+
+diag_11_m(1) = 4/3 -(2 + eps*h^2*exp(eps*y(1)));
+for n = 2:(N - 2)
+diag_11_m(n) = -(2 + eps*h^2*exp(eps*y(n)));
+end
+diag_11_m(N-1) = -(2 + eps*h^2*exp(eps*y(N-1))) +4/3;
+
+diag_11_u(1) = -1/3 + 1;
+for n = 2:(N - 2)
+diag_11_u(n) = 1;
+end
+
+for n = 1:(N - 1)
+diag_12_m(n) = -(1+1i)/2*tau*(h^2);
+end
+
+for n = (N + 1):(2*N - 3)
+diag_21_d(n - N + 1) = -(1+1i)/2*tau*(-1/h^2);
+end
+diag_21_d(N - 1) = -(1+1i)/2*tau*((1/3 - 1)/h^2);
+
+diag_21_m(1) = -(1+1i)/2*tau*((2 - 4/3)/h^2);
+for n = (N + 1):(2*N - 3)
+diag_21_m(n - N + 1) = -(1+1i)/2*tau*(2/h^2);
+end
+diag_21_m(N - 1) = -(1+1i)/2*tau*((-4/3 + 2)/h^2);
+
+diag_21_u(1) = -(1+1i)/2*tau*((-1 + 1/3)/h^2);
+for n = (N + 1):(2*N - 3)
+diag_21_u(n - N + 1) = -(1+1i)/2*tau*(-1/h^2);
+end
+
+for n = N:(2*N - 2)
+diag_22_m(n - N + 1) = 1;
+end
+
+end
+\end{lstlisting}
+
+
+若要在PDESolving函数中使用这些函数，我们需要将位于第74-79行中的代码替换为以下一组命令（函数D和f\_y将不再使用）。
+\begin{lstlisting}
+% CROS1算法的实现
+
+% 准备包含分块矩阵对角线元素（各子块的对角线元素）的数组
+% [D(y) - (1+1i)/2*tau*f\_u(y)]
+[diag_11_m,diag_11_d,diag_11_u,diag_12_m,...
+diag_21_m,diag_21_d,diag_21_u,diag_22_m] = ...
+DiagonalsPreparation...
+(eps,y,t(m + 1) - t(m),h,N);
+
+% 使用退化高斯法寻找w\_1
+w_1 = SpecialMatrixAlgorithm(...
+diag_11_m,diag_11_d,diag_11_u,diag_12_m,...
+diag_21_m,diag_21_d,diag_21_u,diag_22_m,...
+f(y,h,N));
+
+y = y + (t(m + 1) - t(m))*real(w_1)';
+\end{lstlisting}
+
+下面我们比较一下使用一般高斯法和改进后的算法两种情况下，在求解问题~\eqref{Ch3_reduced_equation_V1}近似解时移动到下一时间层所要执行的操作数。
+如前所述，在使用一般高斯法求解时，算法的运行时间与矩阵~\eqref{Ch_3_CROS1_V1}维数的立方成比例，而使用改进后的算法，时间与矩阵维数成比例。
+\begin{equation*}
+\sim \dfrac{2}{3}\big(2(N - 1)\big)^3 \sim \dfrac{2}{3} 8N^3 = \dfrac{16}{3} N^3 \sim 5N^3 \sim O(N^3).
+\end{equation*}
+在使用退化高斯法的情况下，算法第一步骤执行$9(N - 1)$次操作，第二步骤执行 $8(N - 1) - 7$，第三步骤执行$5\cdot2 + 7(N -1)$，故总共执行的操作数与N成比例。
+\begin{equation*}
+\sim 24N - 21 \sim O(N^1).
+\end{equation*}
+因此在使用退化高斯法的情况下，计算时间是有巨大增益的。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{稀疏矩阵的使用}
+
+优化（无论在计算的时间方面，还是在所需的计算机内存方面）求解~\eqref{Ch_3_CROS1_V1}过程的第二种方法是基于在稀疏形式下存储，操作矩阵的一种方法，其泛函数由MatLab提供。
+
+MatLab使用三个向量$\emph{\textbf{i}}$, $\emph{\textbf{j}}$ 和 $\emph{\textbf{s}}$来存储稀疏矩阵，即零元素数目远远多于非零元素数目的矩阵。三个向量代表了矩阵$S$中非零元素的位置和数值：$S\big(\emph{\textbf{i}}(k),\emph{\textbf{j}}(k)\big) = \emph{\textbf{s}}(k)$。若要建立在第$\emph{\textbf{i}}(k)$行第$\emph{\textbf{j}}(k)$列元素数值为$\emph{\textbf{s}}(k)$的矩阵，需要首先生成其对应的向量，然后使用sparse命令。
+\begin{lstlisting}
+S = sparse(i,j,s,m,n)
+\end{lstlisting}
+对上述MatLab函数$\emph{\textbf{D}}$和$\emph{\textbf{f}}_y$做稍许修改，可得到以稀疏形式存储的矩阵为结果的函数。
+
+%\lstinputlisting{D.m}
+\begin{lstlisting}
+function D = D(eps,y,h,N)
+
+% 函数计算待求常微分方程组微分算子的矩阵
+
+% 输入数据：
+% eps -数值较小的参数
+% y - 在当前时间层上ODE的解向量
+% h - 变量x方向上的网格步长
+% N - 变量x方向上的网格间隔数量
+
+% 输出数据:
+% D - 待求微分算子的矩阵（稀疏矩阵形式）
+
+
+i = zeros(1,4*N - 6);
+j = zeros(1,4*N - 6);
+s = zeros(1,4*N - 6);
+
+k = 1;
+i(k) = 1; j(k) = 1; s(k) = 4/3 - ...
+(2 + eps*h^2*exp(eps*y(1)));
+k = k + 1;
+i(k) = 1; j(k) = 2; s(k) = -1/3 + 1;
+for n = 2:(N - 2)
+k = k + 1;
+i(k) = n; j(k) = n - 1; s(k) = 1;
+k = k + 1;
+i(k) = n; j(k) = n; s(k) = ...
+- (2 + eps*h^2*exp(eps*y(n)));
+k = k + 1;
+i(k) = n; j(k) = n + 1; s(k) = 1;
+end
+k = k + 1;
+i(k) = N - 1; j(k) = N - 2; s(k) = 1 - 1/3;
+k = k + 1;
+i(k) = N - 1; j(k) = N - 1; s(k) = ...
+-(2 + eps*h^2*exp(eps*y(N-1))) +4/3;
+for n = N:(2*N - 2)
+k = k + 1;
+i(k) = n; j(k) = n; s(k) = 1;
+end
+
+D = sparse(i,j,s,2*N - 2,2*N - 2);
+
+end
+\end{lstlisting}
+
+%\lstinputlisting{D.m}
+\begin{lstlisting}
+function D = D(eps,y,h,N)
+
+% 函数计算待求常微分方程组微分算子的矩阵
+
+% 输入数据：
+% eps -数值较小的参数
+% y - 在当前时间层上ODE的解向量
+% h - 变量x方向上的网格步长
+% N - 变量x方向上的网格间隔数量
+
+% 输出数据:
+% D - 待求微分算子的矩阵（稀疏矩阵形式）
+
+
+i = zeros(1,4*N - 6);
+j = zeros(1,4*N - 6);
+s = zeros(1,4*N - 6);
+
+k = 1;
+i(k) = 1; j(k) = 1; s(k) = 4/3 - ...
+(2 + eps*h^2*exp(eps*y(1)));
+k = k + 1;
+i(k) = 1; j(k) = 2; s(k) = -1/3 + 1;
+for n = 2:(N - 2)
+k = k + 1;
+i(k) = n; j(k) = n - 1; s(k) = 1;
+k = k + 1;
+i(k) = n; j(k) = n; s(k) = ...
+- (2 + eps*h^2*exp(eps*y(n)));
+k = k + 1;
+i(k) = n; j(k) = n + 1; s(k) = 1;
+end
+k = k + 1;
+i(k) = N - 1; j(k) = N - 2; s(k) = 1 - 1/3;
+k = k + 1;
+i(k) = N - 1; j(k) = N - 1; s(k) = ...
+-(2 + eps*h^2*exp(eps*y(N-1))) +4/3;
+for n = N:(2*N - 2)
+k = k + 1;
+i(k) = n; j(k) = n; s(k) = 1;
+end
+
+D = sparse(i,j,s,2*N - 2,2*N - 2);
+
+end
+\end{lstlisting}
+
+
+%\lstinputlisting{f_y.m}
+\begin{lstlisting}
+function f_y = f_y(y,h,N)
+
+% 函数计算待求ODE右侧部分的雅可比矩阵
+
+% 输入数据:
+% y - 在当前时间点上ODE的解
+% h - 变量x方向上的网格步长
+% N - 变量x方向上的网格间隔数量
+
+% 输出数据:
+% f\_y - 待求雅可比矩阵（稀疏矩阵形式）
+
+i = zeros(1,4*N - 6);
+j = zeros(1,4*N - 6);
+s = zeros(1,4*N - 6);
+
+k = 0;
+for n = 1:(N-1)
+k = k + 1;
+i(k) = n; j(k) = N - 1 + n; s(k) = h^2;
+end
+k = k + 1;
+i(k) = N; j(k) = 1; s(k) = (2 - 4/3)/h^2;
+k = k + 1;
+i(k) = N; j(k) = 2; s(k) = (-1 + 1/3)/h^2;
+for n = (N + 1):(2*N - 3)
+k = k + 1;
+i(k) = n; j(k) = n - N; s(k) = -1/h^2;
+k = k + 1;
+i(k) = n; j(k) = n - N + 1; s(k) = 2/h^2;
+k = k + 1;
+i(k) = n; j(k) = n - N + 2; s(k) = -1/h^2;
+end
+k = k + 1;
+i(k) = 2*N - 2; j(k) = N - 2; s(k) = (1/3 - 1)/h^2;
+k = k + 1;
+i(k) = 2*N - 2; j(k) = N - 1; s(k) = (-4/3 + 2)/h^2;
+
+f_y = sparse(i,j,s,2*N - 2,2*N - 2);
+
+end
+\end{lstlisting}
+
+对于用稀疏矩阵求解的方法，我们无须对其他函数进行改变。需要说明的是，利用稀疏矩阵求解~\eqref{Ch_3_CROS1_V1}比使用退化高斯法的实现要慢，但比一般高斯法快得多。
+通过一组参数的测试示例计算表明，使用一般高斯法在 4\,172秒内得到解，而使用奇异高斯法在30秒内得到解，使用稀疏矩阵的形式在52秒内得到解。因此，通常使用稀疏矩阵进行存储和操作可以节省大量的时间，甚至有时与退化高斯法比起来也是成立的（在退化高斯法的开发和实现上需要花费额外的时间）。
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{解的爆破现象的数值分析}
+
+爆破解实例分析的实际算法，总的来说和第~\ref{Chapter_2}章第е~\ref{Ch2_numerical_diagnostics_of_the_solutions_blowup} <<解的爆破现象的数值分析>>节中介绍的算法一致。我们这里仅讨论其应用的基本差异和一些细节。
+
+由于我们已将~\eqref{Ch3_reduced_equation_V1}中所有的空间导数逼近至精确度 $O(h^2)$，而在系统~\eqref{Ch_3_System_of_ODEs_V1}的数值积分中，我们使用了包含一个可变矩阵 $\emph{\textbf{D}}\big(\emph{\textbf{y}}(t)\big)$ 的算法CROS1~\eqref{Ch_3_CROS1_V1},其精确度为~$O(\tau^1)$,所构造的求解系统~\eqref{Ch3_main_equation}的方法的精确度为 $O(\tau^1 + h^2)$,即 $p_x = p_x^{\, theor} \equiv 2$ и $p_t = p_t^{\, theor} \equiv 1$。因此，从匹配条件~\eqref{Ch2_meshes_matching}得出，满足龙格-龙贝格公式~\eqref{Ch2_Runge-Romberg_formula_deducing_7}适用条件的不同变量的加密系数 $r_x$ 和 $r_t$ 必须满足关系：$r_x^2 = r_t^1$。为了方便计算，选择 $r_x = 2$ 和 $r_t = 4$。
+
+因此，从基础网格 $X_N \times T_M$: $\{x_n,t_m\}$, $0 \leqslant n \leqslant N$, $0 \leqslant m \leqslant M$ 开始，在网格变密的序列 $s = \overline{1,S}$ 上，在计算一组解 $u_{(s)}(x,t) \equiv u^{(r_x^{s - 1}N,r_t^{s - 1}M)}(x,t)$ 之后，我们可以得到一下估值。
+\begin{enumerate}
+    \item 通过公式~\eqref{Ch2_p_eff_total}估计系统~\eqref{Ch_3_System_of_ODEs_V1}解在整个时间间隔 $t \in [t_0,T]$ 内的有效精度阶数
+        \begin{equation*}
+            \label{Ch3_p_eff_total}
+        	{p_t}^{\, eff}_{(s)} = \log_{r_t}{\dfrac{\sqrt{\sum\limits_{n = 0}^N \sum\limits_{m = 0}^M \big(u_{(s - 1)}(x_n,t_m) - u_{(s - 2)}(x_n,t_m)\big)^2}}{\sqrt{\sum\limits_{n = 0}^N\sum\limits_{m = 0}^M  \big(u_{(s)}(x_n,t_m) - u_{(s - 1)}(x_n,t_m)\big)^2}}}.
+        \end{equation*}
+    \item 通过公式~\eqref{Ch2_p_eff_for_every_time}，在每个$t_m \in T_M$, $1 \leqslant m \leqslant M$ 节点上逐点完成有效精度阶数的估计，直到其精确度达到基础网格 $T_M$ 的间隔大小，通过时间来估计产生爆破解的特定时间点的位置，
+        \begin{equation*}
+            \label{Ch3_p_eff_for_every_time}
+        	{p_t}^{\, eff}_{(s)}(t_m) = \log_{r_t}{\dfrac{\sqrt{\sum\limits_{n = 0}^N \big(u_{(s - 1)}(x_n,t_m) - u_{(s - 2)}(x_n,t_m)\big)^2}}{\sqrt{\sum\limits_{n = 0}^N  \big(u_{(s)}(x_n,t_m) - u_{(s - 1)}(x_n,t_m)\big)^2}}}.
+        \end{equation*}
+        \emph{说明 } 注意到，和第~\ref{Chapter_2}章第~\ref{Ch2_numerical_diagnostics_of_the_solutions_blowup}节一样，在基础网格 $T_M$ 的 $t_0$ 节点上，没有计算有效精度阶数，因为在任何网格的该节点上，解都被初始条件精确地指定了。
+    \item 在每个节点 $x_n \in X_N$, $0 \leqslant n \leqslant N$ 上使用公式~\eqref{Ch2_p_eff_for_every_spatial_point}，通过空间，对每个特定时间点 $t_m in T_M$, $1 \leqslant m \leqslant M$，爆破解的空间点的位置进行估计，直到其精确度达到基础网格 $X_N$ 的间隔大小，
+        \begin{equation*}
+            \label{Ch3_p_eff_for_every_spatial_point}
+        	{p_{xt}}^{\, eff}_{(s)}(x_n,t_m) = \log_{r_t}{\dfrac{|u_{(s - 1)}(x_n,t_m) - u_{(s - 2)}(x_n,t_m)|}{|u_{(s)}(x_n,t_m) - u_{(s - 1)}(x_n,t_m)|}}.
+        \end{equation*}
+        \emph{说明 } 注意到，与第~\ref{Chapter_2}章第~\ref{Ch2_numerical_diagnostics_of_the_solutions_blowup}节不同，可以在边界节点 $x_0$ и $x_N$ 上计算有效精度阶数 ${p_{xt}}_{(s)}^{\, eff}(x,t_m)$，因为在边界上函数不是被狄利克雷条件指定的，而是由诺依曼条件指定，即我们不知道在数值计算过程中边界节点处函数的确切值，而只是近似地估算。
+\end{enumerate}
+
+以下是一组MatLab命令的示例，这些命令设计为单独的文件test\_3\_1.m，并通过重复运行本节介绍的MatLab函数 PDESolving，可以从基础网格 $X_N \times T_M$ 开始，获得在不同网格处、有一组参数~\eqref{Ch3_Example_2}的问题~\eqref{Ch3_main_equation}的一组网格解 $u_{(s)}(x,t) \equiv u^{(r_x^{s - 1}N,r_t^{s - 1}M)}(x,t)$, $s = \overline{1,S}$。 % с $N = 50$ и $M = 50$.
+%\lstinputlisting{test_3_1.m}
+\begin{lstlisting}
+% 定义初始计数时间
+t_0 = 0;
+
+% 定义线段的边界 (§ $x \in [a,b]$ §)
+a = 0; b = pi;
+
+% 定义基础网格的区间数量
+N = 50; M = 50;
+
+% 定义问题的参数
+epsilon = 10^(10);
+
+% 定义初始条件
+u_init_0 = @(x) 0;
+u_init_1 = @(x) -(x*(pi-x))^2*sin(x/3);
+
+% 定义分析评定的上界
+% 解爆破的时间
+T = TimeOfBlowUpCalculation...
+   (u_init_0,u_init_1,a,b,100,epsilon);
+
+S = 7;   % 在其上寻找近似解的网格数量
+r_x = 2; % 网格变密系数x
+r_t = 4; % 网格变密系数t
+
+% 为在不同网格上、编号为 (§ $s = \overline{1,S}$ §)的常微分方程的解的网格数值数组分配内存
+% 第一个索引 - 来自加细网格序列的网格序号s，在这些加细网格寻找解
+% 第二个和第三个索引定义了一个数组，
+% 该数组从与基础网格节点重合的节点开始，在编号为 (m + 1) 的行保存了与时间 (§ $t_m$ §) 相对应的解的网格值
+array_of_u = zeros(S,M + 1,N + 1);
+
+% “大循环”，在网格加密的序列中计算S次解
+% 解的网格值的数组仅包含与基础网格节点重合的节点的网格值
+for s = 1:S
+    u = PDESolving(epsilon,a,b,N,t_0,T,M,...
+        u_init_0,u_init_1,s,r_x,r_t);
+    array_of_u(s,:,:) = u;
+end
+
+% 存储对于接下来爆破解分析十分必要的数据 Workspace'а 至文件
+save('data.mat','array_of_u','N','M',...
+    'r_x','r_t','S','a','b','t_0','T');
+\end{lstlisting}
+
+注意到，问题~\eqref{Ch3_main_equation}的~\cite[公式~(2.5)]{Lukyanenko_1}求出的爆破解时间的先验估计上界的结果作为最终的计算时间 $T$
+\begin{equation*}
+    T_{bl}=-\frac{1}{\varepsilon}\frac{\int_a^b e^{\varepsilon u_{init_0}(x)}dx}{\int_a^b e^{\varepsilon u_{init_0}(x)}u_{init_1}(x)\,dx}.
+%
+   %
+%    \frac{\int_0^l e^{\varepsilon u_{init_0}(x)}dx}{\varepsilon\int_0^l e^{\varepsilon u_{init_0}(x)}u_{init_1}(x)\,dx+\int_0^l |\frac{d}{dx}u_{init_0}(x)|^q\,dx}.
+\end{equation*}
+使用MatLab-辅助函数 TimeOfBlowUpCalculation 实现对该公式的计算
+%\lstinputlisting{TimeOfBlowUpCalculation.m}
+\begin{lstlisting}
+function T = TimeOfBlowUpCalculation...
+    (u_init_0,u_init_1,a,b,N,eps)
+
+    % 为了爆破解的时间，计算分析上界评定的函数
+
+    h = (b - a)/N; % 定义网格步长x
+
+    Int1 = 0;
+    Int2 = 0;
+    for n = 1:N
+       Int1 = Int1 + exp(eps*u_init_0(a + h*n - h/2))*h;
+       Int2 = Int2 + exp(eps*u_init_0(a + h*n - h/2))*...
+           u_init_1(a + h*n - h/2)*h;
+    end
+
+    T = -(1/eps)*(Int1/Int2);
+
+end
+\end{lstlisting}
+
+与此前一样，该MatLab代码 test\_3\_1.m 的工作结果将是~文件~data.mat，该文件内容将由分析爆破解实例的函数加载，无需在加密网格序列上重复计算解。
+
+第~\ref{Chapter_2}章第~\ref{Ch2_numerical_diagnostics_of_the_solutions_blowup}节中引入过MatLab-文件 BlowUpDiagnostics.m，使用它形成了的 data.mat 文件，用于计算在时间间隔 $t \in [t_0,T]$ 内近似解的有效精度阶数，因为过程中不会包含任何更改，所以我们这里不再赘述。
+
+MatLab文件 BlowUpDiagnostics\_for\_each\_t.m，使用已产生的文件 data.mat确定产生爆破解的具体时间，从而计算在和节点 $t_m$, $0 \leqslant m \leqslant M$、基础网格 $T_M$ 重合的节点处的近似解的有效精度阶数，该文件仅在负责呈现计算结果的代码中发生更改。有必要将负责绘制精度阶数的理论值的命令替换为以下命令（与 $p_t^{theor} = 1$ 相对应）。
+%\lstinputlisting{BlowUpDiagnostics_for_each_t.m}
+\begin{lstlisting}
+% 绘制理论的精度阶数对基本网格的时间节点的依赖关系
+plot(t,t*0 + 1,'-*k','MarkerSize',3); hold on;
+\end{lstlisting}
+
+MatLab文件 BlowUpDiagnostics\_for\_specified\_t.m，为了通过空间变量 $x$ 定位爆破解，在特定时间 $t_m \in T_M$~\eqref{Ch2_p_eff_for_every_spatial_point}使用data.mat的数据，对与节点 $x_n$, $0 \leqslant n \leqslant N$、空间基础网格 $X_N$ 重合的节点处近似解的有效精度阶数进行计算，该文件包含以下改变。最主要的是，有效精度阶数的计算在所有网格的节点 $X_N$ 上执行，其包含了两个边界节点。绘制所得结果的指令变化是次要变化。
+%\lstinputlisting{BlowUpDiagnostics_for_specified_t.m}
+\begin{lstlisting}
+% 将计算近似解的结果加载到S个加密网格序列上
+load('data.mat');
+
+% 在每个节点 (§ $x_n$, \: $0 \leq n \leq N$ §) 处（数组的第二个索引），及在不同的网格（数组的第一个索引）处，
+% 为近似解计算的有效精度阶数的数值数组分配内存
+p_eff_ForSpecifiedTime = zeros(S,N + 1);
+
+% 计算编号为 (m-1) 、在特定时间层 (§ $t_{m - 1}$ §) 上所有空间点的有效精度阶数（考虑到在MatLab上索引偏移 +1）
+m = 31;
+for n = 1:(N + 1)
+
+    % 无法计算 (§ $p^{\, eff}_{(1)}(x_n)$ §) 和 (§ $p^{\, eff}_{(2)}(x_n)$ §)
+    p_eff_ForSpecifiedTime(1,n) = NaN;
+    p_eff_ForSpecifiedTime(2,n) = NaN;
+
+    for s = 3:S
+        p_eff_ForSpecifiedTime(s,n) = log(...
+          abs(array_of_u(s-1,m,n)-array_of_u(s-2,m,n))/...
+           abs(array_of_u(s,m,n)-array_of_u(s-1,m,n)))/...
+           log(r_t);
+    end
+end
+
+% 为编号为s的网格绘制计算结果
+% S = 7;
+figure;
+x = a:(b - a)/N:b; % 定义基础网格
+% 绘制了理论的精度阶数对基础网格的空间节点的依赖关系
+plot(x,x*0 + 1,'-*k','MarkerSize',3); hold on;
+% 绘制了有效精度阶数对基础网格的空间节点的依赖关系
+plot(x,p_eff_ForSpecifiedTime(S,:),...
+    '-sk','MarkerSize',5,'LineWidth',1);
+axis([x(1) x(N + 1) -2.0 3.0]);
+xlabel('x'); ylabel('p^{eff}');
+\end{lstlisting}
+
+
+在实现了绘制解的MatLab-文件draw.m中，推出改变仅发生在命令 axis 中，对于下列考虑的每个单独的示例，都有必要更改沿纵坐标轴绘制图形的边界。
+
+\emph{示例 1.} 首先，考虑一个测试案例，关于准确的解的爆破时间，该案例有已知的分析结果。
+
+在一组参数的情况下
+\begin{equation}
+    \label{Ch3_Example_1}
+    \begin{aligned}
+        &u_{init_0}(x)  \equiv 0, \: u_{init_1}(x)  \equiv -1, \\
+        &a = 0, \: b = \pi, \: t_0 = 0, \: \varepsilon = 1,
+    \end{aligned}
+\end{equation}
+问题~\eqref{Ch3_main_equation}的解将具有以下形式
+\begin{equation}
+    \label{Ch3_Example_1_model_solution}
+    u(x,t) = \ln(1 - t).
+\end{equation}
+
+显然，解的爆破时间可能被精确地确定为 $T_{bl}= 1$，在此邻域附近，解具有对数增长的性质。
+
+对于数值计算，将间隔为 $N = 50$ 和 $M = 50$ 的网格作为基础网格 $X_N \times T_M$，并且使用加密系数 $r_x = 2$ 和 $r_t = 4$完成网格的依次细化。图~\ref{Fig_3_3}显示了计算了在第七个网格($s = 7$)上的解之后的计算结果（ 通过依次运行来自test\_3\_1.m $\rightarrowtail$ draw.m文件的一组MatLab-命令），
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Chapter-3-3.eps}\\
+    \caption{对于有下列的一组变量： $N = 50$, $M = 50$, $r_x = 2$, $r_t = 4$, $s = 7$，初始数据为~\eqref{Ch3_Example_1}的问题~\eqref{Ch3_main_equation}，其解的计算结果为 $u_{(s)}(x,t) \equiv u^{(r_x^{s - 1}N,r_t^{s - 1}M)}(t)$。仅标记与基础网格的节点一致的节点。}
+    \label{Fig_3_3}
+\end{figure}
+
+图 ~\ref{Fig_3_4}显示了计算的结果（ 通过文件 test\_3\_1.m $\rightarrowtail$ BlowUpDiagnostics\_for\_each\_t.m 依次加载一组MatLab-命令），该图说明了在渐进准确数值下，有效精度阶数 ${p_t}^{\, eff}_{(s)}(t_m)$, $0 \leqslant m \leqslant M$ 逐点数值的显式输出。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Chapter-3-4.eps}\\
+    \caption{对于有下列的一组数值参数： $N = 50$, $M = 50$, $r_x = 2$, $r_t = 4$, $S = 7$，一组输入数据~\eqref{Ch3_Example_1}的问题~\eqref{Ch3_main_equation}，其有效精度阶数的计算结果为 ${p_t}^{\, eff}_{(S)}(t_m)$, $1 \leqslant m \leqslant M$。}
+    \label{Fig_3_4}
+\end{figure}
+
+因此，对于变量组~\eqref{Ch3_Example_1}，我们可以得出关于问题~\eqref{Ch3_main_equation}所得的数值解的下列结论。经过计算 $S = 7$ 的嵌入网格之后，对于每个时间点 $t_m \in T_M$ 至~$m = 49$，有效精度阶数的点值 ${p_t}^{\, eff}_{(s)}(t)$ 包含地收敛到 ${p_t}^{theor} \equiv 1$，而对于最后 $50$ 个网格节点（ 与时间 $t_{50} = 1$ 对应）收敛到~$0$。这意味着爆破发生在~$T_{bl} \in (t_{49},t_{50}] \equiv (0.980,1.000]$ 时刻，而~$m = 50$ 到~$0$ 时，有效精度阶数的明显的趋势表明在点 $T_{bl}$ 处，解拥有对数增长 $u(x,t) \sim \ln(T_{bl} - t)$ 型的特殊性，与已知的分析结果~\eqref{Ch3_Example_1_model_solution}相吻合。
+
+之后，我们可以调查关于空间变量的爆破解性质的问题。图 ~\ref{Fig_3_5}显示了在解爆破之前和之后（或，可能，此刻）不同时间的计算结果（ 通过文件 test\_3\_1.m $\rightarrowtail$ BlowUpDiagnostics\_for\_specidied\_t.m依次运行一组MatLab-命令）。可以清楚地看出，在 $t \geqslant T_{bl}$爆破之后（ 或此刻），所有网格 $X_N$ 的点都在第一个节点处出现了理论值 $p_t^{theor} = 1$ 的收敛偏差 ${p_{xt}}_{(s)}^{\, eff}(x,t)$。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.00\textwidth]{Chapter-3-5.eps}\\
+    \caption{对于有以下一组变量： $N = 50$, $M = 50$, $r_x = 2$, $r_t = 4$, $S = 7$、一组输入数据~\eqref{Ch3_Example_1}的问题~\eqref{Ch3_main_equation}，其有效精度阶数的计算结果为 ${p_{xt}}^{\, eff}_{(S)}(x,t_m)$。展示了 $m \in \{49,50\}$ 的图表。}
+    \label{Fig_3_5}
+\end{figure}
+
+最终，我们可以得出结论：第7个嵌入网格上所得解（ 参照图~\ref{Fig_3_4}）的哪个部分我们可以相信，而哪一部分不能。
+
+\emph{示例 2.} 现在让我们看一组参数的例子
+\begin{equation}
+    \label{Ch3_Example_2}
+    \begin{aligned}
+        &u_{init_0}(x)  \equiv 0, \: u_{init_1}(x)  \equiv -\big(x(\pi-x)\big)^2\sin\frac{x}{3}, \\
+        &a = 0, \: b = \pi, \: t_0 = 0, \: \varepsilon = 10^{10}.
+    \end{aligned}
+\end{equation}
+
+在这种情况下，分析解是未知的，因此我们使用了一种分析爆破解实例的数值算法。
+
+为了进行数值计算，将间隔为 $N = 50$ 和 $M = 50$ 的网格作为基础网 $X_N \times T_M$，并使用加密系数 $r_x = 2$ 和 $r_t = 4$ 完成网格的依次加密。图 ~\ref{Fig_3_6}显示了在第7个网格上（ $s = 7$） 计算解后的计算结果（ 通过文件 test\_3\_1.m $\rightarrowtail$ draw.m 依次运行一组MatLab-命令），
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Chapter-3-6.eps}\\
+    \caption{对于有下列的一组变量： $N = 50$, $M = 50$, $r_x = 2$, $r_t = 4$, $s = 7$，初始数据为~\eqref{Ch3_Example_2}的问题~\eqref{Ch3_main_equation}，其解的计算结果为 $u_{(s)}(x,t) \equiv u^{(r_x^{s - 1}N,r_t^{s - 1}M)}(t)$。仅标记与基础网格的节点一致的节点。}
+    \label{Fig_3_6}
+\end{figure}
+
+图~\ref{Fig_3_7}显示了计算解雇（ 通过文件 test\_3\_1.m $\rightarrowtail$ BlowUpDiagnostics\_for\_each\_t.m 依次运行一组MatLab-命令），该图说明了在渐进准确数值下，有效精度阶数 ${p_t}^{\, eff}_{(s)}(t_m)$, $0 \leqslant m \leqslant M$ 的预期输出结果。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Chapter-3-7.eps}\\
+    \caption{对于有下列的一组数值参数： $N = 50$, $M = 50$, $r_x = 2$, $r_t = 4$, $S = 7$，一组输入数据~\eqref{Ch3_Example_2}的问题~\eqref{Ch3_main_equation}，其有效精度阶数的计算结果为 ${p_t}^{\, eff}_{(S)}(t_m)$, $1 \leqslant m \leqslant M$。}
+    \label{Fig_3_7}
+\end{figure}
+
+因此，对于有一组变量~\eqref{Ch3_Example_2}的问题~\eqref{Ch3_main_equation}，关于该问题所得的数值解，我们可以得出以下结论。经过计算 $S = 7$ 的嵌入网格之后，对于每个时间点 $t_m \in T_M$ 至 ~$m = 24$，有效精度阶数的点值 ${p_t}^{\, eff}_{(s)}(t)$ 包含地收敛到 ${p_t}^{theor} \equiv 1$，而对于较大的数值 $m$，很显然收敛至~$0$。这意味着爆破发生在~$T_{bl} \in (t_{24},t_{25}] \equiv (3.015,3.141] \cdot 10^{-11}$时刻，而当~$m \geqslant 25$ 时，有效精度阶数趋向~$0$的明显的趋势，表明在点 $T_{bl}$ 处，解拥有对数增长 $u(x,t) \sim \ln(T_{bl} - t)$ 型的特殊性。
+
+之后，我们可以研究关于空间变量的爆破解性质的问题。图~\ref{Fig_3_8}显示了在解爆破之前和之后（或，可能，此刻）不同时刻的计算结果（ 通过文件 test\_3\_1.m $\rightarrowtail$ BlowUpDiagnostics\_for\_specidied\_t.m依次运行一组MatLab-命令）。可以清楚地看到，理论值 $p_t^{theor} = 1$ 的收敛性偏差 ${p_{xt}}_{(s)}^{\, eff}(x,t)$ 最初出现于网格的内部节点 $X_N$，然后沿着空间变量 $x \in [a,b]$ 扩展到整个线段。
+\begin{figure}[th]
+    \centering
+    \includegraphics[width=1.00\textwidth]{Chapter-3-8.eps}\\
+    \caption{对于有以下一组变量： $N = 50$, $M = 50$, $r_x = 2$, $r_t = 4$, $S = 7$、一组输入数据~\eqref{Ch3_Example_1}的问题~\eqref{Ch3_main_equation}，其有效精度阶数的计算结果为 ${p_{xt}}^{\, eff}_{(S)}(x,t_m)$。展示了 $m \in \{49,50\}$ 的图表。}
+    \label{Fig_3_8}
+\end{figure}
+
+最终，我们可以得出结论：第7个嵌入网格上所得解（ 参照图~\ref{Fig_3_4}）的哪个部分我们可以相信，而哪一部分不能。
+
+
+
+
+\section{构建时间精度为二阶的算法}
+
+如前所述，具有复数系数 CROS1~\eqref{Ch_3_CROS1_V1} 的Rosenbrock算法的精度阶数为 $O(\tau^1)$ ，这是因为矩阵函数 $\emph{\textbf{D}}(\emph{\textbf{y}})$ 不是常数，且与变量 $\emph{\textbf{y}}$ （ 有关详细说明，请参见~\cite{BUE_basic_1,BUE_basic_2}）有关。但是，在常数的矩阵函数 $\emph{\textbf{D}}$ 的情况下，CROS1算法将有精度阶数 $O(\tau^2)$。如果我们在~\eqref{Ch3_reduced_equation_V1}中再引入一个辅助变量 $g = u_{xx} - e^{\varepsilon u}$，就可以实现这一点，其结果是：自变量 $u$、 $v$ 或 $g$的非线性函数将不被包含在获取关于时间的偏导数的运算符下。让我们更详细地考虑初始问题~\eqref{Ch3_main_equation} 解的这种变式。
+
+由于~\eqref{Ch3_reduced_equation_V1} 中指出的额外的替换 $g = u_{xx} - e^{\varepsilon u}$，初始边值问题~\eqref{Ch3_main_equation} 的形式为
+\begin{equation}
+\label{Ch3_reduced_equation_V2}
+    \left\{
+    \begin{aligned}
+        &\dfrac{\partial}{\partial t} \, g = v, \quad x \in (a,b), \quad t \in (t_0,T], \\
+        &\dfrac{\partial}{\partial t} \, v + u_{xx} = 0, \quad x \in (a,b), \quad t \in (t_0,T], \\
+        &g = u_{xx} - e^{\varepsilon u}, \quad x \in (a,b), \quad t \in (t_0,T], \\
+        &u_x(a,t) = 0, \quad u_x(b,t) = 0, \quad t \in (t_0,T],\\
+        &u(x,t_0) = u_{init_0}(x), \quad x \in [a,b],\\
+        &v(x,t_0) = {u_{init_1}(x)}_{xx} -\varepsilon u_{init_1}(x) e^{\varepsilon u_{init_0}(x)}, \quad x \in (a,b),\\
+        &g(x,t_0) = {u_{init_0}(x)}_{xx} - e^{\varepsilon u_{init_0}(x)}, \quad x \in (a,b).
+    \end{aligned}
+    \right.
+\end{equation}
+
+接下来，我们将执行类似于~\ref{Ch_3_Numerical_solving}部分中描述的操作序列。结果，通过空间变量、在均等的网格 $X_N$ 上，在具有二阶精度的空间导数的有限差分近似之后，我们得到了微分代数系统，需要从中确定 $N + 1$ 个未知函数 $u_{n} \equiv  u_{n}(t) \equiv u(x_n,t)$, $n = \overline{0,N}$，$N - 1$ 个辅助函 $v_{n} \equiv  v_{n}(t) \equiv v(x_n,t)$, $n = \overline{1,N - 1}$，和 $N - 1$ 个辅助函数 $g_{n} \equiv  g_{n}(t) \equiv g(x_n,t)$, $n = \overline{1,N - 1}$。为了方便起见，我们以如下形式编写该系统：
+\begin{equation*}
+    \left\{
+    \begin{aligned}
+        &\dfrac{d g_n}{d t} = v_n, \quad n = \overline{1,N - 1}, \quad t \in (t_0,T], \\
+        &\dfrac{d v_n}{dt} = -\frac{u_{n + 1} - 2u_n + u_{n - 1}}{h^2}, \quad n = \overline{1,N - 1}, \quad t \in (t_0,T], \\
+        &0 = u_0 - \frac{4}{3}u_1 + \frac{1}{3}u_2, \quad t \in (t_0,T],\\
+        &0 = g_n - \frac{u_{n + 1} - 2u_n + u_{n - 1}}{h^2} + e^{\varepsilon u_n}, \, n = \overline{1,N - 1}, \, t \in (t_0,T], \\
+        &0 = u_N - \frac{4}{3}u_{N - 1} + \frac{1}{3}u_{N - 2}, \quad t \in (t_0,T],\\
+        &u_n(t_0) = u_{init_0}(x_n), \quad n = \overline{0,N},\\
+        &v_n(t_0) = \frac{u_{init_1}(x_{n + 1}) - 2u_{init_1}(x_n) + u_{init_1}(x_{n - 1})}{h^2} - {}\\
+        &\hspace{2.5cm} - \varepsilon u_{init_1}(x_n) e^{\varepsilon u_{init_0}(x_n)}, \quad n = \overline{1,N - 1},\\
+        &g_n(t_0) = \frac{u_{init_0}(x_{n + 1}) - 2u_{init_0}(x_n) + u_{init_0}(x_{n - 1})}{h^2} - {}\\
+        &\hspace{2.5cm} - e^{\varepsilon u_{init_0}(x)}, \quad n = \overline{1,N - 1}.
+    \end{aligned}
+    \right.
+\end{equation*}
+
+所得的系统为微分代数系统，因为它既包含微分方程，又包含代数方程（ 其中两个方程由边界条件确定，另一个由约束条件 $g = u_{xx} - e^{\varepsilon u}$确定）。
+
+与~\ref{Ch_3_Numerical_solving} 部分中使用的方法不同，我们不会将 $u_0$ 和 $u_N$ 的表达式通过他们相邻的网格值代换为其余的微分方程，因为存在约束条件，所以我们无法将该微分代数系统简化为纯微分系统。但是即使存在代数方程，求解该系统的算法也不会改变。此外，在本学习教材中，我们旨在展示尽可能多的、不同（但本事上等价）的方法来解决所考虑的问题。
+
+所得到的包含 $3N - 1$ 个方程和 $3N - 1$ 个未知函数 $u_{n}$, $n = \overline{0,N + 1}$, и $v_{n}$, $v_{n}$, $n = \overline{1,N - 1}$的微分代数系统，可以按以下形式重写：
+\begin{equation}
+    \label{Ch_3_System_of_ODEs_V2}
+    \left\{
+    \begin{aligned}
+        &\emph{\textbf{D}} \dfrac{d \emph{\textbf{y}}}{d t} = \emph{\textbf{f}} \, (\emph{\textbf{y}}), \quad t \in (t_0,T],\\
+        &\emph{\textbf{y}}(t_0) = \emph{\textbf{y}}_{init},
+    \end{aligned}
+    \right.
+\end{equation}
+где $\emph{\textbf{y}} = \big(u_0 \; u_1 \; u_2 \;  \ldots \; u_{N - 1} \; u_{N} \; v_1 \; v_2 \;  \ldots \; v_{N - 1} \; g_1 \; g_2 \;  \ldots \; g_{N - 1}\big)^T$, $\emph{\textbf{f}} = \big(f_1 \; f_2 \; \ldots \; f_{3N - 1}\big)^T$ и $\emph{\textbf{y}}_{init} = \big(u_0(t_0) \; \ldots \; u_{N}(t_0) \; v_1(t_0) \; \ldots \; v_{N - 1}(t_0) \; g_1(t_0) \; \ldots \; g_{N - 1}(t_0) \big)^T$.
+
+这里的向量函数 $\emph{\textbf{f}}$ 具有以下结构：
+
+\begin{equation*}
+    f_n = \begin{cases}
+        \vspace{0.1cm}
+        y(n + N + 1),&\text{如果 $n = \overline{1,N-1}$,}\\
+        -\dfrac{y_{n - N + 3} - 2y_{n - N + 2} + y_{n - N + 1}}{h^2},&\text{\!\!\!\!\!如果 $n = \overline{N,2N - 2}$,} \\
+        \vspace{0.1cm}
+        y_1 - \frac{4}{3}y_2 + \frac{1}{3}y_3,&\text{如果 $n = 2N - 1$,}\\
+        y_{n + 1} - \frac{y_{n  - 2N + 3} - 2y_{n  - 2N + 2} + y_{n  - 2N + 1}}{h^2} + \\
+        \qquad\qquad\qquad\qquad + e^{\varepsilon y_{n  - 2N + 2}},&\text{\!\!\!\!\!如果 $n = \overline{2N,3N - 2}$,} \\
+        y_{N + 1} - \frac{4}{3}y_{N} + \frac{1}{3}y_{N - 1},&\text{如果 $n = 3N - 1$.}
+    \end{cases}
+\end{equation*}
+
+下面是MatLab-函数的示例，该函数可计算向量函数 $\emph{\textbf{f}}$ 的组分。
+%\lstinputlisting{f.m}
+\begin{lstlisting}
+function f = f(eps,y,h,N)
+
+    % 该函数计算常微分方程系统解的向量的右半部分。
+
+    % 输入数据：
+    % eps - 很小的参数
+    % y - 常微分方程系统的解向量
+    % 在当前时间层
+    % h - 在变量x上的网格步长
+    % N - 在变量x上的网格间隔的数目
+
+    % 输出数据：
+    % f - 所求向量 f
+
+    f = zeros(3*N - 1,1);
+
+    for n = 1:(N - 1)
+        f(n) = y(n + N + 1);
+    end
+    for n = N:(2*N - 2)
+        f(n) = -(y(n - N + 3) - 2*y(n - N + 2) + ...
+            y(n - N + 1))/h^2;
+    end
+    f(2*N - 1) = y(1) - 4/3*y(2) + 1/3*y(3);
+    for n = 2*N:(3*N - 2)
+        f(n) = y(n + 1) - (y(n - 2*N + 3) - ...
+            2*y(n - 2*N + 2) + y(n - 2*N + 1))/h^2 +...
+            exp(eps*y(n - 2*N + 2));
+    end
+    f(3*N - 1) =  y(N + 1) - 4/3*y(N) + 1/3*y(N - 1);
+
+end
+\end{lstlisting}
+
+矩阵 $\emph{\textbf{D}}$ 具有以下非零元素：
+\begin{equation*}
+    \begin{aligned}
+        &D_{n,n + 2N} & &= 1, \quad \text{如果 $n = \overline{1,N-1}$,}\\
+        &D_{n,n + 2} & &= 1, \quad \text{如果 $n = \overline{N,2N-2}$,}\\
+    \end{aligned}
+\end{equation*}
+
+下面是MatLab-函数的示例，该函数可计算矩阵 $\emph{\textbf{D}}$ 的组分。%, хранимой в разреженном формате данных.
+%\lstinputlisting{D.m}
+\begin{lstlisting}
+function D = D(N)
+
+    % 函数：计算要求求解的常微分方程系统的微分算子的矩阵
+
+    % 输入数据：
+    % N - 在变量x上的网格间隔数目
+
+    % 输出数据：
+    % D - 微分算子的所需矩阵
+
+    D = zeros(3*N - 1,3*N - 1);
+
+    for n = 1:(N - 1)
+        D(n,n + 2*N) = 1;
+    end
+    for n = N:(2*N - 2)
+        D(n,n + 2) = 1;
+    end
+
+end
+\end{lstlisting}
+
+结果，通过时间变量，在引入均等的网格 $T_M$ 后，对系统~\eqref{Ch_3_System_of_ODEs_V2}的解，我们可以应用Rosenbrock算法CROS1：
+\begin{equation}
+    \label{Ch_3_CROS1_V2}
+    \begin{aligned}
+        &\emph{\textbf{y}}(t_{m + 1}) = \emph{\textbf{y}}(t_m) + (t_{m + 1} - t_m) \, \mathrm{Re} \, \emph{\textbf{w}}_1 \, ,\\
+        &\mbox{其中 $\emph{\textbf{w}}_1$ 为线性代数方程组的解} \\
+        &\left[\emph{\textbf{D}} - \dfrac{1 + i}{2} (t_{m + 1} - t_m) \, \emph{\textbf{f}}_\emph{\textbf{y}}\Big(\emph{\textbf{y}}(t_m)\Big)\right] \emph{\textbf{w}}_1 = \emph{\textbf{f}} \, \Big(\emph{\textbf{y}}(t_m)\Big).
+    \end{aligned}
+\end{equation}
+这里 $\emph{\textbf{f}}_\emph{\textbf{y}}$~--- 是有着元素 $\left(f_y\right)_{n,m}  \equiv \frac{\partial f_n}{\partial y_{m}}$ 的矩阵（ 雅可比矩阵），对于所考虑的系统，该矩阵有以下非零元素：
+\begin{align*}
+    &\hspace{-3.5cm}
+    \left(f_y\right)_{n,n + N + 1} = 1, \quad \text{如果 $n = \overline{1,N - 1}$,}
+\end{align*}
+\begin{align*}
+    &\hspace{-2.6cm}
+    \left(f_y\right)_{n,n - N + 3} = -\frac{1}{h^2}, \quad \text{如果 $n = \overline{N,2N - 2}$,}
+\end{align*}
+\begin{align*}
+    &\hspace{-2.9cm}
+    \left(f_y\right)_{n,n - N + 2} = \frac{2}{h^2}, \quad \text{如果 $n = \overline{N,2N - 2}$,}
+\end{align*}
+\begin{align*}
+    &\hspace{-2.6cm}
+    \left(f_y\right)_{n,n - N + 1} = -\frac{1}{h^2}, \quad \text{如果 $n = \overline{N,2N - 2}$,}
+\end{align*}
+\begin{align*}
+    &\hspace{-1.1cm}
+    \left(f_y\right)_{2N - 1,1} = 1, \quad \left(f_y\right)_{2N - 1,2} = -\frac{4}{3}, \quad \left(f_y\right)_{2N - 1,3} = \frac{1}{3},
+\end{align*}
+\begin{align*}
+    &\hspace{-3.5cm}
+    \left(f_y\right)_{n,n + 1} = 1, \quad \text{如果 $n = \overline{2N,3N - 2}$,}
+\end{align*}
+\begin{align*}
+    &\hspace{-2.4cm}
+    \left(f_y\right)_{n,n - 2N + 3} = -\frac{1}{h^2}, \quad \text{如果 $n = \overline{2N,3N - 2}$,}
+\end{align*}
+\begin{align*}
+    &\hspace{-0.6cm}
+    \left(f_y\right)_{n,n - 2N + 2} = \frac{2}{h^2} + \varepsilon e^{\varepsilon y_{n  - 2N + 2}}, \quad \text{如果 $n = \overline{2N,3N - 2}$,}
+\end{align*}
+\begin{align*}
+    &\hspace{-2.4cm}
+    \left(f_y\right)_{n,n - 2N + 1} = -\frac{1}{h^2}, \quad \text{如果 $n = \overline{2N,3N - 2}$,}
+\end{align*}
+\begin{align*}
+    &\hspace{-0.1cm}
+    \left(f_y\right)_{3N - 1,N - 1} = \frac{1}{3}, \quad \left(f_y\right)_{3N - 1,N} = -\frac{4}{3}, \quad \left(f_y\right)_{3N - 1,N + 1} = 1.
+\end{align*}
+
+下面是MatLab-函数的示例，该函数可计算雅可比矩阵 $\emph{\textbf{f}}_\emph{\textbf{y}}$ 的组分。%, хранимой в разреженном формате данных.
+%\lstinputlisting{f_y.m}
+\begin{lstlisting}
+function f_y = f_y(eps,y,h,N)
+
+    % 计算所需求解的常微分方程系统的雅可比矩阵右半部分的函数
+
+    % 输入数据：
+    % eps - 很小的参数
+    % y - 常微分方程系统的解向量
+    % 在当前的时间层
+    % h - 在变量x上的网格步长
+    % N - 在变量x上的网格间隔数目
+
+    % 输出数据：
+    % f\_y - 所求的雅可比矩阵
+
+    f_y = zeros(3*N - 1,3*N - 1);
+
+    for n = 1:(N - 1)
+        f_y(n,n + N + 1) = 1;
+    end
+    for n = N:(2*N - 2)
+        f_y(n,n - N + 3) = -1/h^2;
+        f_y(n,n - N + 2) = 2/h^2;
+        f_y(n,n - N + 1) = -1/h^2;
+    end
+    f_y(2*N - 1,1) = 1;
+    f_y(2*N - 1,2) = -4/3;
+    f_y(2*N - 1,3) = 1/3;
+    for n = 2*N:(3*N - 2)
+        f_y(n,n + 1) = 1;
+        f_y(n,n - 2*N + 3) = -1/h^2;
+        f_y(n,n - 2*N + 2) = 2/h^2 + ...
+            eps*exp(eps*y(n - 2*N + 2));
+        f_y(n,n - 2*N + 1) = -1/h^2;
+    end
+    f_y(3*N - 1,N - 1) = 1/3;
+    f_y(3*N - 1,N) = -4/3;
+    f_y(3*N - 1,N + 1) = 1;
+
+end
+\end{lstlisting}
+
+结果，为了在修改过的形式~\eqref{Ch3_reduced_equation_V2}--\eqref{Ch_3_System_of_ODEs_V2}下，通过使用了上述函数f，D和函数f\_y的系统~\eqref{Ch_3_CROS1_V2}，寻找问题~\eqref{Ch3_main_equation}的数值解，有必要在MatLab-函数 PDESolving 上实现以下更改。
+
+1) 有必要替换位于第42--45行的代码段，该代码段负责确定向量维数 $\textbf{\emph{y}}$， 并下一次修改的开始时间设置他。
+\begin{lstlisting}
+    % 为与当前时间相对应的常微分方程系统解的网格值数组分配内存 (§ $t_m$ §)
+    y = zeros(1,3*N - 1);
+
+    % 设置常微分方程系统的初始条件
+    for n = 1:(N + 1)
+        y(1,n) = u_init_0(x(n));
+    end
+    for n = 1:(N - 1)
+        y(1,n + N + 1) = (u_init_1(x(n + 2)) - ...
+            2*u_init_1(x(n +1)) + u_init_1(x(n)))/h^2 -...
+            eps*u_init_1(x(n + 1))*...
+            exp(eps*u_init_0(x(n + 1)));
+        y(1,n + 2*N) = (u_init_0(x(n + 2)) - ...
+            2*u_init_0(x(n +1)) + u_init_0(x(n)))/h^2 -...
+            exp(eps*u_init_0(x(n + 1)));
+    end
+\end{lstlisting}
+
+2) 有必要更改第74--106行上的代码段，该代码段负责实现CROS1算法和选择和与基础网格节点、下一次修改重合的节点。
+\begin{lstlisting}
+        % 实现算法CROS1
+
+        w_1 = (D(N) - (1+1i)/2*(t(m + 1) - ...
+            t(m))*f_y(eps,y,h,N))\f(eps,y,h,N);
+
+        y = y + (t(m + 1) - t(m))*real(w_1)';
+
+        % 在有基础网格 (§ $t_{m_{basic}}$ §) 的加密网格上，完成匹配检查 (§ $t_{m + 1}$ §)
+        if (m + 1) == (m_basic - 1)*r_t^(s - 1) + 1
+
+            % 为了偏微分方程，填充初始问题解的网格值的数组
+
+            % 在当前时间层，选择与基本网格的节点重合的空间节点
+            for n = 1:(N_0 + 1)
+                u(m_basic,n) = y((n - 1)*r_x^(s-1) + 1);
+            end
+
+            % 现在，跟踪观察在加密网格上，与基础网格 (§ $t_{m_{basic}}$ §) 轮次的匹配
+            m_basic = m_basic + 1;
+
+        end
+\end{lstlisting}
+
+注意到，系统~\eqref{Ch_3_CROS1_V2} 的矩阵具有特殊形式（ 参见图~\ref{Ch_3_Structure_of_the_matrix_V2}），因为通过制定一种简并的高斯方法，来优化数值计算，该方法考虑了矩阵系统的特殊形式，并使用了以稀疏形式存储的矩阵。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Chapter-3-9.eps}\\
+    \caption{线性代数方程组~\eqref{Ch_3_CROS1_V2} 的矩阵结构。}
+    \label{Ch_3_Structure_of_the_matrix_V2}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\chapter{具有空间变量的高阶导数微积分方程初边值问题的爆破解分析}\label{Chapter_4}
+
+
+本章节讨论具有空间变量的高阶导数微积分方程初边值问题的爆破解分析的数值特征。作为例子我们将讨论具有非局部源的薄膜方程~\cite{Sun&Liu&Wu}, 该方程描述了纳米尺寸薄膜的外延生长。与前面的章节一样，需要找到函数  $u(x,t)$, 该函数定义在区间 $(x,t) \in [a,b] \times [t_0,T]$
+%\footnote{\emph{Замечание.} Мы ставим задачу  численного нахождения решения до момента времени~$T$ включительно, хотя знаем, что решение в этот момент времени может не существовать и, более того, даже может разрушиться ранее. Это допущение связано с тем, что мы хотим диагностировать разрушение решения численно, а значит, нам необходимо найти \emph{численное\/} решение вплоть до этого момента времени включительно.}
+并满足方程组
+\begin{equation}
+\label{Ch4_main_equation}
+\left\{
+\begin{aligned}
+&\dfrac{\partial u}{\partial t} + u_{xxxx} - (|u_x|^{p - 2} u_x)_x = \\
+&= |u|^{q - 2} u - \dfrac{1}{b - a} \int\limits_a^b |u|^{q - 2} u \, dx, \; x \in (a,b), \; t \in (t_0,T], \\
+&u_{x}(a,t) = u_{xxx}(a,t) = 0, \quad t \in (t_0,T], \\
+&u_{x}(b,t) = u_{xxx}(b,t) = 0, \quad t \in (t_0,T], \\
+&u(x,t_0) = u_{init}(x), \; x \in [a,b],\\
+\end{aligned}
+\right.
+\end{equation}
+通过对比由分析法得到的先验估计（如果有），还可以分析出爆破解（在它存在的情况下）的事实，并明确其在时间和空间上的位置。同时在求解该方程的示例中，我们将在解不够平滑，或相反，解具有更高精确度的特性的情况下，详细讨论数值爆破解运用的特性。
+
+
+\section{数值解求解} \label{Ch_3_Numerical_solving}
+
+
+首先，我们将初始的初值边界值问题~\eqref{Ch4_main_equation}简化为最方便后续表达的形式（其中包括定义线段长度 $x \in [a,b]$ 如 $l := b - a$):
+\begin{equation}
+\label{Ch4_main_equation_reformulated}
+\left\{
+\begin{aligned}
+&\dfrac{\partial u}{\partial t} + u_{xxxx} - (|u_x|^{p - 1} \sign u_x )_x = |u|^{q - 1} \sign u - \\
+&\hspace{+1.75cm} - \dfrac{1}{l} \int\limits_a^b |u|^{q - 1} \sign u \, dx, \; x \in (a,b), \; t \in (t_0,T], \\
+&u_{x}(a,t) = 0, \quad t \in (t_0,T], \\
+&u_{x}(b,t) = 0, \quad t \in (t_0,T], \\
+&u_{xxx}(a,t) = 0, \quad t \in (t_0,T], \\
+&u_{xxx}(b,t) = 0, \quad t \in (t_0,T], \\
+&u(x,t_0) = u_{init}(x), \; x \in [a,b].
+\end{aligned}
+\right.
+\end{equation}
+
+为了得到问题的数值解~\eqref{Ch4_main_equation_reformulated}，如前几节一样，我们采用直线法 (MOL)~\cite{Kalitkin&Ko_1,Kalitkin,Hairer&Wanner},通过有限差分近似空间导数，并将偏微分方程组简化为微分代数系统，该系统可以在具有复数系数CROS1~\cite{Kalitkin&Ko_1,Rosenbrock}的一阶Rosenbrock方法的帮助下有效地解决 。
+
+为此，我们仅在空间变量$x$下引入具有$N$个区间的均匀网格$X_N$，其步长为h =（b-a）/ N（ 对应N + 1个网格节点）： $X_N = \{x_n, \; 0 \leqslant n \leqslant N: \; x_n = a + n h\}$. 由此可见，在对空间导数进行二阶精度有限差分近似后，我们得到了一个微分代数系统，从该系统需要确定$ N + 1 $未知函数 $u_{n} \equiv  u_{n}(t) \equiv u(x_n,t)$:
+\begin{equation*}
+\left\{
+\begin{aligned}
+&\dfrac{d u_{n}}{d t} + \dfrac{1}{h^4}\big(u_{n + 2} - 4 u_{n + 1} + 6 u_{n} - 4 u_{n - 1} + u_{n - 2}\big) - \\
+&- \dfrac{1}{h^p}\Big(|u_{n + 1} - u_n|^{p - 1}\sign(u_{n + 1} - u_n) - \\
+& - |u_{n} - u_{n - 1}|^{p - 1}\sign(u_{n} - u_{n - 1})\Big) = |u_n|^{q - 1} \sign u_n - \\
+&- \dfrac{1}{l} \bigg(\dfrac{|u_0|^{q - 1} \sign u_0}{2} + \sum\limits_{k = 1}^{N - 1} |u_k|^{q - 1} \sign u_k  + \dfrac{|u_N|^{q - 1} \sign u_N}{2}\bigg)h, \\
+&\hspace{+5.9cm} n = \overline{2,N - 2}, \: t \in (t_0,T], \\
+&\Big(-\dfrac{3}{2} u_0 + 2 u_1 - \dfrac{1}{2} u_2\Big)/h = 0, \quad t \in (t_0,T],\\
+&\Big(\dfrac{3}{2} u_N - 2 u_{N - 1} + \dfrac{1}{2} u_{N - 2}\Big)/h = 0, \quad t \in (t_0,T],\\
+&\Big(-\dfrac{5}{2} u_0 + 9 u_1 - 12 u_2 + 7 u_3 - \dfrac{3}{2} u_4\Big)/h^3 = 0, \quad t \in (t_0,T],\\
+&\Big(\dfrac{5}{2} u_N - 9 u_{N - 1} + 12 u_{N - 2} - 7 u_{N - 3} + \dfrac{3}{2} u_{N - 4}\Big)/h^3 = 0, \; t \in (t_0,T],\\
+&u_n(t_0) = u_{init}(x_n), \quad n = \overline{0,N}.
+\end{aligned}
+\right.
+\end{equation*}
+
+\emph{附注。}有关线段$ [a，b] $的边界点处高阶单边导数近似的详细信息，请参见本节的附录 (节~\ref{Appendix_4_a}) 。
+
+为了方便后续转换，我们将该系统改写成以下形式，隔离每个方程左边的微分部分并改变系统中方程的顺序：
+\begin{equation*}
+\left\{
+\begin{aligned}
+&-\dfrac{3}{2} u_0 + 2 u_1 - \dfrac{1}{2} u_2 = 0, \quad t \in (t_0,T],\\
+&-\dfrac{5}{2} u_0 + 9 u_1 - 12 u_2 + 7 u_3 - \dfrac{3}{2} u_4 = 0, \quad t \in (t_0,T],\\
+&\dfrac{d u_{n}}{d t} = - \dfrac{1}{h^4}\big(u_{n + 2} - 4 u_{n + 1} + 6 u_{n} - 4 u_{n - 1} + u_{n - 2}\big) + \\
+&+ \dfrac{1}{h^p}\Big(|u_{n + 1} - u_n|^{p - 1}\sign(u_{n + 1} - u_n) - \\
+& - |u_{n} - u_{n - 1}|^{p - 1}\sign(u_{n} - u_{n - 1})\Big) + |u_n|^{q - 1} \sign u_n - \\
+&- \dfrac{1}{l} \bigg(\dfrac{|u_0|^{q - 1} \sign u_0}{2} + \sum\limits_{k = 1}^{N - 1} |u_k|^{q - 1} \sign u_k  + \dfrac{|u_N|^{q - 1} \sign u_N}{2}\bigg)h, \\
+&\hspace{+5.9cm} n = \overline{2,N - 2}, \: t \in (t_0,T], \\
+&\dfrac{5}{2} u_N - 9 u_{N - 1} + 12 u_{N - 2} - 7 u_{N - 3} + \dfrac{3}{2} u_{N - 4} = 0, \quad t \in (t_0,T],\\
+&\dfrac{3}{2} u_N - 2 u_{N - 1} + \dfrac{1}{2} u_{N - 2} = 0, \quad t \in (t_0,T],\\
+&u_n(t_0) = u_{init}(x_n), \quad n = \overline{0,N}.
+\end{aligned}
+\right.
+\end{equation*}
+
+得到的系统称为微分代数系统，因为它既包含微分方程又包含代数方程（前两个方程和最后两个方程由边界条件确定）。从边界条件确定的方程中，可以表示$ u_0 $，$ u_1 $，$ u_ {N-1} $和$ u_N $，通过将它们代入微分方程，可以将该系统简化为纯微分方程。 但是，由于相应转换的数量很大，没有必要这样做，因为我们使用的方法允许求解微分代数系统。 此外，让我们回忆一下，我们的目标之一就是证明尽可能多的方法来解决本教材中研究的问题类型。
+
+其次，得到的系统可以改写成这种形式
+\begin{equation}
+\label{Ch4_System_of_ODEs}
+\left\{
+\begin{aligned}
+&\emph{\textbf{D}} \dfrac{d \emph{\textbf{y}}}{d t} = \emph{\textbf{f}} \, (\emph{\textbf{y}}), \quad t \in (t_0,T],\\
+&\emph{\textbf{y}}(t_0) = \emph{\textbf{y}}_{init},
+\end{aligned}
+\right.
+\end{equation}
+此处 $\emph{\textbf{y}} = \big(u_0 \; u_1 \;  \ldots \; u_{N}\big)^T$, $\emph{\textbf{f}} = \big(f_1 \; f_2 \; \ldots \; f_{N + 1}\big)^T$ 并且 $\emph{\textbf{y}}_{init} = \big(u_0(t_0) \; u_1(t_0) \;  \ldots \; u_{N}(t_0)\big)^T$.
+
+在这里向量函数$\emph{\textbf{f}}$ 具有以下结构:
+\begin{equation*}
+f_n =
+\hspace{-0.1cm}
+\begin{cases}
+\vspace{0.0cm}-\frac{3}{2} y_1 + 2 y_2 - \frac{1}{2} y_3,&\text{\hspace{-0.3cm}если $n = 1$,}\\
+\vspace{0.0cm}-\frac{5}{2} y_1 + 9 y_2 - 12 y_3 + 7 y_4 - \frac{3}{2} y_5,&\text{\hspace{-0.3cm}если $n = 2$,}\\
+\vspace{0.0cm}- \frac{1}{h^4}\big(y_{n + 2} - 4 y_{n + 1} + 6 y_{n} - 4 y_{n - 1} + y_{n - 2}\big) + \\
++ \frac{1}{h^p}\Big(|y_{n + 1} - y_n|^{p - 1}\sign(y_{n + 1} - y_n) - \\
+- |y_{n} - y_{n - 1}|^{p - 1}\sign(y_{n} - y_{n - 1})\Big) + \\
++ |y_n|^{q - 1} \sign y_n - \frac{1}{l} \bigg(\frac{|y_1|^{q - 1} \sign y_1}{2} + \\
++ \sum\limits_{k = 2}^{N} |y_k|^{q - 1} \sign y_k  + \frac{|y_{N + 1}|^{q - 1} \sign y_{N + 1}}{2}\bigg)h,&\text{\hspace{-0.3cm}если $n = \overline{3,N-1}$,}\\
+\vspace{0.0cm}\frac{5}{2} y_{N + 1} - 9 y_{N} + 12 y_{N - 1} - 7 y_{N - 2} + \frac{3}{2} y_{N - 3},&\text{\hspace{-0.3cm}если $n = N$,}\\
+\vspace{0.0cm}\frac{3}{2} y_{N + 1} - 2 y_{N} + \frac{1}{2} y_{N - 1},&\text{\hspace{-0.3cm}если $n = N + 1$,}\\
+\end{cases}
+\end{equation*}
+
+
+%\begin{align*}
+%    &\hspace{-3.3cm}f_n = h^2 y(N - 1 + n),\quad \text{для $n=\overline{1,N-1}$}
+%\end{align*}
+%\begin{align*}
+%    &\hspace{-4.8cm}f_N = -\frac{y_{2} - 2y_1 + \big(\frac{4}{3}y_1 - \frac{1}{3}y_2\big)}{h^2},
+%\end{align*}
+%\begin{align*}
+%    &f_n =  -\frac{u_{n - N + 2} - 2u_{n - N + 1} + u_{n - N}}{h^2}, \quad \text{для $n=\overline{N + 1, 2N-3}$},
+%\end{align*}
+%\begin{align*}
+%    &\hspace{-2.5cm}f_{2N - 2} = -\frac{\big(\frac{4}{3}y_{N - 1} - \frac{1}{3}y_{N - 2}\big) - 2y_{N - 1} + y_{N - 2}}{h^2}.
+%\end{align*}
+
+下面是MatLab函数的示例，该函数实现向量函数$\emph{\textbf{f}}$组成成分的计算。
+
+
+%\lstinputlisting{f.m}
+\begin{lstlisting}
+function f = f(y,h,N,p,q,l)
+
+% 函数计算可解的常微分方程组的右侧向量
+
+
+% 输入数据:
+% y - 常微分方程组在当前时间层面的解向量
+
+% h - 变量x中的网格步长
+% N - 变量x中的网格区间数
+% p, q 和 l - 问题参数
+
+% 输出数据:
+% f - 所求向量 f
+
+f = zeros(N + 1,1);
+
+f(1) = -3/2*y(1) + 2*y(2) - 1/2*y(3);
+f(2) = -5/2*y(1) + 9*y(2) - 12*y(3) + ...
+7*y(4) - 3/2*y(5);
+for n = 3:(N - 1)
+f(n) = -1/h^4*(y(n + 2) - 4*y(n + 1) + ...
+6*y(n) - 4*y(n - 1) + y(n - 2)) + ...
+1/h^p*(abs(y(n + 1) - y(n))^(p - 1)*...
+sign(y(n + 1) - y(n)) - ...
+abs(y(n) - y(n - 1))^(p - 1)*...
+sign(y(n) - y(n - 1))) + ...
+abs(y(n))^(q - 1)*sign(y(n)) - ...
+1/l*(1/2*abs(y(1))^(q - 1)*sign(y(1)) + ...
+sum(abs(y(2:N)).^(q - 1).*sign(y(2:N))) + ...
+1/2*abs(y(N + 1))^(q - 1)*sign(y(N + 1)))*h;
+end
+f(N) = 5/2*y(N + 1) - 9*y(N) + 12*y(N - 1) - ...
+7*y(N - 2) + 3/2*y(N - 3);
+f(N + 1) = 3/2*y(N + 1) - 2*y(N) + 1/2*y(N - 1);
+
+end
+\end{lstlisting}
+
+矩阵函数$ \ emph {\ textbf {D}} $具有以下非零元素：
+\begin{equation*}
+D_{n,n} =
+\begin{cases}
+0,&\text{если $n = \{1,2,N,N + 1\}$,}\\
+1,&\text{если $n = \overline{3,N - 1}$.}
+\end{cases}\\
+\end{equation*}
+
+下面是MatLab函数的一个示例，该函数实现矩阵函数$\emph{\textbf{D}}$组成成分的计算。
+
+%\lstinputlisting{D.m}
+\begin{lstlisting}
+function D = D(N)
+
+
+% 函数计算可解的常微分方程组的微分算子矩阵
+
+% 输入数据:
+% N - 变量x中的网格区间数
+
+% 输出数据:
+% D - 所求微分算子矩阵
+
+D = zeros(N + 1,N + 1);
+
+D(1,1) = 0;
+D(2,2) = 0;
+for n = 3:(N - 1)
+D(n,n) = 1;
+end
+D(N,N) = 0;
+D(N + 1,N + 1) = 0;
+
+end
+\end{lstlisting}
+
+
+接下来，引入时间为 $t$，步长为$\tau = (T - t_0)/M$的均匀网格 $T_M$，其中具有 $M$ 个区间 (即 $M + 1$ 个节点): $T_M = \{t_m, \; 0 \leqslant m \leqslant M: \; t_m = t_0 + m \tau\}$.
+
+在结果中我们可以采用Rosenbrock CROS1方案来解决系统问题~\eqref{Ch4_System_of_ODEs}:
+\begin{equation}
+\label{Ch4_CROS1}
+\hspace{0.1cm}
+\begin{aligned}
+&\emph{\textbf{y}}(t_{m + 1}) = \emph{\textbf{y}}(t_m) + (t_{m + 1} - t_m) \, \mathrm{Re} \, \emph{\textbf{w}}_1 \, ,\\
+&\mbox{где $\emph{\textbf{w}}_1$ является решением СЛАУ} \\
+&\left[\emph{\textbf{D}} - \dfrac{1 + i}{2} (t_{m + 1} - t_m) \, \emph{\textbf{f}}_\emph{\textbf{y}}\Big(\emph{\textbf{y}}(t_m)\Big)\right] \emph{\textbf{w}}_1 = \emph{\textbf{f}} \, \Big(\emph{\textbf{y}}(t_m)\Big).
+\end{aligned}
+\end{equation}
+此处 $\emph{\textbf{f}}_\emph{\textbf{y}}$~--- 矩阵带有元素 $\left(f_y\right)_{n,m}  \equiv \frac{\partial f_n}{\partial y_{m}}$ (雅可比矩阵), 该矩阵对于所研究的系统，其具有通过以下算法计算的非零元素:
+%\begin{align*}
+%    &\hspace{-1.9cm}
+%    \left(f_y\right)_{n,N - 1 + n} = h^2, \quad \text{если $n = \overline{1,N - 1}$,}
+%\end{align*}
+%\begin{align*}
+%    &\hspace{-0.5cm}
+%    \left(f_y\right)_{n,n - N} = \begin{cases}
+%        -\frac{1}{h^2},&\text{если $n = \overline{N + 1,2N - 3}$,}\\
+%        \frac{1/3 - 1}{h^2},&\text{если $n = 2N - 2$.}
+%    \end{cases}
+%\end{align*}
+%\begin{align*}
+%    &\hspace{-0.0cm}
+%    \left(f_y\right)_{n,n - N + 1} = \begin{cases}
+%        \frac{2 - 4/3}{h^2},&\text{если $n = N$,}\\
+%        \frac{2}{h^2},&\text{если $n = \overline{N + 1,2N - 3}$,}\\
+%        \frac{-4/3 + 2}{h^2},&\text{если $n = 2N - 2$,}
+%    \end{cases}
+%\end{align*}
+%\begin{align*}
+%    &\hspace{-0.1cm}
+%    \left(f_y\right)_{n,n - N + 2} = \begin{cases}
+%        \frac{-1 + 1/3}{h^2},&\text{если $n = N$,}\\
+%        -\frac{1}{h^2},&\text{если $n = \overline{N + 1,2N - 3}$.}
+%    \end{cases}
+%\end{align*}
+
+\begin{equation*}
+\begin{aligned}
+&{(f_y) \:}_{1, \, 1} := -\frac{3}{2}, \: {(f_y) \:}_{1, \, 2} := 2, \: {(f_y) \:}_{1, \, 3} := -\frac{1}{2}, \\
+&{(f_y) \:}_{2, \, 1} := -\frac{5}{2}, \: {(f_y) \:}_{2, \, 2} := 9, \: {(f_y) \:}_{2, \, 3} := -12, \\
+&{(f_y) \:}_{2, \, 4} := 7, \: {(f_u) \:}_{2, \, 5} := -\frac{3}{2}, \\
+&{(f_y) \:}_{n, \, 1} := - \frac{1}{2l}(q- 1)|y_{1}|^{q-2}h, \quad\text{для $n = \overline{3,N - 1}$,}\\
+&{(f_y) \:}_{n, \, m} := - \frac{1}{l}(q- 1)|y_{m}|^{q-2}h, \quad\text{для $n = \overline{3,N - 1}$ и $m = \overline{2,N}$ ,}\\
+&{(f_y) \:}_{n, \, N + 1} := - \frac{1}{2l}(q- 1)|y_{N + 1}|^{q-2}h, \quad\text{для $n = \overline{3,N - 1}$,}\\
+&{(f_y) \:}_{N, \, N - 3} := \frac{3}{2}, \: {(f_u) \:}_{N, \, N - 2} := -7, \: {(f_y) \:}_{N, \, N - 1} = 12, \\
+&{(f_u) \:}_{N, \, N} := -9, \: {(f_y) \:}_{N, \, N + 1} := \frac{5}{2}, \\
+&{(f_y) \:}_{N + 1, \, N - 1} := \frac{1}{2}, \: {(f_y) \:}_{N + 1, \, N} := -2, \: {(f_y) \:}_{N + 1, \, N + 1} := \frac{3}{2}, \\
+&{(f_y) \:}_{n, \, n - 2} :=  {(f_y) \:}_{n, \, n - 2} - \frac{1}{h^4}(1), \quad \text{для $n = \overline{3,N - 1}$,} \\
+&{(f_y) \:}_{n, \, n - 1} := {(f_y) \:}_{n, \, n - 1} -\frac{1}{h^4} (-4) + \\
+&\hspace{+2.7cm} + \frac{1}{h^p}(p - 1)|y_{n} - y_{n - 1}|^{p - 2}, \quad \text{для $n = \overline{3,N - 1}$,} \\
+&{(f_y) \:}_{n, \, n } := {(f_y) \:}_{n, \, n } -\frac{1}{h^4} (6) - \frac{1}{h^p}(p - 1)\big(|y_{n + 1} - y_{n}|^{p - 2} + \\
+&\hspace{+1.5cm} + |y_{n} - y_{n - 1}|^{p - 2}\big) + (q - 1)|y_n|^{q - 2} , \quad \text{для $n = \overline{3,N - 1}$,} \\
+&{(f_y) \:}_{n, \, n + 1} := {(f_y) \:}_{n, \, n + 1} -\frac{1}{h^4} (-4) + \\
+&\hspace{+2.7cm}+ \frac{1}{h^p}(p - 1)|y_{n + 1} - y_{n}|^{p - 2}, \quad \text{для $n = \overline{3,N - 1}$,} \\
+&{(f_y) \:}_{n, \, n + 2} := {(f_y) \:}_{n, \, n + 2} - \frac{1}{h^4} (1), \quad \text{для $n = \overline{3,N - 1}$.}
+\end{aligned}
+\end{equation*}
+
+下面是MatLab函数的示例，该函数实现了雅可比矩阵$\emph{\textbf{f}}_\emph{\textbf{y}}$组成成分的计算
+
+
+%\lstinputlisting{f_y.m}
+\begin{lstlisting}
+function f_y = f_y(y,h,N,p,q,l)
+
+% 函数计算有解的常微分方程组的右侧部分的雅可比矩阵
+
+% 输入数据:
+% y - 常微分方程组在当前时间层面的解向量
+% h - 变量x上的网格步长
+% N - 变量x上的网格区间数
+% p, q 和 l - 问题参数
+% 输出数据:
+% f\_y - 所求雅可比矩阵
+
+f_y = zeros(N + 1,N + 1);
+
+f_y(1,1) = -3/2; f_y(1,2) = 2; f_y(1,3) = -1/2;
+f_y(2,1) = -5/2; f_y(2,2) = 9; f_y(2,3) = -12;
+f_y(2,4) = 7; f_y(2,5) = -3/2;
+for n = 3:(N - 1)
+f_y(n,1) = - 1/(2*l)*(q - 1)*abs(y(1))^(q - 2)*h;
+end
+for n = 3:(N - 1)
+for m = 2:N
+f_y(n,m) = - 1/l*(q - 1)*abs(y(m))^(q - 2)*h;
+end
+end
+for n = 3:(N - 1)
+f_y(n,N + 1) = - 1/(2*l)*(q - 1)*...
+abs(y(N + 1))^(q - 2)*h;
+end
+f_y(N,N-3) = 3/2; f_y(N,N-2) = -7; f_y(N,N-1) = 12;
+f_y(N,N) = -9; f_y(N,N+1) = 5/2;
+f_y(N+1,N-1) = 1/2; f_y(N+1,N)= -2; f_y(N+1,N+1)=3/2;
+
+for n = 3:(N - 1)
+f_y(n,n - 2) = f_y(n,n - 2) - 1/h^4*(1);
+f_y(n,n - 1) = f_y(n,n - 1) - 1/h^4*(-4) + ...
+1/h^p*(p - 1)*abs(y(n) - y(n - 1))^(p - 2);
+f_y(n,n) = f_y(n,n) - 1/h^4*(6) - ...
+1/h^p*(p-1)*(abs(y(n+1)-y(n))^(p - 2)+ ...
+abs(y(n) - y(n - 1))^(p - 2)) + ...
+(q - 1)*abs(y(n))^(q - 2);
+f_y(n,n + 1) = f_y(n,n + 1) - 1/h^4*(-4) + ...
+1/h^p*(p - 1)*abs(y(n + 1) - y(n))^(p - 2);
+f_y(n,n + 2) = f_y(n,n + 2) - 1/h^4*(1);
+end
+
+end
+\end{lstlisting}
+
+
+以下是MatLab函数的示例，该函数使用上述函数f, D和f\_y，通过方案~\eqref{Ch4_CROS1}，以被更改后的形式~\eqref{Ch4_System_of_ODEs}，实现对问题~\eqref{Ch4_main_equation_reformulated}的数值解的求解。
+%\lstinputlisting{PDESolving.m}
+\begin{lstlisting}
+function u = PDESolving(a,b,N_0,t_0,T,M_0,...
+u_init,p,q,r,s,r_x,r_t)
+
+% 该函数求解偏微分方程（PDE）的近似数值解
+
+% 输入参数:
+% a, b - 变量x的闭区间边界 (§ $[a,b]$ §)
+% N\_0 - 空间上基础网格的区间数量
+% t\_0, T - 开始和结束的计数时刻 (§ $t_0$ §) 和 (§ $T$ §)
+% M\_0 - 时间上基础网格的区间数量
+% u\_init - 定义初始条件的函数
+% p, q 和 r - 所求解方程式中包含的参数
+% s - 网格编号，在其上计算解
+% (如果 s = 1, 则在基础网格上求解)
+% r\_x 和 r\_t - x 和 t 的网格密集系数
+
+% 输出参数:
+% u- 数组，其包含偏微分方程解的网格值
+% 该值仅在与基础网格节点重合的节点上
+
+% 在对空间变量x上 $r_x^{s - 1}$ 次和
+% 在对时间变量t上 $r_t^{s - 1}$ 次中
+% 形成编号为s的细化网格
+
+N = N_0*r_x^(s - 1);    % 在编号为s的网格上
+M = M_0*r_t^(s - 1);    % 计算区间数
+
+h = (b - a)/N;     % 定义x上的网格步长
+x = a:h:b;         % 定义x上的细化网格
+tau = (T - t_0)/M; % 定义t上的网格步长
+t = t_0:tau:T;     % 定义t上的细化网格
+
+% 在数组u上分配内存
+% 该数组在第(m + 1)行存储
+% 解的网格值
+% 该值对应基础网格在时间上的时刻(§ $t_m$ §)
+u = zeros(M_0 + 1,N_0 + 1);
+
+% 在网格值数组上分配内存
+% 常微分方程组的解
+% 对应的当前时刻(§ $t_m$ §)
+y = zeros(1,N + 1);
+
+% 可解常微分方程组的初始条件的任务
+for n = 1:(N + 1)
+y(1,n) = u_init(x(n),r);
+end
+
+%从与初始条件对应的数组u\_init的第一行中，
+%从节点中选择网格值，
+%该节点与空间上的基础网格的节点重合
+for n = 1:(N_0 + 1)
+u(1,n) = u_init(x((n - 1)*r_x^(s - 1) + 1),r);
+end
+
+%引入一个指标，该索引负责在编号为s网格上的临时层的选择
+%该索引与基础网格的对应的临时层重合。
+%此时，我们将跟踪在基础网格上的(§ $t_{m_{basic}}$ §)
+%与细化网格上的(§ $t_m$ §)的重合
+m_basic = 2;
+
+for m = 1:M
+
+% 实现CROS1方案
+
+w_1 = (D(N) - (1+1i)/2*(t(m + 1) - ...
+t(m))*f_y(y,h,N,p,q,b - a))\...
+f(y,h,N,p,q,b - a);
+
+y = y + (t(m + 1) - t(m))*real(w_1)';
+
+%在带有（§$ t_ {m_ {basic}} $§）基础网格的细化网格上
+%执行重合检验（§$ t_ {m + 1} $§）
+if (m + 1) == (m_basic - 1)*r_t^(s - 1) + 1
+
+%对于偏微分方程原始问题的网格值数组的填写
+
+%在当前时间层面选择空间节点
+%该节点与基础网格节点重合
+% (除了在上面已经核查的边界)
+for n = 1:(N_0 + 1)
+u(m_basic,n) = y((n - 1)*r_x^(s - 1)+ 1);
+end
+
+%现在将跟踪在细化网格上的(§ $t_{m + 1}$ §)与
+%下一个基础网格(§ $t_{m_{basic}}$ §)的重合
+m_basic = m_basic + 1;
+
+end
+
+end
+
+end
+\end{lstlisting}
+
+
+
+
+\emph{附注。} 与前面章节一样，让我们关注PDESolving函数实现的一些特性。
+
+\begin{enumerate}
+	\item 该函数已经实现了在一系列细化网格上近似数值解求解的可能，包括仅从与基础网格节点重合的节点中选择网格值。在数值爆破解分析的实现中，我们将需要此特性，下一节将对此进行讨论。现在，为了仅在一个（基本）网格上计算解，我们将使用此函数。这种情况对应输入参数$s：= 1$的值，因此参数$r_x$和$r_t$的值不是必需的，且在目前没有影响。
+	\item 为了节省内存（这对于很大的$s$值至关重要），在当前计算时间中仅将向量$\emph{\textbf{y}}(t_m)$的一组网格值存储在内存中，而作为在编号为$s$网格上的网格解，该函数不会返回一组完整的网格值，只会返回与基础网格节点重合的节点上的一组值。
+	\item 需要注意以下：当变换向量$t$和$x$的组成成分时，所有索引都位移$+1$（ 与上述分析公式相比），因为在MatLab中，数组元素的编号以$1$开始，(因此 $x_0 \equiv x(1)$, $x_1 \equiv x(2)$, \ldots, $x_N \equiv x(N + 1)$)。
+\end{enumerate}
+
+可以通过如例以下命令集来启动PDESolving函数：
+%\lstinputlisting{test_4_1_PDESolving.m}
+\begin{lstlisting}
+% 定义计数开始和结束的时间
+t_0 = 0; T = 0.113;
+
+% 定义区间边界 (§ $x \in [a,b]$ §)
+a = 0; b = pi;
+
+% 定义基础网格的区间数
+N = 50; M = 50;
+
+% 定义求解方程中包含的参数
+p = 3.5; q = 4.5; r = 3;
+
+% 定义初始条件
+u_init = @(x,r) r*cos(x);
+
+s = 1;   % 网格编号 (仅基础网格)
+r_x = 2; % x上的细化网格的系数
+r_t = 2; % t上的细化网格的系数
+
+u = PDESolving(a,b,N,t_0,T,M,u_init,p,q,r,s,r_x,r_t);
+
+% 解的优化
+figure;
+x = a:(b - a)/N:b; % x上的基础网格的定义
+for m = 0:M
+% 绘制初始条件图
+plot(x,u(1,:),'--k','LineWidth',1); hold on;
+% 在时间(§ $t_m$ §)上绘制解的图
+plot(x,u(m + 1,:),'-ok',...
+'MarkerSize',3,'LineWidth',1); hold on;
+axis([a b -12 12]); xlabel('x'); ylabel('u');
+hold off; drawnow; pause(0.1);
+end
+\end{lstlisting}
+
+
+
+这组指令可以为下一组问题的参数~\eqref{Ch4_main_equation}提供解：
+\begin{equation}
+\label{Ch4_parameters_4_1_a}
+\begin{aligned}
+&a = 0, \quad b = \pi, \quad t_0 = 0, \quad T = 0.113, \\
+&p = 3.5, \quad q = 4.5, \\
+&u_{init}(x) = r \cos x, \quad r = 3,
+\end{aligned}
+\end{equation}
+和在空间和时间上的网格参数：
+\begin{equation}
+\label{Ch4_parameters_4_1_b}
+N = 50, \quad M = 50.
+\end{equation}
+
+
+在图~\ref{Fig_4_1}上，给出了函数$u(x,t_m)$在不同时间点$t_m$的几组网格值。
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Chapter-4-1.eps}\\
+	\caption{根据~\eqref{Ch4_CROS1}方案，对于参数组~\eqref{Ch4_parameters_4_1_a}--\eqref{Ch4_parameters_4_1_b}，问题~\eqref{Ch4_main_equation}解的示例。该图体现了函数$ u（x，t_m）$在不同时间点$ t_m $的几组网格值。}
+	\label{Fig_4_1}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	
+\section{？？}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	
+\section{附录：高阶导数的近似法}\label{Appendix_4_a}
+
+在计算精度为$p$的节点$x_n$处的函数$f(x)$的$k$-阶导数公式的形式为
+\begin{equation}
+\label{Ch4_3_general_finite-difference_formula}
+f^{(k)}(x_n) = \dfrac{1}{h^k}\sum\limits_{\{s\}} a_s f(x_{n + s}) + O(h^p).
+\end{equation}
+
+在表~\ref{Table_4_5},~\ref{Table_4_6} 和 \ref{Table_4_7}中给出系数组$a_s$。
+\begin{table}[t!]
+	\begin{center}
+		\begin{tabular}{c|c||c|c|c|c|c|c|c}
+			\multirow{2}{1em}{k} & \multirow{2}{1em}{p} & \multicolumn{7}{c}{s} \\
+			\cline{3-9}
+			&  & -3 & -2 & -1 & 0 & +1 & +2 & +3 \\
+			\hline\hline
+			\multirow{2}{1em}{1} & 2 &  &  & $-\frac{1}{2}$ & 0 & $\frac{1}{2}$ &  &  \\
+			\cline{2-9}
+			& 4 &  & $\frac{1}{12}$ & $-\frac{2}{3}$ & 0 & $\frac{2}{3}$ & $-\frac{1}{12}$ &  \\
+			\hline
+			\multirow{2}{1em}{2} & 2 &  &  & 1 & -2 & 1 & &  \\
+			\cline{2-9}
+			& 4 &  & -$\frac{1}{12}$ & $\frac{4}{3}$ & $-\frac{5}{2}$ & $\frac{4}{3}$ & $-\frac{1}{12}$ &  \\
+			\hline
+			\multirow{2}{1em}{3} & 2 &  & $-\frac{1}{2}$ & 1 & 0 & -1 & $\frac{1}{2}$ &  \\
+			\cline{2-9}
+			& 4 & $\frac{1}{8}$ & -1 & $\frac{13}{8}$ & 0 & $-\frac{13}{8}$ & 1 & $-\frac{1}{8}$ \\
+			\hline
+			\multirow{2}{1em}{4} & 2 &  & 1 & -4 & 6 & -4 & 1 &  \\
+			\cline{2-9}
+			& 4 & $-\frac{1}{6}$ & 2 & $-\frac{13}{2}$ & $\frac{28}{3}$ & $-\frac{13}{2}$ & 2 & $-\frac{1}{6}$
+		\end{tabular}
+	\end{center}
+	\caption{系数组$a_s$通过公式~\eqref{Ch4_3_general_finite-difference_formula}来计算精度为$p$的$k$阶中心导数。}
+	\label{Table_4_5}
+\end{table}
+
+\begin{table}[t!]
+	\begin{center}
+		\begin{tabular}{c|c||c|c|c|c|c|c}
+			\multirow{2}{1em}{k} & \multirow{2}{1em}{p} & \multicolumn{6}{c}{s} \\
+			\cline{3-8}
+			&  & 0 & +1 & +2 & +3 & +4 & +5 \\
+			\hline\hline
+			\multirow{2}{1em}{1} & 1 & -1 & 1 &  &  &  &  \\
+			\cline{2-8}
+			& 2 & $-\frac{3}{2}$ & 2 & $-\frac{1}{2}$ &  &  &  \\
+			\hline
+			\multirow{2}{1em}{2} & 1 & 1 & -2 & 1 &  &  &  \\
+			\cline{2-8}
+			& 2 & 2 & -5 & 4 & -1 &  &  \\
+			\hline
+			\multirow{2}{1em}{3} & 1 & -1 & 3 & -3 & 1 &  &  \\
+			\cline{2-8}
+			& 2 & $-\frac{5}{2}$ & 9 & -12 & 7 & $-\frac{3}{2}$ &  \\
+			\hline
+			\multirow{2}{1em}{4} & 1 & 1 & -4 & 6 & -4 & 1 &  \\
+			\cline{2-8}
+			& 2 & 3 & -14 & 26 & -24 & 11 & -2 \\
+		\end{tabular}
+	\end{center}
+	\caption{系数组$a_s$通过公式~\eqref{Ch4_3_general_finite-difference_formula}来计算精度为$p$的$k$阶右导数。}
+	\label{Table_4_6}
+\end{table}
+
+
+\begin{table}[t!]
+	\begin{center}
+		\begin{tabular}{c|c||c|c|c|c|c|c}
+			\multirow{2}{1em}{k} & \multirow{2}{1em}{p} & \multicolumn{6}{c}{s} \\
+			\cline{3-8}
+			&  & -5 & -4 & -3 & -2 & -1 & 0 \\
+			\hline\hline
+			\multirow{2}{1em}{1} & 1 &  &  &  &  & -1 & 1 \\
+			\cline{2-8}
+			& 2 &  &  &  & $\frac{1}{2}$ & -2 & $\frac{3}{2}$ \\
+			\hline
+			\multirow{2}{1em}{2} & 1 &  &  &  & 1 & -2 & 1 \\
+			\cline{2-8}
+			& 2 &  &  & -1 & 4 & -5 & 2 \\
+			\hline
+			\multirow{2}{1em}{3} & 1 &  &  & -1 & 3 & -3 & 1 \\
+			\cline{2-8}
+			& 2 &  & $\frac{3}{2}$ & -7 & 12 & -9 & $\frac{5}{2}$ \\
+			\hline
+			\multirow{2}{1em}{4} & 1 &  & 1 & -4 & 6 & -4 & 1 \\
+			\cline{2-8}
+			& 2 & -2 & 11 & -24 & 26 & -14 & 3 \\
+		\end{tabular}
+	\end{center}
+	\caption{系数组$a_s$通过公式~\eqref{Ch4_3_general_finite-difference_formula}来计算精度为$p$的$k$阶左导数。}
+	\label{Table_4_7}
+\end{table}
+	
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{thebibliography}{s2}
+     \bibitem{Po} {\itshape Mitidieri~E., Pokhozhaev~S. I.} A priori estimates and blow-up of solutions to nonlinear partial differential equations and inequalities // Proc. Steklov Inst. Math. 2001. V.~234. P.~1--362.
+    \bibitem{Levine1} {\itshape Levine H. A.} Some nonexistence and instability theorems for solutions of formally parabolic equations of the form $Pu_t=-Au+\mathcal{F}(u)$ // Archive for Rational Mechanics and Analysis. 1973. V.~51, N~5. P.~371--386.
+    \bibitem{Levine2} {\itshape Levine H. A.}  Instability and nonexistence of global solutions to nonlinear wave equations of the form $Pu_{tt}=-Au+\mathcal{F}(u)$ // Transactions of the American mathematical society. 1974. V.~192. P.~1--21.
+    \bibitem{Kal} {\itshape Kalantarov V. K., Ladyzhenskaya O. A.} The occurrence of collapse for quasilinear equations of parabolic and hyperbolic types // Nauch. Semin. Leningr. Otd. Mat. Inst. Steklova. 1977. V.~69. P.~77--102.
+    \bibitem{Al} {\itshape Sveshnikov A. G., Al’shin A. B, Korpusov M. O., Pletner Yu. D.}  Linear and nonlinear equations of Sobolev type.  Fizmatlit, Moscow, 2007.
+    \bibitem{Korpusov} {\itshape Korpusov M. O.} Blow-up in nonclassical wave equations. Editorial, Moscow, 2010.
+    %\bibitem{Kor2} {\itshape Korpusov M. O.} Blow-up of ion acoustic waves in a plasma // Mat. Sb. 2011. V.~202, N~1. P.~37--64.
+    \bibitem{Samar} {\itshape Samarskii A. A., Galaktionov V. A., Kurdyumov S. P., Mikhailov A. P.} Blow-up in quasilinear parabolic equations. Nauka, Moscow, 1987.
+    \bibitem{Galact} {\itshape Galaktionov V. A., Pokhozhaev S. I.} Third-order nonlinear dispersive equations: shocks, rarefaction, and blowup waves // Comput. Math. Math. Phys. 2008. V.~48, N~10. P.~1784--1810.
+    \bibitem{PelXu} {\itshape Pelinovsky D. E., Xu Ch.} On numerical modelling and the blow-up behavoir of contact lines with a $180^\circ$ contact angle // Journal of Engineering Mathematics. 2015. V.~92. P.~31--44.
+    \bibitem{Georg} {\itshape Cangiani A., Georgoulis E. H., Kyza I., Metcalfe S.} Adaptivity and blow-up detection for nonlinear evolution problems // Arxive: http://arxiv.org/abs/1502.03250.
+    \bibitem{Turner} {\itshape Haynes R., Turner C.} A numerical and theoretical study of blow-up for a system of ordinary differential equations using the Sundman transformation // Atlantic electronic journal of mathematics. 2007. V.~2, N~1. P.~1--13.
+    \bibitem{BerKohn} {\itshape Berger M., Kohn R. V.} A rescaling algorithm for the numerical calcultaion of blowing-up solutions // Communications on pure and applied mathematics. 1988. XLI. P.~841--863.
+    \bibitem{Cho} {\itshape Cho Ch.-H.} Numerical detection of blow-up: a new sufficient condition for blow-up // Japan Journal of Industrial and Applied Mathematics. 2016. V.~33, N~81. doi:10.1007/s13160-015-0198-0.
+    \bibitem{BUE_basic_1} {\itshape Alshina E. A., Kalitkin N. N., Koryakin P. V.} Diagnostics of singularities of exact solutions in computations with error control // Comput. Math. Math. Phys. 2005. V.~45, N~10.  ?.~1769--1779.
+    \bibitem{BUE_basic_2} {\itshape Alshin A. B., Alshina E. A.} Numerical diagnosis of blow-up of solutions of pseudoparabolic equations // Journal of Mathematical Sciences. 2008. V.~148, N~1. P.~143--162.
+    \bibitem{Kalitkin_book_3} {\itshape Kalitkin N. N., Al’shin A. B., Al’shina E. A., Rogov B. V.} Calculations on quasi-uniform grids. Fizmatlit, Moscow, 2005 [in Russian].
+    \bibitem{HJ} {\itshape Hoffman J., Johnson C.} Blow up of incompressible Euler solutions // BIT Numerical Mathematics. 2008 48. 285--307. doi:10.1007/s10543-008-0184-x.
+    \bibitem{Kalitkin} {\itshape Kalitkin N. N.} Numerical methods for solving stiff systems  // Mat. Model. 1995. V.~7, N~5. P.~8--11.
+    \bibitem{Panin_1} {\itshape Korpusov M. O., Panin A. A.} Local solvability and solution blowup for the Benjamin-Bona-Mahony-Burgers equation with a nonlocal boundary condition // Theoretical and Mathematical Physics. 2013. V.~175, N~2. P.~580--591.
+    \bibitem{Hairer&Wanner} {\itshape Hairer E.,Wanner G.} Solving of Ordinary Differential Equations. Stiff and Differential-Algebraic Problems. Springer, 2002.
+    \bibitem{Kalitkin&Ko_1} {\itshape Al’shin A. B., Al’shina E. A., Kalitkin N. N., Koryagina A. B.} Rosenbrock schemes with complex coefficients for stiff and differential algebraic systems // Comput. Math. Math. Phys.. 2006. V.~46, N~8.  P.~1320--1340.
+    \bibitem{Rosenbrock} {\itshape Rosenbrock H. H.} Some general implicit processes for the numerical solution of differential equations // Computer Journal. 1963. V.~5, N~4. P.~329-330.
+    \bibitem{Lukyanenko_1} {\itshape Korpusov M. O., Lukyanenko D. V., Panin A. A., Yushkov E. V.}  Blow-up for one Sobolev problem: theoretical approach and numerical analysis // Journal of Mathematical Analysis and Applications. 2016. V.~442, N~2. P.~451-468.
+    \bibitem{Sun&Liu&Wu} {\itshape Fenglong Sun, Lishan Liu, Yonghong Wu}  Finite time blow-up for a thin-film equation with initial data at arbitrary energy level // Journal of Mathematical Analysis and Applications. 2018. V.~458, N~1. P.~9-20.
+    \bibitem{Lukyanenko_2} {\itshape Korpusov M. O., Lukyanenko D. V., Panin A. A.}  Blow-up for Joseph-Egri equation: theoretical approach and numerical analysis // Mathematical Methods in the Applied Sciences. 2020. V.~43, N~11. P.~6771-6800.
+
+
+\end{thebibliography}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newpage
+\chapter{定义在无界域的三维偏微分方程问题的爆破解分析}\label{Chapter_5}
+
+在本章讨论的是关于在无界域的三维偏微分方程问题的爆破解的数值分析的特征。例如，考虑半轴上的Joseph-Egry方程的初边值问题~\cite{Lukyanenko_2}。需要找到函数 $u(x,t)$，该函数定义域 $(x,t) \in [a,+\infty]\footnote{\emph{注释 1.} 我们将 ``无穷大'' 作为闭区间的边界鉴于我们想在``无穷大''找到\emph{数值\/} 解。} \times [t_0,T]$\footnote{\emph{注释 2.} 我们提出到时间~$T$ 前（包括~$T$）的寻找数值解的问题，尽管知道在这时刻可能不存在解，甚至是更早。这是因为我们想通过数值的方式来分析爆破解，也就意味着我们必须要找到直到这个时刻的\emph{数值\/}解。} 并满足方程组
+\begin{equation}
+\label{Ch5_main_equation}
+    \left\{
+        \begin{aligned}
+            &\dfrac{\partial u}{\partial t} + u_{x} + u u_{x} + \dfrac{\partial^2}{\partial t^2} u_{x} = 0, \quad x \in (a,+\infty], \quad t \in (t_0,T], \\
+            &u(a,t) = 0, \quad t \in (t_0,T], \\
+            &u(x,t_0) = u_{init_0}(x), \quad x \in [a,+\infty], \\
+            &u_t(x,t_0) = u_{init_1}(x), \quad x \in [a,+\infty],
+        \end{aligned}
+    \right.
+\end{equation}
+同时与通过分析方法得到的先验估值（如果存在）相比，分析爆破解（如果存在）的实例并阐明其在时间和空间上的限定范围。
+
+同样，本章的目标之一是总结经研究的数值图解和相对应的程序，用来解决在无界域和有界域中需要使用特殊非均匀网格的问题，这些网格需要考虑到解决问题的特征。
+
+
+\section{寻找数值解} \label{Ch_5_Numerical_solving}
+
+首先将原始初边值问题~\eqref{Ch5_main_equation} 化为关于时间变化的一阶方程组:
+\begin{equation}
+\label{Ch5_reduced_equation_V1}
+    \left\{
+    \begin{aligned}
+        &\dfrac{\partial u}{\partial t} = v, \quad x \in (a,+\infty], \quad t \in (t_0,T], \\
+        &v + u_{x} + u u_{x} + \dfrac{\partial}{\partial t} \, v_{x} = 0, \quad x \in (a,+\infty], \quad t \in (t_0,T], \\
+        &u(a,t) = 0, \quad v(a,t) = 0, \quad t \in (t_0,T],\\
+        &u(x,t_0) = u_{init_0}(x), \quad x \in [a,+\infty],\\
+        &v(x,t_0) = u_{init_1}(x), \quad x \in [a,+\infty].
+    \end{aligned}
+    \right.
+\end{equation}
+
+对于数值解问题~\eqref{Ch5_main_equation}，与前面章节相同，我们将使用线法(MOL)~\cite{Kalitkin&Ko_1,Kalitkin,Hairer&Wanner}，用常微分方程组近似逼近于偏微分方程
+
+为此，首先引入仅在空间变量 $x$ 中具有 $N$ 个间隔的拟均匀网格 $X_N$~\cite{Kalitkin_book_3} : $X_N = \{x_{n,N}, \; 0 \leqslant n \leqslant N\}$:
+\begin{equation}
+    \label{Ch5_quasiuniform_mesh_1}
+    x_{n,N} \equiv x(\xi_{n,N}) = a + \dfrac{c \, \xi_{n,N}}{(1 - \xi_{n,N})^m}, \quad \xi_{n,N} = \alpha + \dfrac{\beta - \alpha}{N} \, n,
+\end{equation}
+其中 $\alpha = 0$, $\beta = 1$, $c$ и $m$~--- 控制参数，用于定义在点 $x = a$ 和 $x = +\infty$ 的邻域的拟均匀网格 $X_N$ 的稠密性。关于变换 $x(\xi)$ 和控制参数的选择更详细的解释，以及不同变换 $x(\xi)$ 的概述请参见~\cite{Kalitkin_book_3} 和附录~1 (本章节~\ref{Appendix_5_a})。
+
+\emph{注释.} 注意，与前几章不同的是，我们将在变量 $x$ 的索引中明确标记，该变量定义了具体网格的节点 $x_{n,N}$，其值不仅取决于节点号 $n$，还取决于网格的间隔总数 $N$。使用这种表示将以更简单的方式把数值图解转换为程序代码。
+
+以下是Matlab函数的示例，该函数在变换~\eqref{Ch5_quasiuniform_mesh_1}的帮助下计算网格节点 $x_{n,N}$ 的值，该变换生成覆盖半轴 $[a,+\infty\underline{]}$ 的拟均匀网格的节点。
+
+%\lstinputlisting{x.m}
+\begin{lstlisting}
+function x_nN = x(n,N)
+
+    % 函数生成拟均匀网格，
+    % 覆盖半轴 (§ $x \in [a,+\infty]$ §)
+
+    % 输入参数：
+    % n - 节点号 (节点号：n = 0,...,N)
+    % N - 网格的间隔数
+
+    % 输出参数：
+    % x\_nN - (§ $x_{n,N} $ §) 的值
+
+    a = 0;
+    alpha = 0; beta = 1;
+    c = 4; m = 1;
+    xi_nN = alpha + (beta - alpha)/N*n;
+    x_nN = a + c*xi_nN/(1 - xi_nN)^m;
+
+end
+\end{lstlisting}
+
+
+
+在拟均匀网格上以一阶精度对空间导数进行有限差分近似逼近后，获得微分代数方程组，需要从该方程组确定 $N + 1$ 个未知函数 $u_{n} \equiv  u_{n}(t) \equiv u(x_{n,N},t)$, $n = \overline{0,N}$，和 $N + 1$ 个辅助函数 $v_{n} \equiv  v_{n}(t) \equiv v(x_{n,N},t)$, $n = \overline{0,N}$:
+\begin{equation*}
+    \left\{
+    \begin{aligned}
+            &\dfrac{d u_{n}}{d t} = v_n, \quad n = \overline{1,N}, \quad t \in (t_0,T],\\
+            &v_n + \dfrac{u_{n} - u_{n - 1}}{2(x_{n - 1/4,N} - x_{n - 3/4,N})} + u_n \dfrac{u_{n} - u_{n - 1}}{2(x_{n - 1/4,N} - x_{n - 3/4,N})} + \\
+            &\hspace{0.7cm} + \dfrac{d}{d t} \, \dfrac{v_{n} - v_{n - 1}}{2(x_{n - 1/4,N} - x_{n - 3/4,N})} = 0, \quad n = \overline{1,N}, \quad t \in (t_0,T], \\
+            &u_0 = 0, \quad v_0 = 0, \quad t \in (t_0,T], \\
+            &u_n(t_0) =  u_{init_0} (x_n), \quad v_n(t_0) =  u_{init_1} (x_n), \quad n = \overline{0,N}. \\
+        \end{aligned}
+    \right.
+\end{equation*}
+
+%\emph{Замечание.} Основные формулы для аппроксимации проивзодных на квазиравномерных сетках, в том числе и в случае неограниченных областей, приведены в Приложении этой главы.
+
+为了方便后续变换，我们隔离每个方程式左边的微分部分，并以以下形式重述该方程组：
+\begin{equation*}
+    \left\{
+    \begin{aligned}
+            &\dfrac{d u_{n}}{d t} = v_n, \quad n = \overline{1,N}, \quad t \in (t_0,T],\\
+            &\dfrac{1}{2(x_{n - 1/4,N} - x_{n - 3/4,N})} \dfrac{d v_{n}}{d t} - \dfrac{1}{2(x_{n - 1/4,N} - x_{n - 3/4,N})} \dfrac{d v_{n - 1}}{d t} = \\
+            &\hspace{0.7cm} = -v_n - \dfrac{(u_{n} - u_{n - 1})(1 + u_n)}{2(x_{n - 1/4,N} - x_{n - 3/4,N})}, \quad n = \overline{1,N}, \quad t \in (t_0,T], \\
+            &u_0 = 0, \quad v_0 = 0, \quad t \in (t_0,T], \\
+            &u_n(t_0) =  u_{init_0} (x_n), \quad v_n(t_0) =  u_{init_1} (x_n), \quad n = \overline{0,N}. \\
+        \end{aligned}
+    \right.
+\end{equation*}
+
+所得的方程组是微分代数方程组，因为它既包含微分方程，又包含代数方程（由边界条件确定的两个方程）。通过将 $u_0$ 和 $v_0$ ($u_0 = 0$, $v_0 = 0$) 代入到第二个微分方程（对于 $n = 1$），方程组可以化简为纯微分的形式：
+\begin{equation*}
+    \left\{
+    \begin{aligned}
+            &\dfrac{d u_{n}}{d t} = v_n, \quad n = \overline{1,N}, \quad t \in (t_0,T],\\
+            &\dfrac{1}{2(x_{3/4,N} - x_{1/4,N})} \dfrac{d v_{1}}{d t} = -v_1 - \dfrac{u_{1}(1 + u_1)}{2(x_{3/4,N} - x_{1/4,N})}, \quad t \in (t_0,T], \\
+            &\dfrac{1}{2(x_{n - 1/4,N} - x_{n - 3/4,N})} \dfrac{d v_{n}}{d t} - \dfrac{1}{2(x_{n - 1/4,N} - x_{n - 3/4,N})} \dfrac{d v_{n - 1}}{d t} = \\
+            &\hspace{0.7cm} = -v_n - \dfrac{(u_{n} - u_{n - 1})(1 + u_n)}{2(x_{n - 1/4,N} - x_{n - 3/4,N})}, \quad n = \overline{2,N}, \quad t \in (t_0,T], \\
+            &u_n(t_0) =  u_{init_0} (x_n), \quad v_n(t_0) =  u_{init_1} (x_n), \quad n = \overline{1,N}. \\
+        \end{aligned}
+    \right.
+\end{equation*}
+
+包含 $2N$ 个方程和 $2N$ 个未知函数 $u_{n}$ 和 $v_n$, $n = \overline{1,N}$的方程组可以被重述成向量的形式：
+\begin{equation}
+    \label{Ch5_System_of_ODEs}
+    \left\{
+    \begin{aligned}
+        &\emph{\textbf{D}} \dfrac{d \emph{\textbf{y}}}{d t} = \emph{\textbf{f}} \, (\emph{\textbf{y}}), \quad t \in (t_0,T],\\
+        &\emph{\textbf{y}}(t_0) = \emph{\textbf{y}}_{init},
+    \end{aligned}
+    \right.
+\end{equation}
+其中 $\emph{\textbf{y}} = \big(u_1 \; u_2 \;  \ldots \; u_{N} \; v_1 \; v_2 \;  \ldots \; v_{N} \big)^T$，$\emph{\textbf{f}} = \big(f_1 \; f_2 \; \ldots \; f_{2N}\big)^T$ 和 $\emph{\textbf{y}}_{init} = \big(u_1(t_0) \; u_2(t_0) \;  \ldots \; u_{N}(t_0) \; v_1(t_0) \; v_2(t_0) \;  \ldots \; v_{N}(t_0)\big)^T$。
+
+这里的向量函数 $\emph{\textbf{f}}$ 具有以下结构：
+\begin{equation*}
+    f_n = \begin{cases}
+        \vspace{0.1cm}
+        y_{n + N},&\text{если $n = \overline{1,N}$,}\\
+        -y_{N + 1} - \dfrac{y_1(1 + y_1)}{2(x_{3/4,N} - x_{1/4,N})},&\text{если $n = N + 1$,}\\
+        -y_n - \dfrac{(y_{n - N} - y_{n - N - 1})(1 + y_{n - N})}{2(x_{n - N- 1/4,N} - x_{n - N - 3/4,N})},&\text{если $n = \overline{N + 2,2N}$.}\\
+    \end{cases}
+\end{equation*}
+
+
+以下是Matlab函数的示例，该函数实现向量函数 $\emph{\textbf{f}}$ 的分量计算。
+%\lstinputlisting{f.m}
+\begin{lstlisting}
+function f = f(y,N)
+
+    % 函数计算右侧的向量
+    % 常微分方程组有待解决的
+
+    % 输入的数据：
+    % y - 常微分方程组的向量解
+    % 在当前时间
+    % N - 变量x的网格间隔数
+
+    % 输出数据：
+    % f - 所求的向量 f
+
+    f = zeros(2*N,1);
+
+    for n = 1:N
+        f(n) = y(n + N);
+    end
+    f(N + 1) = -y(N + 1) - y(1)*(1 + y(1))/...
+        (2*(x(3/4,N) - x(1/4,N)));
+    for n = (N + 2):(2*N)
+        f(n) = - y(n) - (y(n - N) - y(n - N - 1))*...
+            (1 + y(n - N))/...
+            (2*(x(n - N - 1/4,N) - x(n - N - 3/4,N)));
+    end
+
+end
+\end{lstlisting}
+
+而矩阵 $\emph{\textbf{D}}$ 有以下非零元素：
+\begin{equation*}
+    \begin{aligned}
+        &D_{n,n - 1} & \hspace{-0.4cm}&= - \dfrac{1}{2(x_{n - N - 1/4,N} - x_{n - N - 3/4,N})}, \quad \text{如果 $n = \overline{N + 2,2N}$,}\\
+        &D_{n,n} & \hspace{-0.4cm}&= \begin{cases}
+            1,&\text{如果 $n = \overline{1,N}$,}\\
+            \dfrac{1}{2(x_{n - N - 1/4,N} - x_{n - N - 3/4,N})},&\text{如果 $n = \overline{N + 1,2N}$.}\\
+        \end{cases}\\
+    \end{aligned}
+\end{equation*}
+
+现在一般情况下，在时间 $t$ 引入 $M$ 个间隔的拟均匀网格 $T_M$：$T_M = \{t_{m,M}, \; 0 \leqslant m \leqslant M: \; t_{0,M} < t_{1,M} < t_{2,M} < \ldots < t_{M - 1,M} < t_{M,M} = T\}$.
+
+
+
+以下是Matlab函数的示例，该函数计算均匀网格节点 $t_{m,M}$ 的值。
+%\lstinputlisting{t.m}
+\begin{lstlisting}
+function t_mM = t(m,M)
+
+    % 函数在一般情况下
+    % 生成变量为t的拟均匀网格
+
+    % 在当前情况网格是均匀的
+    % 并覆盖区间 (§ $t \in [t_0,T]$ §)
+
+    % 输入参数：
+    % m - 节点号 (节点号：m = 0,...,M)
+    % M - 网格间隔数
+
+    % 输出参数：
+    % t\_mM - (§ $t_{m,M} $ §) 的值
+
+    t_0 = 0; T = 1;
+
+    alpha = 0; beta = 1;
+    xi_mM = alpha + (beta - alpha)/M*m;
+    t_mM = t_0 + xi_mM*(T - t_0);
+
+end
+\end{lstlisting}
+
+\emph{注释.} 我们决定用这种均匀网格 $T_M$ 的程序表示形式，类似于空间变量的网格 $X_N$ 表示形式，以便读者在必要时可以容易更改程序代码，这对于考虑到特殊解的拟均匀网格的具体题目也最为便利。
+
+最后，我们可以应用Rosenbrock CROS1图解来求解方程组~\eqref{Ch5_System_of_ODEs}：
+\begin{equation}
+    \label{Ch5_CROS1}
+    \begin{aligned}
+        &\emph{\textbf{y}}(t_{m + 1}) = \emph{\textbf{y}}(t_m) + (t_{m + 1} - t_m) \, \mathrm{Re} \, \emph{\textbf{w}}_1 \, , \quad m = \overline{0,M - 1},\\
+        &\mbox{其中 $\emph{\textbf{w}}_1$ 是线性代数方程组的解} \\
+        &\left[\emph{\textbf{D}} - \dfrac{1 + i}{2} (t_{m + 1} - t_m) \, \emph{\textbf{f}}_\emph{\textbf{y}}\Big(\emph{\textbf{y}}(t_m)\Big)\right] \emph{\textbf{w}}_1 = \emph{\textbf{f}} \, \Big(\emph{\textbf{y}}(t_m)\Big).
+    \end{aligned}
+\end{equation}
+在这里，$\emph{\textbf{f}}_\emph{\textbf{y}}$~---矩阵，包含元素 $\left(f_y\right)_{n,m}  \equiv \frac{\partial f_n}{\partial y_{m}}$ （雅可比矩阵），该矩阵在所讨论的方程组中具有以下非零的元素：
+\begin{align*}
+    &\hspace{-5.3cm}
+    \left(f_y\right)_{n,n + N} = 1, \quad \text{如果 $n = \overline{1,N}$,}
+\end{align*}
+\begin{align*}
+    &\hspace{-4.9cm}
+    \left(f_y\right)_{n,n} = -1, \quad \text{如果 $n = \overline{N + 1,2N}$,}
+\end{align*}
+\begin{align*}
+    &\hspace{-0.1cm}
+    \left(f_y\right)_{n,n - N} = \begin{cases}
+        \vspace{+0.2cm}
+        - \dfrac{1 + 2y_1}{2(x_{3/4,N} - x_{1/4,N})},&\hspace{-0.3cm}\text{如果 $n = N + 1$,}\\
+        -\dfrac{1 + 2y_{n - N} - y_{n - N - 1}}{2(x_{n - N- 1/4,N} - x_{n - N - 3/4,N})},&\hspace{-0.3cm}\text{如果 $n = \overline{N + 2,2N}$,}\\
+    \end{cases}
+\end{align*}
+\begin{align*}
+    &\hspace{-0.1cm}
+    \left(f_y\right)_{n,n - N - 1} = -\dfrac{-1 - y_{n - N}}{2(x_{n - N- 1/4,N} - x_{n - N - 3/4,N})}, \text{如果 $n = \overline{N + 2,2N}$.}
+\end{align*}
+
+
+注意到，线性代数方程组矩阵~\eqref{Ch5_CROS1}
+\begin{equation}
+    \label{Ch5_SLAE_matrix}
+    \left[\emph{\textbf{D}} - \dfrac{1 + i}{2} (t_{m + 1} - t_m) \, \emph{\textbf{f}}_\emph{\textbf{y}}\Big(\emph{\textbf{y}}(t_m)\Big)\right]
+\end{equation}
+具有专门特殊的形式~--- 其内部结构如图~\ref{Fig_5_1} （非零元素仅位于标记的对角线和次对角线上）。这与章节~\ref{sweep_method} 类似，允许在 $O(N^1)$ 运算中实现这种特殊形式求解线性代数方程组的求解算法，这是一种比高斯法解特殊形式矩阵的线性代数方程组更加经济的实现，无论是从执行的时间（复杂度为 $O(N^1)$），还是从算法操作所需要的内存（在非常密集的网格上进行进一步的计算至关重要）来看。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.65\textwidth]{Chapter-5-1.eps}\\
+    \caption{Структура матрицы~\eqref{Ch5_SLAE_matrix} СЛАУ~\eqref{Ch5_CROS1}.}
+    \label{Fig_5_1}
+\end{figure}
+
+以下是MatLab函数的示例, 该函数处理矩阵~\eqref{Ch5_SLAE_matrix}对角线的元素。
+%\lstinputlisting{DiagonalsPreparation.m}
+\begin{lstlisting}
+function [diag_11_m,diag_12_m,diag_21_m,diag_21_d,...
+            diag_22_m,diag_22_d] = ...
+            DiagonalsPreparation(y,tau,N)
+
+    % 函数准备数组，
+    % 数组包含对角元素
+    % 常微分方程组解的矩阵块元素
+
+    % 矩阵的形式是
+    % [D - (1+1i)/2*tau*f\_y(y)] 并
+    % 由四个维度为NxN的正方块组成
+    % 正方块 (1,1) 和 (1,2) - 对角矩阵
+    % 正方块 (2,1) 和 (2,2) - 双对角矩阵
+    % 次下对角线
+
+    % 输入数据：
+    % y - 常微分方程组的向量解
+    % 在当前时刻
+    % tau - 当前时刻的步骤
+    % N - 变量x的网格间隔数
+
+    % 输出参数:
+    % diag\_11\_m,diag\_12\_m,diag\_21\_m,diag\_21\_d,
+    % diag\_22\_m,diag\_22\_d - 所求的数组
+
+    % 为所求的数组分配内存
+    diag_11_m = zeros(1,N); diag_12_m = zeros(1,N);
+    diag_21_m = zeros(1,N); diag_21_d = zeros(1,N);
+    diag_22_m = zeros(1,N); diag_22_d = zeros(1,N);
+
+    for n = 1:N
+        diag_11_m(n) =  1;
+    end
+
+    for n = 1:N
+        diag_12_m(n) = - (1+1i)/2*tau*(1);
+    end
+
+    diag_21_m(1) = - (1+1i)/2*tau*(-(1 + 2*y(1))/...
+        (2*(x(3/4,N) - x(1/4,N))));
+    for n = (N + 2):(2*N)
+        diag_21_m(n - N) =  - (1+1i)/2*tau*(...
+            -(1 + 2*y(n - N) - y(n - N - 1))/...
+            (2*(x(n - N - 1/4,N) - x(n - N - 3/4,N))));
+    end
+
+    for n = (N + 2):(2*N)
+        diag_21_d(n - N) =  - (1+1i)/2*tau*(...
+            -(-1 - y(n - N))/(2*(x(n - N - 1/4,N) - ...
+            x(n - N - 3/4,N))));
+    end
+
+    for n = (N + 1):(2*N)
+        diag_22_m(n - N) = 1/(2*(x(n - N - 1/4,N) - ...
+            x(n - N - 3/4,N))) - (1+1i)/2*tau*(-1);
+    end
+
+    for n = (N + 2):(2*N)
+        diag_22_d(n - N) = -1/(2*(x(n - N - 1/4,N) - ...
+            x(n - N - 3/4,N)));
+    end
+
+end
+\end{lstlisting}
+
+\emph{注释.} 在图~\ref{Fig_5_1} 可以看到，对角线的长度不同。但是为方便算法的程序实现，我们把它们的值存储在相同长度 $N$ 的数组中。在这种情况下将次对角线的元素从数组的第二个元素开始录入。
+
+
+以下是Matlab函数的示例，该函数实现解特殊形式矩阵 (рис.~\ref{Fig_5_1}) 的线性代数方程组~\eqref{Ch5_CROS1} 的一种算法，仅使用6个长度为 $N$ 的包含矩阵~\eqref{Ch5_SLAE_matrix} 的非零元素的一维数组。
+%\lstinputlisting{SpecialMatrixAlgorithm.m}
+\begin{lstlisting}
+function X = SpecialMatrixAlgorithm...
+    (diag_11_m,diag_12_m,diag_21_m,diag_21_d,...
+    diag_22_m,diag_22_d,B)
+
+    % 函数解线性代数方程组 AX = B
+    % 特殊形式矩阵 A
+    % 由四个维度为 NxN 的正方块组成
+    % 正方块 (1,1) 和 (1,2) - 对角矩阵
+    % 正方块 (2,1) 和 (2,2) - 双对角矩阵
+    % 次下对角线
+
+    % 输入参数:
+    % diag\_11\_m,diag\_12\_m,diag\_21\_m,diag\_21\_d,
+    % diag\_22\_m,diag\_22\_d - 长度为 N 的数组,
+    % 该数组包含矩阵 A 的非零元素,
+    % 这些元素位于对角线上 (不使用数组元素
+    % diag\_21\_d(1) 和 diag\_22\_d(1))
+    % B - 长度为 2N 的右边的向量
+
+    N = length(B)/2;
+    X = zeros(2*N,1);
+
+    % 将正方块 (2,1) 的对角线归零
+    % 这重新定义了
+    % 块 (2,2) 的对角线元素和向量 B 的后 N 个元素
+    for n = 1:N
+        c = diag_21_m(n)/diag_11_m(n);
+        diag_22_m(n) = diag_22_m(n) - c*diag_12_m(n);
+        B(n + N) = B(n + N) - c*B(n);
+    end
+
+    % 将正方块 (2,1) 的次对角线归零
+    % 这重新定义了
+    % 块 (2,2) 的次对角线元素和向量 B 的后 N-1 个元素
+    for n = 1:(N - 1)
+        c = diag_21_d(n + 1)/diag_11_m(n);
+        diag_22_d(n+1) = diag_22_d(n+1) - c*diag_12_m(n);
+        B(n + N + 1) = B(n + N + 1) - c*B(n);
+    end
+
+    % 将正方块 (2,2) 的次对角线归零
+    % 这重新定义了向量 B 的后 N-1 个元素
+    for n = 1:(N - 1)
+        c = diag_22_d(n + 1)/diag_22_m(n);
+        B(n + N + 1) = B(n + N + 1) - c*B(n + N);
+    end
+
+    % 将正方块 (1,2) 的对角线归零
+    % 这重新定义了向量 B 的前 N 个元素
+    for n = N:-1:1
+        c = diag_12_m(n)/diag_22_m(n);
+        B(n) = B(n) - c*B(n + N);
+    end
+
+    % 计算出 X
+    for n = 1:N
+        X(n,1) = B(n)/diag_11_m(n);
+        X(n + N,1) = B(n + N)/diag_22_m(n);
+    end
+
+end
+\end{lstlisting}
+
+以下是Matlab函数示例，该函数使用上述函数 f, x, t, DiagonalsPreparation和SpecialMatrixAlgorithm，根据图解~\eqref{Ch5_CROS1}，以变形式~\eqref{Ch5_System_of_ODEs} 实现对问题~\eqref{Ch5_main_equation} 的数值解的搜索。
+%\lstinputlisting{PDESolving.m}
+\begin{lstlisting}
+function u = PDESolving(N_0,M_0,...
+    u_init_0,u_init_1,s,r_x,r_t)
+
+    % 函数找到近似数值解
+    % 偏微分方程的数值解 (УрЧП/PDE)
+
+    % 输入参数：
+    % N\_0 - 空间基础网格间隔数量
+    % M\_0 - 时间基础网格间隔数量
+    % u\_init\_0 和 u\_init\_1 - 函数，
+    % 初始条件定义的函数
+    % s - 求解的网格号
+    % (如果 s = 1，可以在基础网格找到解)
+    % r\_x 和 r\_t - 变量x，t网格的密集系数
+
+    % 输出参数：
+    % u - 包含偏微分方程网格值解的数组
+    % 仅在与基本网格节点重合的节点上
+
+    % 压缩（网格变密）
+    % 在空间变量 x $r_x^{s - 1}$ 倍和
+    % 在时间变量 t $r_t^{s - 1}$ 倍
+    % s号网格
+
+    N = N_0*r_x^(s - 1);    % 计算间隔数
+    M = M_0*r_t^(s - 1);    % s号网格上的间隔数
+
+    % 为数组 u 分配内存
+    % 在数组的 (m + 1) 行存储
+    % 网格值解，相对应于
+    % 基础网格的 (§ $t_m$ §) 时刻
+    u = zeros(M_0 + 1,N_0 + 1);
+
+    % 为网格值解数组分配内存
+    % 常微分方程组的解，相对应于
+    % 当前 (§ $t_m$ §) 时刻
+    y = zeros(1,2*N);
+
+    % 设置解常微分方程组的初始条件
+    for n = 1:N
+        y(1,n) = u_init_0(x(n,N));
+        y(1,N + n) = u_init_1(x(n,N));
+    end
+    % 考虑MatLab函数计算特点
+    % 函数 (§ $u_{init_0} (x)$ §), 不正确地
+    % 计算当 (§ $x = \infty$ §)
+    % 所以定义 y(1,2*N)
+    y(1,2*N) = 0;
+    % 在另一个函数 (§ $u_{init_0} (x)$ §)
+    % 这个命令，可能，需要改变
+
+    % 从数组 u\_init\_0 的第一行，
+    % 对应初始条件，
+    % 从节点中选择网格值，
+    % 和空间变量的基础网格值节点重合的节点
+    for n = 1:(N_0 + 1)
+        u(1,n) = u_init_0(x((n - 1)*r_x^(s - 1) + 1,N));
+    end
+
+    % 引入索引，
+    % 该索引负责编号为s的网格上的临时层
+    % 该索引与基础网格相应的临时层重合。
+    % 在指定的时刻
+    % 将观察比较在密集网格的 (§ $t_m$ §)
+    % 和基础网格的 (§ $t_{m_{basic}}$ §)
+    m_basic = 2;
+
+    for m = 0:(M - 1)
+
+        % 实现图解 CROS1
+
+        % 准备数组，数组包含
+        % 块状矩阵的对角线元素
+        % [D - (1+1i)/2*tau*f\_y(y)],
+        [diag_11_m,diag_12_m,diag_21_m,diag_21_d,...
+            diag_22_m,diag_22_d] = ...
+            DiagonalsPreparation(y,t(m +1,M) - t(m,M),N);
+
+        % 使用简并高斯法搜索 w\_1
+        w_1 = SpecialMatrixAlgorithm...
+            (diag_11_m,diag_12_m,diag_21_m,diag_21_d,...
+            diag_22_m,diag_22_d,f(y,N));
+
+        y = y + (t(m + 1,M) - t(m,M))*real(w_1)';
+
+        % 检验密集网格的 (§ $t_{m + 1}$ §)
+        % 和基础网格的 (§ $t_{m_{basic}}$ §) 的重合性
+        if (m + 1) == (m_basic - 1)*r_t^(s - 1)
+
+            % 填充网格值解数组
+            % 偏微分方程原始问题的解
+
+            % 考虑左边界条件
+            u(m_basic,1) = 0;
+
+            % 在当前时间层
+            % 选择空间节点，重合于
+            % 基础网格的节点
+            % （除了已经考虑的边界条件）
+            for n = 2:(N_0 + 1)
+                u(m_basic,n) = y((n - 1)*r_x^(s - 1));
+            end
+
+            % 现在检验密集网格的 (§ $t_{m + 1}$ §)
+            % 和当前基础网格的 (§ $t_{m_{basic}}$ §)
+            % 的重合性
+            m_basic = m_basic + 1;
+
+        end
+
+    end
+
+end
+\end{lstlisting}
+
+
+\emph{注释.} 注意PDESolving函数的一些特征。
+\begin{enumerate}
+    \item 该函数已经实现了在密集网格上搜索近似数值解的可能，包括仅从与基础网格节点重合的节点中选择网格值。在实现爆破解的数值分析时需要这个特征，该特征将在下一章节进行介绍。现在我们仅在一个（基础）网格用这个函数求解。这种情况和输入参数值 $s := 1$ 对应，所以参数值 $r_x$ 和 $r_t$ 不存在且在指定时刻不影响其他值。
+
+    \item 为了节省内存 （这对于大值 $s$ 至关重要）在当前计算的时刻仅将向量 $\emph{\textbf{y}}(t_m)$ 的网格值集存储在内存里。
+
+    \item 和前面章节的类似函数不同，网格 $x$ 和 $t$ 节点的值的索引没有变化。
+\end{enumerate}
+
+例如，可以使用以下命令集启用PDESolving函数，这些命令单独放在MatLab-файла test\_5\_1\_PDESolving.m。
+%\lstinputlisting{test_5_1_PDESolving.m}
+\begin{lstlisting}
+% 定义基础网格间隔数
+N = 50; M = 50;
+
+% 定义初始条件
+u_init_0 = @(x) 0;
+u_init_1 = @(x) -694.936*exp(-x)*sin(x);
+
+s = 1;   % 网格编号（仅基础）
+r_x = 4; % 变量x的网格密集系数
+r_t = 2; % 变量t的网格密集系数
+
+u = PDESolving(N,M,u_init_0,u_init_1,s,r_x,r_t);
+
+% 解的润色
+figure;
+
+% 定义变量x的基础网格
+% (对于解的润色是必要的)
+x_0 = zeros(1,N + 1);
+for n = 0:N
+    x_0(n + 1) = x(n,N);
+end
+
+for m = 0:M
+    % 绘制初始条件图
+    plot(x_0,u(1,:),'--k','LineWidth',1); hold on;
+    % 绘制在 (§ $t_m$ §) 时刻解的图
+    plot(x_0,u(m + 1,:),'-ok',...
+        'MarkerSize',3,'LineWidth',1); hold on;
+    axis([0 10 -2000 500]); xlabel('x'); ylabel('u');
+    hold off; drawnow; pause(0.1);
+end
+\end{lstlisting}
+
+所给的命令集将为题~\eqref{Ch5_main_equation} 的以下参数集解答：
+\begin{equation}
+    \label{Ch5_parameters_2_a}
+    \begin{aligned}
+        &a = 0, \quad t_0 = 0, \quad T = 1, \\
+        &u_{init_0}(x) = 0, \quad u_{init_1}(x) = -r_1 e^{-x}\sin x, \\
+        &r_1 = 694.936,
+    \end{aligned}
+\end{equation}
+具有空间和时间的网格参数：
+\begin{equation}
+    \label{Ch5_parameters_2_b}
+    N = 50, \quad M = 50.
+\end{equation}
+
+
+在图~\ref{Fig_5_2} 对于时间 $t_m$ 分别引用几组函数 $u(x,t_m)$ 的网格值。
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Chapter-5-2.eps}\\
+    \caption{图解~\eqref{Ch5_CROS1} 参数集为~\eqref{Ch5_parameters_2_a}--\eqref{Ch5_parameters_2_b} 的题~\eqref{Ch5_main_equation} 的解的示例。图上反映函数 $u(x,t_m)$ 在不同时间点 $t_m$ 的几组网格值。显然，空间变量 $x$ 的网格在 $x = 0$ 附近被细化。主图中仅呈现50个中的前49个节点的网格值 ($x_{50} = +\infty$ 没有标记)，在嵌套上~--- 前36个。}
+    \label{Fig_5_2}
+\end{figure}
+
+注意，$r_1$ 的值的选择是为了让时间的上限在 $T_{bl} \leqslant T = 1$ (在实践中给出了参数 $r_1$ 的选择的理由~\cite{Lukyanenko_2})。
+
+
+\section{爆破解的数值分析}
+
+
+从整体上爆破解的实例分析的实践算法重复了第~\ref{Chapter_2} 章 ~\ref{Ch2_numerical_diagnostics_of_the_solutions_blowup}节 <<爆破解的数值分析>>的算法。这里仅讨论基本差异和一些应用细节。
+
+由于我们逼近~\eqref{Ch5_reduced_equation_V1} 的所有空间导数精确度为 $O(N^{-1})$，而在对方程组~\eqref{Ch5_System_of_ODEs} 进行数值积分时，使用图解 CROS1~\eqref{Ch5_CROS1}，精确度为~$O(\tau^2)$，所构造的解方程组~\eqref{Ch5_main_equation} 的方法的精确值为 $O(\tau^2 + N^{-1})$，即：$p_x = p_x^{\, theor} \equiv 1$ 和 $p_t = p_t^{\, theor} \equiv 2$。因此从匹配条件~\eqref{Ch2_meshes_matching} 可以得出满足龙格--龙贝格公式~\eqref{Ch2_Runge-Romberg_formula_deducing_7} 的条件的不同变量的的密度系数 $r_x$ 和 $r_t$ 应当满足关系 $r_x^1 = r_t^2$。对于计算最好选择 $r_x = 4$ 和 $r_t = 2$.
+
+以下是一组Matlab命令的示例，这些命令设置在单独文件test\_5\_1.m，通过多次运用本章上一节的PDESolving Matlab函数可以得到问题~\eqref{Ch5_main_equation} 的网格解集 $u_{(s)}(x,t) \equiv u^{(r_x^{s - 1}N,r_t^{s - 1}M)}(x,t)$, $s = \overline{1,S}$，该题在从基础网格 $X_N \times T_M$ 开始的不同网格上具有参数~\eqref{Ch5_parameters_2_a}。
+
+%\lstinputlisting{test_5_1.m}
+\begin{lstlisting}
+% 定义基础网格的间隔数
+N = 50; M = 50;
+
+% 定义初始条件
+u_init_0 = @(x) 0;
+u_init_1 = @(x) -694.936*sin(x)*exp(-x);
+
+S = 7;   % 网格数，在网格上寻找
+         % 近似解
+r_x = 4; % 变量x的网格密度系数
+r_t = 2; % 变量t的网格密度系数
+
+% 为网格值数组分配内存
+% 在不同网格(§ $s = \overline{1,S}$ §)的常微分方程的解的网格值
+% 第一个索引 - 密集网格序列中的网格s的编号
+% 在这些密集网格中搜寻解
+% 第二个和第三个索引定义了数组，
+% 在该数组的(m + 1)行储存
+% 网格解值，对应于
+% 节点中的 (§ $t_m$ §) 时刻，
+% 这些节点与基础网格的节点重合
+array_of_u = zeros(S,M + 1,N + 1);
+
+% “大循环”在密集网格数列中
+% 计算解S次
+% 网格解值数组只包含
+% 节点的网格值，
+% 这些节点和基础网格的节点重合
+for s = 1:S
+    u = PDESolving(N,M,u_init_0,u_init_1,s,r_x,r_t);
+    array_of_u(s,:,:) = u;
+end
+
+% 将接下来的爆破解诊断Workspace的必要数据
+% 保存到文件中
+save('data.mat','array_of_u','N','M',...
+    'r_x','r_t','S');
+\end{lstlisting}
+
+和之前一样，~文件~data.mat 是MatLab代码 test\_5\_1.m 的结果，data.mat的内容将由第~\ref{Chapter_2} 章的~\ref{Ch2_numerical_diagnostics_of_the_solutions_blowup}节 的函数 BlowUpDiagnostics.m， BlowUpDiagnostics\_for\_each\_t.m 和 BlowUpDiagnostics\_for\_specified\_t.m 加载，诊断爆破解的实际情况，不需要在密集网格的序列多次求解。
+
+
+MatLab文件BlowUpDiagnostics.m计算时间 $t \in [t_0,T]$ 的近似解的精度的有效阶数 ${p_t}^{\, eff}_{(s)}$, $s = \overline{1,S}$，没有任何改变。
+
+MatLab-文件BlowUpDiagnostics\_for\_specified\_t.m使用已经生成的文件data.mat的数据来实现与基本网格 $T_M$~\eqref{Ch2_p_eff_for_every_time}节点$t_m$重合的节点的近似解的精度的有效阶数 ${p_t}^{\, eff}_{(s)}(t_m)$，$s = \overline{1,S}$的计算，它将包含仅仅与变量$t$基础网格的另一个定义相关的变化以便于正确绘图。在这个文件需要更改命令，从命令figure开始。
+%\lstinputlisting{BlowUpDiagnostics_for_each_t.m}
+\begin{lstlisting}
+figure;
+% 定义变量t的基础网格
+% (绘图的必要条件)
+t_0 = zeros(1,M + 1);
+for m = 0:M
+    t_0(m + 1) = t(m,M);
+end
+% 绘制精度理论阶数
+% 与基础网格的时间节点的关系
+plot(t_0,t_0*0 + 2,'-*k','MarkerSize',3); hold on;
+% 绘制精度有效阶数
+% 与基础网格的时间节点的关系
+plot(t_0(2:M+1),p_eff_ForEveryTime(S,2:M + 1),...
+    '-sk','MarkerSize',5,'LineWidth',1);
+axis([t_0(1) t_0(M + 1) -3.0 3.0]);
+xlabel('t'); ylabel('p^{eff}');
+\end{lstlisting}
+
+再次注意，在基础网格 $X_N$ 的节点 $t_0$ 没有计算精度的有效阶数  ${p_t}_{(s)}^{\, eff}(t_0)$，因为在任何网格的该节点上解都是由初始条件给出。由于精度的有效阶数确定了在精确解的泰勒级数展开的项数，数值方案可以准确表达这些项，可以设 ${p_t}_{(s)}^{\, eff}(t_0) = +\infty$。
+
+%Отметим, что в качестве финального времени счёта $T$ (заложенного в MatLab-функцию t.m) используется результат вычисления априорной оценки сверху времени разрушения решения, полученной для задачи~\eqref{Ch5_main_equation} в работе~\cite{Lukyanenko_2}.
+
+在图~\ref{Fig_5_3} 显示了计算结果 (通过文件 test\_5\_1.m $\rightarrowtail$ BlowUpDiagnostics\_for\_each\_t.m 依次运行一组Matlab命令)，展示精度的有效阶数 ${p_t}^{\, eff}_{(s)}(t_m)$, $0 \leqslant m \leqslant M$逐点值的显式输出趋近于精确值。因此，对于参数~\eqref{Ch5_parameters_2_a}--\eqref{Ch5_parameters_2_b} 的问题~\eqref{Ch5_main_equation} 的数值解，我们可以得出以下结论。在 $S = 7$ 的嵌套网格计算后，对于每个时刻 $t_m \in T_M$ 直到~$m=34$ 精度的有效阶数 ${p_t}^{\, eff}_{(s)}(t)$ 的逐点值都收敛到 ${p_t}^{theor} \equiv 2$，而对于大值~$m$，收敛于~$-2$。这意味着，爆破发生在~$T_{bl} \in (t_{34},t_{35}] \equiv (0.680,0.700]$，而精度的有效阶数在~$m\geqslant35$ 明显趋向于~$-2$ 表示，在点 $T_{bl}$ 处解具有极点类型的特征 $u(x,t) \sim (T_{bl} - t)^{-2}$。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Chapter-5-3.eps}\\
+    \caption{题~\eqref{Ch5_main_equation}具有以下参数的输入数据~\eqref{Ch5_parameters_2_a}：$N = 50$，$M = 50$，$r_x = 4$，$r_t = 2$，$S = 7$的精度有效阶数${p_t}^{\, eff}_{(S)}(t_m)$, $0 \leqslant m \leqslant M$ 的计算结果。}
+    \label{Fig_5_3}
+\end{figure}
+
+MatLab文件 BlowUpDiagnostics\_for\_specified\_t.m计算精度的有效阶数${p_{xt}}^{\, eff}_{(s)}(x_n,t_m)$, $s = \overline{1,S}$，在节点的近似值，空间变量 $X_N$ 与基础网格节点 $x_n$ 重合的节点，在具体时刻 $t_m \in T_M$~\eqref{Ch2_p_eff_for_every_spatial_point}，使用文件data.mat的数据，为了制止空间变量 $x$ 的爆破，它将包含仅与基础网格 $x$ 的另一个定义相关的变化，以便正确绘图。需要更改命令，从命令figure开始。
+%\lstinputlisting{BlowUpDiagnostics_for_specified_t.m}
+\begin{lstlisting}
+figure;
+% 定义变量x的基础网格
+% (绘图的必要条件)
+x_0 = zeros(1,N + 1);
+for n = 0:N
+    x_0(n + 1) = x(n,N);
+end
+
+% 绘制了精度理论阶数与
+% 基础网格的空间节点的关系
+plot(x_0,x_0*0 + 2,'-*k','MarkerSize',3); hold on;
+% 绘制了精度有效阶数与
+% 基础网格的空间节点的关系
+plot(x_0(2:N+1),p_eff_ForSpecifiedTime(S,2:N + 1),...
+    '-sk','MarkerSize',5,'LineWidth',1);
+axis([0 200 -3.0 3.0]);
+xlabel('x'); ylabel('p^{eff}');
+\end{lstlisting}
+
+
+再次注意，在基础网格 $X_N$ 的节点 $x_0$ 上没有计算出精度的有效阶数 ${p_{xt}}_{(s)}^{\, eff}(x_0,t_m)$，因为在任何网格的此节点上解由它的边界条件决定。因此，在该点上可以设精度的有效阶数等于 $+\infty$.
+
+在图~\ref{Fig_5_4} 显示了计算结果 (通过文件 test\_5\_1.m $\rightarrowtail$ BlowUpDiagnostics\_for\_specidied\_t.m依次运行一组MatLab命令) 在爆破解的不同时刻之前和之后 (或者可能在那个时刻)。显然可见，爆破同时发生在半轴 $[0,+\infty)$ 的所有点上。
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=1.00\textwidth]{Chapter-5-4.eps}\\
+    \caption{题~\eqref{Ch5_main_equation} 具有以下参数的输入数据~\eqref{Ch5_parameters_2_a}：$N = 50$, $M = 50$, $r_x = 4$, $r_t = 2$, $S = 7$的精度的有效阶数 ${p_{xt}}^{\, eff}_{(S)}(x,t_m)$ 的计算结果。给出了 $m = \{33,34,35,36\}$的图像。}
+    \label{Fig_5_4}
+\end{figure}
+
+总之，我们可以得出结论：我们可以相信在第7个嵌套网格获得的图~\ref{Fig_5_5} 的数值解的哪个部分，不能相信哪个部分。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Chapter-5-5.eps}\\
+    \caption{题~\eqref{Ch5_main_equation} 具有以下输入参数的数据~\eqref{Ch5_parameters_2_a}：$N = 50$, $M = 50$, $r_x = 4$, $r_t = 2$, $s = 7$ 的 $u_{(s)}(x,t) \equiv u^{(r_x^{s - 1}N,r_t^{s - 1}M)}(x,t)$ 解的计算结果。仅标记与基础网格节点重合的节点。}
+    \label{Fig_5_5}
+\end{figure}
+
+注意图~\ref{Fig_5_2} 和~\ref{Fig_5_5}所示的解之间的差异，这和同一输入参数呈现不同 $s$ 的计算结果有关(在图~\ref{Fig_5_2} 的$s = 1$ 和在图~\ref{Fig_5_5} 的 $s = 7$)。
+
+
+
+通过MatLab-文件 draw.m的以下命令得到第7个网格($s = 7$)的解。
+\newpage
+%\lstinputlisting{draw.m}
+\begin{lstlisting}
+% 近似解计算结果输入
+% 在r倍密集网格的序列上
+load('data.mat');
+
+% 从不同网格的解的数组中
+% 在第7个网格选择网格值
+s = 7;
+
+u(:,:) = array_of_u(s,:,:);
+
+% 图解
+figure;
+% 定义x变量的基础网格
+for n = 0:N
+    x_0(n + 1) = x(n,N);
+end
+for m = 0:M
+    % 绘制初始条件图
+    plot(x_0,u(1,:),'--k','LineWidth',1); hold on;
+    % 绘制在 (§ $t_m$ §) 的图解
+    plot(x_0,u(m + 1,:),'-ok',...
+        'MarkerSize',3,'LineWidth',1); hold on;
+    axis([0 10 -2000 500]); xlabel('x'); ylabel('u');
+    hold off; drawnow; pause(0.1);
+end
+\end{lstlisting}
+
+
+
+\section{附录1：生成准均匀网格的变换}\label{Appendix_5_a}
+
+在本节目录中讨论不同的可以生成准均匀网格的变换 $x(\xi)$, 并给出了在相应公式中对控制变量的选择的建议。首先考虑生成仅覆盖一个区间的准均匀网格的变换。这对于更精确地在以时间$t$为变量的区间$[t_0,T]$内引入准均匀网格计算某些时间点附近的区间内会快速变化（不仅是在力矩断裂的时刻附近的区间）的解有所帮助。接着我们考虑覆盖直线或者半直线的生成准均匀网格的变换。
+
+大多数生成准均匀网格的变换的示例均来自本书~\cite{Kalitkin_book_3}.
+
+\bigskip
+\emph{例1.} 假设所考虑的函数$u(x)$在区间$[a,b]$的边界之一附近快速变化，但在远离它的位置处~---缓慢变化。则需要在相应的边界附近构造一个密度为$X_N$的网格，但在另一个边界处，网格可能非常稀疏。例如，可以取这样的生成变换：
+\begin{equation}
+    \label{Ch5_App1_example_of_quasiuniform_mesh_1}
+    x(\xi) = a + (b - a)\dfrac{e^{c\xi} - 1}{e^c - 1}, \quad 0 \leqslant \xi \leqslant 1,
+\end{equation}
+\begin{equation*}
+    \hspace{-2.4cm}
+    x'(\xi) = c(b - a)\dfrac{e^{c\xi}}{e^c - 1}.
+\end{equation*}
+如果需要在左边界附近密集、在右边界附近稀疏的网格，则需要取$c > 0$ (图.~\ref{Fig_5_App1_1}, a). 如果需要在右边界附近密集、在左边界附近稀疏的网格，则需要取$c < 0$ (图.~\ref{Fig_5_App1_1}, b).
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.00\textwidth]{Chapter-5-Appendix-1-1.eps}\\
+    \caption{在区间$[0,3]$上使用变换构造的准均匀网格（例1）~\eqref{Ch5_App1_example_of_quasiuniform_mesh_1}. 左图对应的控制参数的值为$c = 1.5 > 0$（在左边界密集），右图~---  $c = -2.5 < 0$（在右边界密集）。}
+    \label{Fig_5_App1_1}
+\end{figure}
+
+在以下设想中选择控制参数$c$。如果我们设$\xi^\star$为所有集中在区间$[a,a_1]$左边界附近的区间的比例，则对应的$c$的值由等式定义：
+\begin{equation*}
+    x(\xi^\star) = a_1.
+\end{equation*}
+例如，如果我们希望所有网格区间的$2/3$集中在最靠近右边界的$1/4$区间上，则可以从等式$ x(1 - 2/3) = a + (b - a)*(1 - 1/4)$中找到对应的$c$的值，得出$c =\sim -4$。
+
+\bigskip
+\emph{例2.} 构造另一个生成准均匀网格$X_N$的变换，该网格在左边界附近的区间很小，而在右边界附近的区间~---很大：
+\begin{equation}
+    \label{Ch5_App1_example_of_quasiuniform_mesh_2}
+    x(\xi) = a + (b - a)\dfrac{(c - 1)^m \xi}{(c - \xi)^m}, \quad 0 \leqslant \xi \leqslant 1,
+\end{equation}
+\begin{equation*}
+    \hspace{-0.7cm}
+    x'(\xi) = (b - a)(c - 1)^m\dfrac{c + (m - 1) \xi}{(c - \xi)^{m + 1}}.
+\end{equation*}
+最好在~\eqref{Ch5_App1_example_of_quasiuniform_mesh_2}中设置$m = 1$，仅保留一个控制参数$c$。$c$越接近1，初始区间越小。变换~\eqref{Ch5_App1_example_of_quasiuniform_mesh_2}生成了一个与例1中的网格在定性上相似的准均匀网格，这表明可以使用完全不同形式的变换来构造定性相似的准均匀网格。
+
+\bigskip
+\emph{例3.} 通常需要解决在具有交替的厚层和薄层的分层介质中进行的问题（例如，声音通过由薄玻璃制成且具有相当大的间隙的窗包的传递）的问题。为了使方程式的差分近似正确，网格必须是准均匀的，并且是特殊的（即层的边界必须是网格节点），并且薄层中的区间数~---不小。但是为了提高效率，在厚层中不必要设置太多的区间~---大约与薄层中的区间数相同。举一个这样的网格的例子。
+
+为简单起见，我们选择三层对称配置，其总厚度为$2b$，其中包含两个边界层（其厚度为$a \ll b$）和一个较厚的中间层。这些层的边界是~---点$x = \{-b; -b + a; b - a; b\}$。考虑如下变换：
+\begin{equation}
+    \label{Ch5_App1_example_of_quasiuniform_mesh_3}
+    x(\xi) = \dfrac{c\xi}{(1 + d\xi^2)^{1/2}}, \quad -1 \leqslant \xi \leqslant 1,
+\end{equation}
+\begin{equation*}
+    \hspace{-2.2cm}
+    x'(\xi) = \dfrac{c}{(1 + d\xi^2)^{3/2}}.
+\end{equation*}
+选择控制参数$c$和$d$的条件之一：$x(1) = b$。 作为第二个条件，取$x(\xi^\star) = b - a$，其中$\xi^\star$ ($0 < \xi^\star < 1$）~---所有位于中央厚层的网格区间的比例。在这种情况下，$(1 - \xi^\star)/2$~---是位于每个薄层中的网格区间的比例。这两个条件为控制参数给出以下值：
+\begin{equation*}
+    d = \dfrac{(b - a)^2 - b^2 {\xi^\star}^2}{a(2b - a){\xi^\star}^2}, \quad c = \dfrac{b(b - a)}{\xi^\star}\left[\dfrac{1 - {\xi^\star}^2}{a(2b - a)}\right]^{1/2}.
+\end{equation*}
+如果我们希望网格节点始终落在介质之间的界面上，则必须选择$\xi^\star$和间隔数$N$，满足$N(1 - \xi^\star)/2$是整数。在图.~\ref{Fig_5_App1_2}中展示了这种网格的示例。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Chapter-5-Appendix-1-2.eps}\\
+%    \caption{在区间$[-6,6]$上使用变换~\eqref{Ch5_App1_example_of_quasiuniform_mesh_3}构造准均匀网格（例3），其中$a = 1$，$\xi^\star = 0.5$，$N = 12$。}
+    \label{Fig_5_App1_2}
+\end{figure}
+
+\bigskip
+\emph{例4.} 构造一个变换，其在半直线$x \in [a,+\infty\underline{]}$上生成一个准均匀网格$X_N$，且在左边界上最密集的：
+\begin{equation}
+    \label{Ch5_App1_example_of_quasiuniform_mesh_4}
+    x(\xi) = a + \dfrac{c\xi}{(1 - \xi)^m}, \quad 0 \leqslant \xi \leqslant 1,
+\end{equation}
+
+\begin{equation*}
+    \hspace{-1.8cm}
+    x'(\xi) = \dfrac{1 + (m - 1)\xi}{(1 - \xi)^{m + 1}}.
+\end{equation*}
+
+\newpage
+这样的网格例子在图.~\ref{Fig_5_App1_3}给出。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.50\textwidth]{Chapter-5-Appendix-1-3.eps}
+%    \caption{半直线 $x \in [0,+\infty\underline{]}$ 上由变换\eqref{Ch5_App1_example_of_quasiuniform_mesh_4} 生成的准均匀网格（例4），其中控制参数 $c = 2$, $m = 0.7$。}
+    \label{Fig_5_App1_3}
+\end{figure}
+它的最后一个节点是一个无穷远点，即$x_N = +\infty$。因此，最后的区间$[x_{N - 1},x_N]$是无界的。
+
+让我们描述一下选择变换~\eqref{Ch5_App1_example_of_quasiuniform_mesh_4}的控制参数$c$和$m$的最简单方法。若在左边界附近构造一个密集的网格，那么我们隐含地假设这对于准确解决问题很重要。 因此，可以从以下考虑因素中选择控制参数：如果我们希望一半节点位于区间$[a,a_1]$上，则控制参数必须满足条件$x(1/2) = a_1$。在这种情况下，一半的网格区间将属于区间$[a,a_1 = a + 2^{m - 1}c]$。
+
+\bigskip
+\emph{例5.} 考虑另一种形式的变换，该变换在半直线$x \in [a,+\infty\underline{]}$上生成准均匀网格$X_N$且在左边界密集。 我们希望使其具有与例5中的网格类似的性质，但同时仅包含一个控制参数：
+\begin{equation}
+    \label{Ch5_App1_example_of_quasiuniform_mesh_5}
+    x(\xi) = a - с \ln(1 - \xi), \quad 0 \leqslant \xi \leqslant 1,
+\end{equation}
+\begin{equation*}
+    \hspace{-3.0cm}
+    x'(\xi) = \dfrac{c}{1 - \xi}.
+\end{equation*}
+
+这样的网格例子在图.~\ref{Fig_5_App1_4}给出。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.50\textwidth]{Chapter-5-Appendix-1-4.eps}
+%    \caption{在半直线 $x \in [0,+\infty\underline{]}$ 上使用变换\eqref{Ch5_App1_example_of_quasiuniform_mesh_5}构建的准均匀网格（例5），控制参数$c = 4$。}
+    \label{Fig_5_App1_4}
+\end{figure}
+根据例4中出现的考虑，可以得出结论，一半的网格区间将属于区间$[a,a + c \ln 2]$。
+
+\bigskip
+\emph{例6.} 构造一个变换，在直线$x \in \underline{[}-\infty,+\infty\underline{]}$上生成一个准均匀网格$X_N$，它是在点$x = a$附近最密集：
+\begin{equation}
+    \label{Ch5_App1_example_of_quasiuniform_mesh_6}
+    x(\xi) = a + \dfrac{c\xi}{(1 - \xi^2)^m}, \quad -1 \leqslant \xi \leqslant 1,
+\end{equation}
+\begin{equation*}
+    \hspace{-1.8cm}
+    x'(\xi) = c\dfrac{1 + (2m - 1)\xi^2}{(1 - \xi^2)^{m + 1}}.
+\end{equation*}
+
+这样的网格例子在图.~\ref{Fig_5_App1_5}给出。
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.50\textwidth]{Chapter-5-Appendix-1-5.eps}\\
+%    \caption{在直线$x \in \underline{[}-\infty,+\infty\underline{]}$上使用变换~\eqref{Ch5_App1_example_of_quasiuniform_mesh_6}构造准均匀网格（例6），在点$x = 0$附近进行局部厚化，控制参数$c = 1$，$m = 1$。}
+    \label{Fig_5_App1_5}
+\end{figure}
+根据例4中出现的考虑，可以得出结论，一半的网格区间将属于区间$[a - c \, \frac{2^{2m - 1}}{3^m},a + c \, \frac{2^{2m - 1}}{3^m}]$。
+
+其中，如果仅对区间$0 \leqslant \xi \leqslant 1$进行变换~\eqref{Ch5_App1_example_of_quasiuniform_mesh_6}，那么将获得一个准均匀网格，该网格仅覆盖右半线$x \in [a,+\infty\underline{]}$。如果选取区间$-1 \leqslant \xi \leqslant 0$，则变换~\eqref{Ch5_App1_example_of_quasiuniform_mesh_6}将给出一个准均匀网格，该网格仅覆盖左半线$x \in \underline{[}-\infty,0]$。
+
+\bigskip
+\emph{例7.} 我们再构造一个变换，在直线$x \in \underline{[}-\infty,+\infty\underline{]}$上生成准均匀网格$X_N$，并且在点$x = a$附近是最密集的：
+\begin{equation}
+    \label{Ch5_App1_example_of_quasiuniform_mesh_7}
+    x(\xi) = a + c \cdot \tan \xi, \quad -\frac{\pi}{2} \leqslant \xi \leqslant \frac{\pi}{2},
+\end{equation}
+\begin{equation*}
+    \hspace{-3.0cm}
+    x'(\xi) = \dfrac{c}{\cos^2 \xi}.
+\end{equation*}
+
+该变换非常接近变换~\eqref{Ch5_App1_example_of_quasiuniform_mesh_6}，其中$m = 1$。
+在这种情况下，一半的网格区间将属于区间$[a - c ,a + c]$。
+
+
+
+\section{附录2：准均匀网格上的导数逼近}\label{Appendix_5_b}
+
+\subsection*{边界区域情况}
+具有二阶精度的导数的对称近似：
+\begin{equation*}
+    u'_n = \dfrac{u_{n + 1} - u_{n - 1}}{x_{n + 1} - x_{n - 1}},
+\end{equation*}
+\begin{equation*}
+    u''_n = \dfrac{2}{x_{n + 1} - x_{n - 1}}\left(\dfrac{u_{n + 1} - u_{n}}{x_{n + 1} - x_{n}} - \dfrac{u_{n} - u_{n - 1}}{x_{n} - x_{n - 1}}\right).
+\end{equation*}
+
+具有一阶精度的导数的不对称近似：
+\begin{align*}
+    &{u'_n}_{\: left} = \dfrac{u_{n} - u_{n - 1}}{x_{n} - x_{n - 1}}, \qquad {u'_n}_{\: right} = \dfrac{u_{n + 1} - u_{n}}{x_{n + 1} - x_{n}}.
+\end{align*}
+
+具有二阶精度的导数的不对称近似：
+{\small
+\begin{align*}
+    &{u'_n}_{\: left} = \dfrac{(u_{n} - u_{n - 1})\Big(2 + \frac{x_{n - 1} - x_{n - 2}}{x_{n} - x_{n - 1}}\Big) - (u_{n - 1} - u_{n - 2})\Big(\frac{x_{n} - x_{n - 1}}{x_{n - 1} - x_{n - 2}}\Big)}{x_{n} - x_{n - 2}},\\
+    &{u'_n}_{\: right} = \dfrac{(u_{n +1 } - u_{n})\Big(2 + \frac{x_{n + 2} - x_{n + 1}}{x_{n + 1} - x_{n}}\Big) - (u_{n + 2} - u_{n + 1})\Big(\frac{x_{n + 1} - x_{n}}{x_{n + 2} - x_{n + 1}}\Big)}{x_{n + 2} - x_{n}}.
+\end{align*}
+}
+
+\subsection*{无限区域情况}
+
+这些公式的特性在于它们不应包含无限远的网格节点。例如，半直线$x \in [a,+\infty\underline{]}$上的点$x_N = +\infty$。要变通解决此问题，应当使用分散的点：
+\begin{equation*}
+   h_n = x_n - x_{n - 1} \approx \dfrac{1}{1 - 2\gamma}(x_{n - \gamma} - x_{n - 1 + \gamma}) \underset{\gamma \to 1/4}{\longrightarrow} 2(x_{n - 1/4} - x_{n - 3/4}).
+\end{equation*}
+
+最终，即使在无界区域中，在使用这些公式的情况下也不会出现无限性。
+
+具有二阶精度的导数的对称近似：
+\begin{equation*}
+    u'_n = \dfrac{u_{n + 1} - u_{n - 1}}{2(x_{n + 1/2} - x_{n - 1/2})},
+\end{equation*}
+\begin{equation*}
+    u''_n = \dfrac{1}{2(x_{n + 1/2} - x_{n - 1/2})}\left(\dfrac{u_{n + 1} - u_{n}}{x_{n + 3/4} - x_{n + 1/4}} - \dfrac{u_{n} - u_{n - 1}}{x_{n - 1/4} - x_{n - 3/4}}\right).
+\end{equation*}
+
+具有一阶精度的导数的不对称近似：
+\begin{align*}
+    &{u'_n}_{\: left} = \dfrac{u_{n} - u_{n - 1}}{2(x_{n - 1/4} - x_{n - 3/4})}, \qquad {u'_n}_{\: right} = \dfrac{u_{n + 1} - u_{n}}{2(x_{n + 3/4} - x_{n + 1/4})}.
+\end{align*}
+
+具有二阶精度的导数的不对称近似：
+{\tiny
+\begin{align*}
+    &{u'_n}_{\: left} = \dfrac{(u_{n} - u_{n - 1})\Big(2 + \frac{x_{n - 5/4} - x_{n - 7/4}}{x_{n - 1/4} - x_{n - 3/4}}\Big) - (u_{n - 1} - u_{n - 2})\Big(\frac{x_{n - 1/4} - x_{n - 3/4}}{x_{n - 5/4} - x_{n - 7/4}}\Big)}{2(x_{n - 1/2} - x_{n - 3/2})}),\\
+    &{u'_n}_{\: right} = \dfrac{(u_{n + 1 } - u_{n})\Big(2 + \frac{x_{n + 7/4} - x_{n + 5/4}}{x_{n + 3/4} - x_{n - 1/4}}\Big) - (u_{n + 2} - u_{n + 1})\Big(\frac{x_{n + 3/4} - x_{n + 1/4}}{x_{n + 7/4} - x_{n + 5/4}}\Big)}{2(x_{n + 3/2} - x_{n + 1/2})}.
+\end{align*}
+}
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\begin{thebibliography}{s2}
+     \bibitem{Po} {\itshape Mitidieri~E., Pokhozhaev~S. I.} A priori estimates and blow-up of solutions to nonlinear partial differential equations and inequalities // Proc. Steklov Inst. Math. 2001. V.~234. P.~1--362.
+    \bibitem{Levine1} {\itshape Levine H. A.} Some nonexistence and instability theorems for solutions of formally parabolic equations of the form $Pu_t=-Au+\mathcal{F}(u)$ // Archive for Rational Mechanics and Analysis. 1973. V.~51, N~5. P.~371--386.
+    \bibitem{Levine2} {\itshape Levine H. A.}  Instability and nonexistence of global solutions to nonlinear wave equations of the form $Pu_{tt}=-Au+\mathcal{F}(u)$ // Transactions of the American mathematical society. 1974. V.~192. P.~1--21.
+    \bibitem{Kal} {\itshape Kalantarov V. K., Ladyzhenskaya O. A.} The occurrence of collapse for quasilinear equations of parabolic and hyperbolic types // Nauch. Semin. Leningr. Otd. Mat. Inst. Steklova. 1977. V.~69. P.~77--102.
+    \bibitem{Al} {\itshape Sveshnikov A. G., Al’shin A. B, Korpusov M. O., Pletner Yu. D.}  Linear and nonlinear equations of Sobolev type.  Fizmatlit, Moscow, 2007.
+    \bibitem{Korpusov} {\itshape Korpusov M. O.} Blow-up in nonclassical wave equations. Editorial, Moscow, 2010.
+    %\bibitem{Kor2} {\itshape Korpusov M. O.} Blow-up of ion acoustic waves in a plasma // Mat. Sb. 2011. V.~202, N~1. P.~37--64.
+    \bibitem{Samar} {\itshape Samarskii A. A., Galaktionov V. A., Kurdyumov S. P., Mikhailov A. P.} Blow-up in quasilinear parabolic equations. Nauka, Moscow, 1987.
+    \bibitem{Galact} {\itshape Galaktionov V. A., Pokhozhaev S. I.} Third-order nonlinear dispersive equations: shocks, rarefaction, and blowup waves // Comput. Math. Math. Phys. 2008. V.~48, N~10. P.~1784--1810.
+    \bibitem{PelXu} {\itshape Pelinovsky D. E., Xu Ch.} On numerical modelling and the blow-up behavoir of contact lines with a $180^\circ$ contact angle // Journal of Engineering Mathematics. 2015. V.~92. P.~31--44.
+    \bibitem{Georg} {\itshape Cangiani A., Georgoulis E. H., Kyza I., Metcalfe S.} Adaptivity and blow-up detection for nonlinear evolution problems // Arxive: http://arxiv.org/abs/1502.03250.
+    \bibitem{Turner} {\itshape Haynes R., Turner C.} A numerical and theoretical study of blow-up for a system of ordinary differential equations using the Sundman transformation // Atlantic electronic journal of mathematics. 2007. V.~2, N~1. P.~1--13.
+    \bibitem{BerKohn} {\itshape Berger M., Kohn R. V.} A rescaling algorithm for the numerical calcultaion of blowing-up solutions // Communications on pure and applied mathematics. 1988. XLI. P.~841--863.
+    \bibitem{Cho} {\itshape Cho Ch.-H.} Numerical detection of blow-up: a new sufficient condition for blow-up // Japan Journal of Industrial and Applied Mathematics. 2016. V.~33, N~81. doi:10.1007/s13160-015-0198-0.
+    \bibitem{BUE_basic_1} {\itshape Alshina E. A., Kalitkin N. N., Koryakin P. V.} Diagnostics of singularities of exact solutions in computations with error control // Comput. Math. Math. Phys. 2005. V.~45, N~10.  ?.~1769--1779.
+    \bibitem{BUE_basic_2} {\itshape Alshin A. B., Alshina E. A.} Numerical diagnosis of blow-up of solutions of pseudoparabolic equations // Journal of Mathematical Sciences. 2008. V.~148, N~1. P.~143--162.
+    \bibitem{Kalitkin_book_3} {\itshape Kalitkin N. N., Al’shin A. B., Al’shina E. A., Rogov B. V.} Calculations on quasi-uniform grids. Fizmatlit, Moscow, 2005 [in Russian].
+    \bibitem{HJ} {\itshape Hoffman J., Johnson C.} Blow up of incompressible Euler solutions // BIT Numerical Mathematics. 2008 48. 285--307. doi:10.1007/s10543-008-0184-x.
+    \bibitem{Kalitkin} {\itshape Kalitkin N. N.} Numerical methods for solving stiff systems  // Mat. Model. 1995. V.~7, N~5. P.~8--11.
+        
+    \bibitem{Panin_1} {\itshape Korpusov M. O., Panin A. A.} Local solvability and solution blowup for the Benjamin-Bona-Mahony-Burgers equation with a nonlocal boundary condition // Theoretical and Mathematical Physics. 2013. V.~175, N~2. P.~580--591.
+    \bibitem{Hairer&Wanner} {\itshape Hairer E.,Wanner G.} Solving of Ordinary Differential Equations. Stiff and Differential-Algebraic Problems. Springer, 2002.
+    \bibitem{Kalitkin&Ko_1} {\itshape Al’shin A. B., Al’shina E. A., Kalitkin N. N., Koryagina A. B.} Rosenbrock schemes with complex coefficients for stiff and differential algebraic systems // Comput. Math. Math. Phys.. 2006. V.~46, N~8.  P.~1320--1340.
+    \bibitem{Rosenbrock} {\itshape Rosenbrock H. H.} Some general implicit processes for the numerical solution of differential equations // Computer Journal. 1963. V.~5, N~4. P.~329-330.
+    \bibitem{Lukyanenko_1} {\itshape Korpusov M. O., Lukyanenko D. V., Panin A. A., Yushkov E. V.}  Blow-up for one Sobolev problem: theoretical approach and numerical analysis // Journal of Mathematical Analysis and Applications. 2016. V.~442, N~2. P.~451-468.
+    \bibitem{Sun&Liu&Wu} {\itshape Fenglong Sun, Lishan Liu, Yonghong Wu}  Finite time blow-up for a thin-film equation with initial data at arbitrary energy level // Journal of Mathematical Analysis and Applications. 2018. V.~458, N~1. P.~9-20.
+    \bibitem{Lukyanenko_2} {\itshape Korpusov M. O., Lukyanenko D. V., Panin A. A.}  Blow-up for Joseph-Egri equation: theoretical approach and numerical analysis // Mathematical Methods in the Applied Sciences. 2020. V.~43, N~11. P.~6771-6800.
+
+\end{thebibliography}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\newpage
+\clearpage
+
+\backmatter
+
+\printindex
+%\addcontentsline{toc}{chapter}{索引}
+
+\end{CJK*}
+\end{document}
