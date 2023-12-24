@@ -23,8 +23,4 @@ This repository addresses the challenge of efficiently managing resources for th
 
 3. **Results Comparison:** The dual-model approach allows for a rational analysis of the hornet crisis, aiding in the determination of government intervention strategies.
 
-## Usage
 
-1. Clone the repository.
-2. Run the provided models on relevant datasets.
-3. Review results and prioritize resources accordingly.
